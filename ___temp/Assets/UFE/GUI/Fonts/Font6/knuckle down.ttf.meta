@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: b65b0773d8ee7d94ab3630b07c7c1e2c
+timeCreated: 1516562152
+licenseType: Pro
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Knuckle Down
+  fontNames:
+  - Knuckle Down
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
