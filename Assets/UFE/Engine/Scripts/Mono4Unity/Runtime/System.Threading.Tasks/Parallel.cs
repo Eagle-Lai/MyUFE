@@ -29,8 +29,16 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Runtime.InteropServices;
 
+/// <summary>
+/// 并行工具（Parallel）。
+/// <para>用途：从 Mono 移植的并行编程入口——提供 For/ForEach/Invoke 等并行循环与并行调用，</para>
+/// <para>自动将工作分配到多个任务/线程并行执行。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 并行静态类：并行执行循环与调用。
+	/// </summary>
 	public static class Parallel
 	{
 #if MOONLIGHT || MOBILE

@@ -28,11 +28,21 @@
 
 //#if NET_4_0 || MOBILE
 
+/// <summary>
+/// 任务常量（TaskConstants）。
+/// <para>用途：从 Mono 移植的内部常量——提供已完成的 Task（Finished）与已取消的 Task（Canceled）单例，</para>
+/// <para>避免重复创建这些常用任务。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务常量静态类。
+	/// </summary>
 	static class TaskConstants
 	{
+		/// <summary>已完成的空任务。</summary>
 		public static readonly Task Finished;
+		/// <summary>已取消的空任务。</summary>
 		public static readonly Task Canceled;
 
 		static TaskConstants ()

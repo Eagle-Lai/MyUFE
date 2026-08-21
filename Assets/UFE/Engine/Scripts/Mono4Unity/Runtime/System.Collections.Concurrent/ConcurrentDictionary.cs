@@ -31,8 +31,16 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Diagnostics;
 
+/// <summary>
+/// 并发字典（ConcurrentDictionary&lt;TKey, TValue&gt;）。
+/// <para>用途：从 Mono 移植的线程安全字典——底层基于哈希桶（ConcurrentOrderedList）无锁实现，</para>
+/// <para>提供 TryAdd/TryGetValue/AddOrUpdate/GetOrAdd 等原子操作。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
+	/// <summary>
+	/// 并发字典：线程安全的键值对字典。
+	/// </summary>
 	[DebuggerDisplay ("Count={Count}")]
 	[DebuggerTypeProxy (typeof (CollectionDebuggerView<,>))]
 	public class ConcurrentDictionary<TKey, TValue> : IDictionary<TKey, TValue>,

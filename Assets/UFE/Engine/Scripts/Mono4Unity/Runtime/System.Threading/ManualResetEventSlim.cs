@@ -28,16 +28,29 @@
 
 //#if NET_4_0 || MOBILE
 #pragma warning disable 0168
+/// <summary>
+/// 轻量手动重置事件（ManualResetEventSlim）。
+/// <para>用途：从 Mono 移植的高效同步原语——先短时自旋等待，超过自旋次数后才创建并切换到内核事件句柄，</para>
+/// <para>支持 Set/Reset/Wait（含超时与取消令牌）。</para>
+/// </summary>
 namespace System.Threading
 {
+	/// <summary>
+	/// 轻量手动重置事件：自旋优先的线程同步事件。
+	/// </summary>
 	[System.Diagnostics.DebuggerDisplayAttribute ("Set = {IsSet}")]
 	public class ManualResetEventSlim : IDisposable
 	{
+		/// <summary>自旋等待次数上限。</summary>
 		readonly int spinCount;
 
+		/// <summary>底层手动重置事件（延迟创建）。</summary>
 		ManualResetEvent handle;
+		/// <summary>是否已释放（原子标志）。</summary>
 		internal AtomicBooleanValue disposed;
+		/// <summary>正在使用句柄的线程数（释放时等待）。</summary>
 		int used;
+		/// <summary>状态（低 1 位=是否置位，高位移除序号）。</summary>
 		long state;
 
 		public ManualResetEventSlim ()

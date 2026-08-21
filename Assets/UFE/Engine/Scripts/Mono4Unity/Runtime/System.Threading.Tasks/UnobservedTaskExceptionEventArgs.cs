@@ -27,11 +27,20 @@
 //#if NET_4_0 || MOBILE
 using System;
 
+/// <summary>
+/// 未观察任务异常事件参数（UnobservedTaskExceptionEventArgs）。
+/// <para>用途：从 Mono 移植——携带任务未被观察的聚合异常，供 UnobservedTaskException 事件处理。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 未观察任务异常事件参数类。
+	/// </summary>
 	public class UnobservedTaskExceptionEventArgs : EventArgs
 	{
+		/// <summary>未观察的聚合异常。</summary>
 		AggregateException exception;
+		/// <summary>异常是否已被观察（标记）。</summary>
 		bool wasObserved;
 
 		public UnobservedTaskExceptionEventArgs (AggregateException exception)

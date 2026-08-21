@@ -31,9 +31,18 @@ using System.Threading;
 
 namespace System.Threading.Tasks
 {
+/// <summary>
+/// 同步上下文调度器（SynchronizationContextScheduler）。
+/// <para>用途：从 Mono 移植的内部类——把任务调度到指定 SynchronizationContext（如 UI 线程）执行。</para>
+/// </summary>
+	/// <summary>
+	/// 同步上下文任务调度器。
+	/// </summary>
 	sealed class SynchronizationContextScheduler : TaskScheduler
 	{
+		/// <summary>目标同步上下文。</summary>
 		readonly SynchronizationContext ctx;
+		/// <summary>任务启动回调（缓存）。</summary>
 		readonly SendOrPostCallback callback;
 
 		public SynchronizationContextScheduler (SynchronizationContext ctx)

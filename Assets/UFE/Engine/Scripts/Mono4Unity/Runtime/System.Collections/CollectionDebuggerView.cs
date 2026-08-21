@@ -29,20 +29,35 @@
 using System;
 using System.Diagnostics;
 
+/// <summary>
+/// 集合调试器视图（CollectionDebuggerView，非泛型）。
+/// <para>用途：从 Mono 移植的调试器代理——将非泛型集合在调试器中以数组形式展示。</para>
+/// </summary>
 namespace System.Collections
 {
 	//
 	// Custom debugger type proxy to display collections as arrays
 	//
+	/// <summary>
+	/// 非泛型集合调试器视图：将 ICollection 以 object 数组形式呈现。
+	/// </summary>
 	internal sealed class CollectionDebuggerView
 	{
+		/// <summary>目标集合。</summary>
 		readonly ICollection c;
 
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="col">目标集合。</param>
 		public CollectionDebuggerView (ICollection col)
 		{
 			this.c = col;
 		}
 		
+		/// <summary>
+		/// 集合内容数组（调试器展开显示）。
+		/// </summary>
 		[DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
 		public object[] Items {
 			get {

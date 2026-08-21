@@ -7,16 +7,29 @@ using UFENetcode;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 帧同步核心（FluxCapacitor）。
+/// <para>用途：实现 UFE 网络对战的帧同步（Rollback Netcode）算法——管理输入预测/确认、帧延迟、回滚、</para>
+/// <para>反同步检测与恢复、游戏历史快照（FluxGameHistory）、网络消息收发与调试信息。</para>
+/// <para>支持"回滚"（Rollback，需 UFE_PRO）与"帧延迟"（Frame Delay）两种同步策略，</para>
+/// <para>保证双方客户端在帧号一致的前提下按确定性规则推进游戏模拟。</para>
+/// </summary>
 public class FluxCapacitor {
 	#region public class properties
+	/// <summary>玩家索引越界提示消息模板。</summary>
 	public static string PlayerIndexOutOfRangeMessage = 
 	"The Player Index is {0}, but it should be in the [{1}, {2}] range.";
 
+	/// <summary>收到意外玩家网络消息的提示消息模板。</summary>
 	public static string NetworkMessageFromUnexpectedPlayerMessage = 
 	"The Network Message was sent by {0}, but it was expected to be sent by {1}.";
 	#endregion
 
 	#region public instance properties
+	/// <summary>
+	/// 是否允许回滚（Rollback）——需配置启用回滚、游戏运行中且为网络对战。
+	/// <para>菜单界面禁用回滚（按帧延迟算法行为，避免菜单状态机不支持回滚）。</para>
+	/// </summary>
 	public bool AllowRollbacks{
 		get{
             //---------------------------------------------------------------------------------------------------------
@@ -39,12 +52,16 @@ public class FluxCapacitor {
         }
 	}
 
+	/// <summary>游戏历史（帧状态快照缓冲）。</summary>
 	public FluxGameHistory History{
 		get{
 			return this._history;
 		}
 	}
 
+	/// <summary>
+	/// 当前网络帧延迟（帧数）——自动模式按网络延迟计算最优值，固定模式用默认值。
+	/// </summary>
 	public int NetworkFrameDelay{
 		get{
 			int frameDelay = 0;
@@ -78,6 +95,7 @@ public class FluxCapacitor {
 		}
 	}
 
+	/// <summary>玩家管理器（双方输入缓冲）。</summary>
 	public FluxPlayerManager PlayerManager{
 		get{
 			return this._playerManager;
@@ -86,24 +104,38 @@ public class FluxCapacitor {
 #endregion
 
 #region public instance fields
+	/// <summary>保存的游戏状态（状态追踪器测试用）。</summary>
 	public FluxStates? savedState = null;
 #endregion
 
 #region protected instance fields
+	/// <summary>调试文本组件（帧同步调试信息显示）。</summary>
     protected Text debugger;
+	/// <summary>调试信息字符串缓存。</summary>
 	protected StringBuilder _debugInfo = new StringBuilder();
+	/// <summary>游戏历史（帧状态快照）。</summary>
 	protected FluxGameHistory _history = new FluxGameHistory();
+	/// <summary>当前最大帧号记录。</summary>
 	protected long _maxCurrentFrameValue = long.MinValue;
+	/// <summary>玩家管理器。</summary>
 	protected FluxPlayerManager _playerManager = new FluxPlayerManager();
+	/// <summary>已收到的网络消息列表。</summary>
 	protected List<byte[]> _receivedNetworkMessages = new List<byte[]>();
+	/// <summary>双方当前选中的菜单选项。</summary>
 	protected sbyte?[] _selectedOptions = new sbyte?[2];
 
+	/// <summary>本地同步状态列表（反同步检测用）。</summary>
 	protected List<FluxSimpleState> _localSynchronizationStates = new List<FluxSimpleState>();
+	/// <summary>远端同步状态列表（反同步检测用）。</summary>
 	protected List<FluxSimpleState> _remoteSynchronizationStates = new List<FluxSimpleState>();
 
+	/// <summary>已发生反同步次数。</summary>
 	protected int _desynchronizations = 0;
+	/// <summary>远端玩家下一期望帧号。</summary>
 	protected long _remotePlayerNextExpectedFrame;
+	/// <summary>是否已应用回滚平衡。</summary>
 	protected bool _rollbackBalancingApplied;
+	/// <summary>距离下次发送网络消息的剩余时间。</summary>
 	protected long _timeToNetworkMessage;
 #endregion
 
@@ -320,14 +352,26 @@ public class FluxCapacitor {
         }
 	}
 
+	/// <summary>
+	/// 初始化帧同步（帧号0）。
+	/// </summary>
 	public virtual void Initialize(){
 		this.Initialize(0);
 	}
 
+	/// <summary>
+	/// 初始化帧同步（指定当前帧号）。
+	/// </summary>
+	/// <param name="currentFrame">当前帧号。</param>
 	public virtual void Initialize(long currentFrame){
 		this.Initialize(currentFrame, -1);
 	}
 
+	/// <summary>
+	/// 初始化帧同步（完整参数）：重置历史/同步状态/缓冲，订阅回合与消息事件并创建调试文本。
+	/// </summary>
+	/// <param name="currentFrame">当前帧号。</param>
+	/// <param name="maxHistoryLength">最大历史长度（-1 使用配置值）。</param>
 	public virtual void Initialize(long currentFrame, int maxHistoryLength){
 		this._debugInfo.Length = 0;
 		this._debugInfo.Append("PLAYER ").Append(UFE.GetLocalPlayer()).Append(" - SYNCHRONIZATION LOG\n\n\n");
@@ -363,10 +407,19 @@ public class FluxCapacitor {
         debugger = UFE.DebuggerText("Debugger", "", new Vector2(-Screen.width + 50, Screen.height - 180), TextAnchor.UpperLeft);
 	}
 
+	/// <summary>
+	/// 获取最优帧延迟（按当前网络 Ping 计算）。
+	/// </summary>
+	/// <returns>最优帧延迟。</returns>
 	public virtual int GetOptimalFrameDelay(){
 		return this.GetOptimalFrameDelay(UFE.multiplayerAPI.GetLastPing());
 	}
 
+	/// <summary>
+	/// 获取最优帧延迟：按单程延迟与帧时长换算应延迟的帧数，并夹取到配置的最小/最大帧延迟。
+	/// </summary>
+	/// <param name="ping">当前网络 Ping 值（毫秒）。</param>
+	/// <returns>最优帧延迟（帧数）。</returns>
 	public virtual int GetOptimalFrameDelay(int ping){
 		//-------------------------------------------------------------------------------------------------------------
 		// Measure the time that a message needs to arrive at the other client and  calculate the duration
@@ -384,6 +437,11 @@ public class FluxCapacitor {
 		return Mathf.Clamp(frameDelay,UFE.config.networkOptions.minFrameDelay,UFE.config.networkOptions.maxFrameDelay);
 	}
 
+	/// <summary>
+	/// 请求记录某玩家的菜单选中选项（帧同步传递，用于选人/选场等界面）。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
+	/// <param name="option">选中的选项（sbyte，-1 表示取消）。</param>
 	public virtual void RequestOptionSelection(int player, sbyte option){
 		if (player == 1 || player == 2){
 			this._selectedOptions[player-1] = option;
@@ -391,6 +449,10 @@ public class FluxCapacitor {
 	}
 
 
+	/// <summary>
+	/// 开始回放录像：加载初始游戏状态并恢复双方输入缓冲。
+	/// </summary>
+	/// <param name="replay">录像数据。</param>
 	public virtual void StartReplay(FluxGameReplay replay){
 		if (replay != null && replay.Player1InputBuffer != null && replay.Player2InputBuffer != null){
             FluxStateTracker.LoadGameState(replay.InitialState);
@@ -401,6 +463,12 @@ public class FluxCapacitor {
 #endregion
 
 #region protected instance mehtods
+	/// <summary>
+	/// 应用当前帧输入：读取双方上一帧/当前帧输入转换为 UFE 输入字典，注入到双方控制器，
+	/// 更新 GUI 调试信息，并应用已确认的菜单选中选项。
+	/// </summary>
+	/// <param name="currentFrame">当前帧号。</param>
+	/// <param name="lastSynchronizedFrame">最后同步帧号。</param>
 	protected virtual void ApplyInputs(long currentFrame, long lastSynchronizedFrame){
 		bool synchronized = currentFrame <= lastSynchronizedFrame;
 
@@ -694,6 +762,9 @@ public class FluxCapacitor {
     }
     
 
+	/// <summary>
+	/// 开始新回合（帧同步内执行）：递增回合数、重置计时器/双方数据/位置、锁定输入并广播新回合。
+	/// </summary>
 	protected void StartNewRound(){
         ControlsScript p1ControlScript = UFE.GetControlsScript(1);
         ControlsScript p2ControlScript = UFE.GetControlsScript(2);
@@ -719,10 +790,19 @@ public class FluxCapacitor {
 		}
 	}
 
+	/// <summary>
+	/// 停止摄像机移动（K.O. 演出后冻结镜头）。
+	/// </summary>
     protected void KillCam() {
         UFE.GetControlsScript(1).cameraScript.killCamMove = true;
     }
 
+	/// <summary>
+	/// 生成同步调试日志（反同步日志模式启用时输出双方角色/物理/招式状态对比）。
+	/// </summary>
+	/// <param name="currentFrame">当前帧号。</param>
+	/// <param name="lastSynchronizedFrame">最后同步帧号。</param>
+	/// <param name="frameInput">当前帧输入。</param>
     protected virtual void GenerateDebugLog(long currentFrame, long lastSynchronizedFrame, FluxFrameInput frameInput) {
         if (UFE.config.debugOptions.desyncErrorLog) {
             FluxStates state;
@@ -801,6 +881,11 @@ public class FluxCapacitor {
         }
     }
 
+	/// <summary>
+	/// 检查并发送出站网络消息：按输入消息频率决定每帧发送或隔帧发送，
+	/// 且当本地输入变化时立即发送以避免"超级回滚"（mega-rollbacks）。
+	/// </summary>
+	/// <param name="currentFrame">当前帧号。</param>
 	protected virtual void CheckOutgoingNetworkMessages(long currentFrame){
 		//---------------------------------------------------------------------------------------------------------
 		// Check if we need to send a network message
@@ -859,6 +944,9 @@ public class FluxCapacitor {
         }
     }
 
+	/// <summary>
+	/// 执行同步延迟动作队列（每帧递减步数，到期执行并移除）。
+	/// </summary>
     protected virtual void ExecuteSynchronizedDelayedActions() {
         // Check if we need to execute any delayed "synchronized action" (game actions)
         for (int i = UFE.delayedSynchronizedActions.Count - 1; i >= 0; --i) {
@@ -872,6 +960,10 @@ public class FluxCapacitor {
         }
     }
 
+	/// <summary>
+	/// 强制断开连接（反同步处理）：累计反同步次数，超过允许次数时输出错误日志并断开。
+	/// </summary>
+	/// <param name="disconnectionCause">断开原因文本。</param>
 	protected virtual void ForceDisconnection(string disconnectionCause){
 		if (UFE.config.networkOptions.disconnectOnDesynchronization){
 			++this._desynchronizations;
@@ -906,6 +998,11 @@ public class FluxCapacitor {
 
 	}
 
+	/// <summary>
+	/// 获取本地指定帧的同步状态（反同步检测用）。
+	/// </summary>
+	/// <param name="frame">帧号。</param>
+	/// <returns>同步状态；未找到返回 null。</returns>
 	protected virtual FluxSimpleState? GetLocalSynchronizationState(long frame){
 		for (int i = 0; i < this._localSynchronizationStates.Count; ++i){
 			if (this._localSynchronizationStates[i].frame == frame){
@@ -916,6 +1013,11 @@ public class FluxCapacitor {
 		return null;
 	}
 
+	/// <summary>
+	/// 获取远端指定帧的同步状态（反同步检测用）。
+	/// </summary>
+	/// <param name="frame">帧号。</param>
+	/// <returns>同步状态；未找到返回 null。</returns>
 	protected virtual FluxSimpleState? GetRemoteSynchronizationState(long frame){
 		for (int i = 0; i < this._remoteSynchronizationStates.Count; ++i){
 			if (this._remoteSynchronizationStates[i].frame == frame){
@@ -926,6 +1028,10 @@ public class FluxCapacitor {
 		return null;
 	}
 
+	/// <summary>
+	/// 获取本地同步状态中最小的帧号。
+	/// </summary>
+	/// <returns>最小帧号；无记录返回 -1。</returns>
 	protected virtual long GetFirstLocalSynchronizationFrame(){
 		long frame = -1L;
 
@@ -938,6 +1044,10 @@ public class FluxCapacitor {
 		return frame;
 	}
 
+	/// <summary>
+	/// 获取远端同步状态中最小的帧号。
+	/// </summary>
+	/// <returns>最小帧号；无记录返回 -1。</returns>
 	protected virtual long GetFirstRemoteSynchronizationFrame(){
 		long frame = -1L;
 
@@ -950,6 +1060,10 @@ public class FluxCapacitor {
 		return frame;
 	}
 
+	/// <summary>
+	/// 获取本地同步状态中最大的帧号。
+	/// </summary>
+	/// <returns>最大帧号；无记录返回 -1。</returns>
 	protected virtual long GetLastLocalSynchronizationFrame(){
 		long frame = -1L;
 
@@ -960,6 +1074,10 @@ public class FluxCapacitor {
 		return frame;
 	}
 
+	/// <summary>
+	/// 获取远端同步状态中最大的帧号。
+	/// </summary>
+	/// <returns>最大帧号；无记录返回 -1。</returns>
 	protected virtual long GetLastRemoteSynchronizationFrame(){
 		long frame = -1L;
 
@@ -979,6 +1097,8 @@ public class FluxCapacitor {
 	/// </remarks>
 	/// <returns><c>true</c> if this instance is network game; otherwise, <c>false</c>.</returns>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// <summary>判断当前是否为网络对战（存在远端玩家）。</summary>
+	/// <returns>网络对战返回 true。</returns>
 	protected virtual bool IsNetworkGame(){
 		return this.PlayerManager.AreThereRemoteCharacters();
 	}
@@ -990,6 +1110,8 @@ public class FluxCapacitor {
 	/// <param name="serializedMessage">Serialized message.</param>
 	/// <param name="msgInfo">Message info.</param>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// <summary>网络消息接收回调：将收到的消息字节存入待处理列表。</summary>
+	/// <param name="bytes">收到的消息字节。</param>
 	protected virtual void OnMessageReceived(byte[] bytes){
 		this._receivedNetworkMessages.Add(bytes);
 	}
@@ -999,6 +1121,8 @@ public class FluxCapacitor {
 	/// This method is invoked by the engine at the start of the round.
 	/// </summary>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// <summary>回合开始回调：重置反同步计数。</summary>
+	/// <param name="currentRound">回合编号。</param>
 	protected virtual void OnRoundBegin(int currentRound){
 		// We set the desynchronizations count to zero at the start of each round
 		this._desynchronizations = 0;
@@ -1011,6 +1135,9 @@ public class FluxCapacitor {
 	/// <param name="winner">Winner.</param>
 	/// <param name="loser">Loser.</param>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// <summary>回合结束回调：输出反同步日志（如启用）并重置反同步计数。</summary>
+	/// <param name="winner">获胜角色。</param>
+	/// <param name="loser">失败角色。</param>
 	protected virtual void OnRoundEnds(UFE3D.CharacterInfo winner, UFE3D.CharacterInfo loser){
 		if (UFE.config.debugOptions.desyncErrorLog && this._desynchronizations > 0 && this._debugInfo.Length > 0){
 			Debug.LogWarning(this._debugInfo.ToString());
@@ -1023,6 +1150,7 @@ public class FluxCapacitor {
 	/// Processes the pending network messages.
 	/// </summary>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// <summary>处理待处理的网络消息：按消息类型分发到输入缓冲或同步消息处理，处理完清空队列。</summary>
 	protected virtual void ProcessReceivedNetworkMessages(){
 		foreach (byte[] serializedMessage in this._receivedNetworkMessages){
 			if (serializedMessage != null && serializedMessage.Length > 0){
@@ -1108,6 +1236,12 @@ public class FluxCapacitor {
 		}
 	}
 
+	/// <summary>
+	/// 处理收到的单帧输入：设置该玩家该帧的确认输入。
+	/// </summary>
+	/// <param name="playerIndex">玩家索引。</param>
+	/// <param name="frame">（帧号, 输入）对。</param>
+	/// <param name="lastFrameWithConfirmedInput">最后确认帧号。</param>
 	protected virtual void ProcessInput(int playerIndex, Tuple<long, FrameInput> frame, long lastFrameWithConfirmedInput){
 		long currentFrame = frame.Item1;
 		this.PlayerManager.TrySetConfirmedInput(playerIndex, currentFrame, frame.Item2);
@@ -1116,6 +1250,10 @@ public class FluxCapacitor {
         //bool rollbackRequired = firstFrameWhereRollbackIsRequired>=0 && firstFrameWhereRollbackIsRequired<currentFrame;
     }
 
+	/// <summary>
+	/// 处理同步消息：与本地对应帧的期望状态比较以检测反同步；无本地期望状态时先保存远端状态待后续比对。
+	/// </summary>
+	/// <param name="msg">同步消息。</param>
 	protected virtual void ProcessSynchronizationMessage(SynchronizationMessage msg){
 		if(UFE.config.networkOptions.synchronizationMessageFrequency!=NetworkSynchronizationMessageFrequency.Disabled){
 			FluxSimpleState? expectedState = this.GetLocalSynchronizationState(msg.CurrentFrame);
@@ -1138,6 +1276,10 @@ public class FluxCapacitor {
 		}
 	}
 
+	/// <summary>
+	/// 发送网络消息：将本地玩家的已确认输入缓冲（可压缩为仅输入变化）打包为 InputBufferMessage 发送，
+	/// 并按同步频率在需要时附加同步状态消息。
+	/// </summary>
 	protected virtual void SendNetworkMessages(){
 		int localPlayer = UFE.GetLocalPlayer();
 
@@ -1197,10 +1339,24 @@ public class FluxCapacitor {
 		}
 	}
 
+	/// <summary>
+	/// 回滚（无覆盖状态版本）。
+	/// </summary>
+	/// <param name="currentFrame">当前帧号。</param>
+	/// <param name="rollbackFrame">回滚目标帧号。</param>
+	/// <param name="lastFrameWithConfirmedInputs">最后确认输入帧号。</param>
 	protected virtual void Rollback(long currentFrame, long rollbackFrame, long lastFrameWithConfirmedInputs){
 		this.Rollback(currentFrame, rollbackFrame, lastFrameWithConfirmedInputs, null);
 	}
 
+	/// <summary>
+	/// 回滚（Rollback）核心逻辑：将预测输入校正为确认输入（可选覆盖状态以反同步恢复），
+	/// 把游戏状态恢复到最后一致帧并快进模拟后续所有帧回到当前帧，同时快进同步状态与延迟动作。
+	/// </summary>
+	/// <param name="currentFrame">当前帧号。</param>
+	/// <param name="rollbackFrame">回滚目标帧号。</param>
+	/// <param name="lastFrameWithConfirmedInputs">最后确认输入帧号。</param>
+	/// <param name="overriddenGameState">可选的覆盖状态（反同步恢复）。</param>
 	protected virtual void Rollback(
 		long currentFrame, 
 		long rollbackFrame, 
@@ -1283,6 +1439,12 @@ public class FluxCapacitor {
 #endif
     }
 
+	/// <summary>
+	/// 读取双方当前帧输入：为双方生成预测输入（本地确认，远端可预测），
+	/// 并清理已消费的菜单选中选项（ReadInputs 每帧调用）。
+	/// </summary>
+	/// <param name="frameDelay">当前帧延迟。</param>
+	/// <param name="allowRollbacks">是否允许回滚。</param>
     protected virtual void ReadInputs(long frameDelay, bool allowRollbacks) {
         //-------------------------------------------------------------------------------------------------------------
         // Read the player inputs (ensuring that there aren't any "holes" created by variable frame-delay).
@@ -1298,6 +1460,13 @@ public class FluxCapacitor {
         }
     }
 
+	/// <summary>
+	/// 同步检查（默认允许反同步恢复）。
+	/// </summary>
+	/// <param name="expectedState">本地期望状态。</param>
+	/// <param name="receivedState">远端收到的状态。</param>
+	/// <param name="frame">帧号。</param>
+	/// <returns>状态一致返回 true。</returns>
 	protected virtual bool SynchronizationCheck(
 		FluxSimpleState expectedState, 
 		FluxSimpleState receivedState, 
@@ -1306,6 +1475,15 @@ public class FluxCapacitor {
 		return this.SynchronizationCheck(expectedState, receivedState, frame, true);
 	}
 
+	/// <summary>
+	/// 同步检查（反同步检测）：比较双方生命/能量/相对位置（含帧号），
+	/// 误差在阈值内视为一致；否则触发反同步处理（按配置强制断开或覆盖状态恢复）。
+	/// </summary>
+	/// <param name="expectedState">本地期望状态。</param>
+	/// <param name="receivedState">远端收到的状态。</param>
+	/// <param name="frame">帧号。</param>
+	/// <param name="allowRecoveryFromDesynchronizations">是否允许反同步恢复。</param>
+	/// <returns>状态一致返回 true。</returns>
 	protected virtual bool SynchronizationCheck(
 		FluxSimpleState expectedState, 
 		FluxSimpleState receivedState, 
@@ -1419,6 +1597,15 @@ public class FluxCapacitor {
 		}
 	}
 
+	/// <summary>
+	/// 更新 GUI：推进摄像机淡入淡出、向战斗 HUD 转发双方输入与选中选项，并更新触屏控件与调试文本。
+	/// </summary>
+	/// <param name="player1PreviousInputs">玩家1上一帧输入。</param>
+	/// <param name="player1CurrentInputs">玩家1当前帧输入。</param>
+	/// <param name="player1SelectedOptions">玩家1选中选项。</param>
+	/// <param name="player2PreviousInputs">玩家2上一帧输入。</param>
+	/// <param name="player2CurrentInputs">玩家2当前帧输入。</param>
+	/// <param name="player2SelectedOptions">玩家2选中选项。</param>
 	protected virtual void UpdateGUI(
 		IDictionary<InputReferences, InputEvents> player1PreviousInputs,
 		IDictionary<InputReferences, InputEvents> player1CurrentInputs,
@@ -1482,6 +1669,10 @@ public class FluxCapacitor {
 		}
 	}
 
+	/// <summary>
+	/// 更新回合计时器：按配置计时速度递减剩余时间（训练/挑战冻结时间模式除外），
+	/// 每秒触发一次计时事件，归零后触发时间到事件。
+	/// </summary>
 	protected virtual void UpdateTimer(){
 		if (UFE.config.roundOptions.hasTimer && UFE.timer > 0 && !UFE.IsTimerPaused()) {
 			if (UFE.gameMode != GameMode.TrainingRoom 

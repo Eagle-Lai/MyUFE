@@ -30,10 +30,18 @@
 using System;
 using System.Runtime.CompilerServices;
 
+/// <summary>
+/// 泛型任务常量（TaskConstants&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的内部常量——提供泛型已取消任务（Canceled）单例。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 泛型任务常量内部类。
+	/// </summary>
 	internal class TaskConstants<T>
 	{
+		/// <summary>已取消的泛型任务。</summary>
 		internal static readonly Task<T> Canceled;
 
 		static TaskConstants ()

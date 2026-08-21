@@ -26,12 +26,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+/// <summary>
+/// 集合变更动作（NotifyCollectionChangedAction）。
+/// <para>用途：从 Mono 移植——描述集合内容变化的具体动作类型。</para>
+/// </summary>
 namespace System.Collections.Specialized {
 
+	/// <summary>
+	/// 集合变更动作枚举。
+	/// </summary>
 	public enum NotifyCollectionChangedAction {
+		/// <summary>添加元素。</summary>
 		Add,
+		/// <summary>移除元素。</summary>
 		Remove,
+		/// <summary>替换元素。</summary>
 		Replace,
+		/// <summary>集合整体重置。</summary>
 		Reset = 4
 	}
 }

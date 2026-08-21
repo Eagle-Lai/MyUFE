@@ -4,47 +4,83 @@ using System.Collections.Generic;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 默认角色选择界面（DefaultCharacterSelectionScreen）。
+/// <para>用途：完整的选人界面——以网格（characters）展示可选角色，支持大头像（CharacterPortrait）与 3D 模型</para>
+/// <para>（CharacterGameObject）两种展示模式；为双方玩家分别处理光标移动/确认/取消（含 CPU 模式下共用一套输入），</para>
+/// <para>并在选人后播放角色选择动画、更新 HUD 光标位置。</para>
+/// </summary>
 public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 	#region public enum definitions
+	/// <summary>角色展示模式。</summary>
 	public enum DisplayMode{
+		/// <summary>大头像（Image）。</summary>
 		CharacterPortrait,
+		/// <summary>3D 角色模型。</summary>
 		CharacterGameObject,
 	}
 	#endregion
 
 	#region public instance fields
+	/// <summary>移动光标音效。</summary>
 	public AudioClip moveCursorSound;
+	/// <summary>加载音效。</summary>
 	public AudioClip onLoadSound;
+	/// <summary>背景音乐。</summary>
 	public AudioClip music;
+	/// <summary>加载时是否停止之前的音效。</summary>
 	public bool stopPreviousSoundEffectsOnLoad = false;
+	/// <summary>延迟播放音乐的时间。</summary>
 	public float delayBeforePlayingMusic = 0.1f;
+	/// <summary>玩家1名称文本。</summary>
 	public Text namePlayer1;
+	/// <summary>玩家2名称文本。</summary>
 	public Text namePlayer2;
+	/// <summary>角色展示模式。</summary>
 	public DisplayMode displayMode = DisplayMode.CharacterPortrait;
+	/// <summary>玩家1大头像。</summary>
 	public Image portraitPlayer1;
+	/// <summary>玩家2大头像。</summary>
 	public Image portraitPlayer2;
+	/// <summary>3D 展示模式的背景预制体。</summary>
 	public GameObject background3dPrefab;
+	/// <summary>玩家1 3D 模型位置。</summary>
 	public Vector3 positionPlayer1 = new Vector3(-4,0,0);
+	/// <summary>玩家2 3D 模型位置。</summary>
 	public Vector3 positionPlayer2 = new Vector3(4,0,0);
+	/// <summary>角色网格图片列表（选人按钮）。</summary>
 	public Image[] characters;
+	/// <summary>玩家1 HUD 光标。</summary>
 	public Animator hudPlayer1;
+	/// <summary>玩家2 HUD 光标。</summary>
 	public Animator hudPlayer2;
+	/// <summary>双方共用的 HUD 光标。</summary>
 	public Animator hudBothPlayers;
+	/// <summary>空位显示的无角色贴图。</summary>
 	public Sprite noCharacterSprite;
 
+	/// <summary>玩家1默认悬停角色索引。</summary>
 	public int defaultCharacterPlayer1 = 0;
+	/// <summary>玩家2默认悬停角色索引。</summary>
 	public int defaultCharacterPlayer2 = 999;
 	#endregion
 
 	#region protected instance fields
+	/// <summary>角色按钮白名单（导航用）。</summary>
 	protected List<Selectable> characterButtonsWhiteList = new List<Selectable>();
 
+	/// <summary>3D 展示模式的背景实例。</summary>
 	protected GameObject background;
+	/// <summary>玩家1 3D 模型实例。</summary>
 	protected GameObject gameObjectPlayer1;
+	/// <summary>玩家2 3D 模型实例。</summary>
 	protected GameObject gameObjectPlayer2;
 	#endregion
 
 	#region public override methods
+	/// <summary>
+	/// 固定帧更新：按双人/单人（CPU）模式为双方分别或共用调用特殊导航系统处理光标移动与选择/取消。
+	/// </summary>
 	public override void DoFixedUpdate(
 		IDictionary<InputReferences, InputEvents> player1PreviousInputs,
 		IDictionary<InputReferences, InputEvents> player1CurrentInputs,
@@ -160,6 +196,11 @@ public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 		}
 	}
 
+	/// <summary>
+	/// 设置悬停索引：更新角色名称/头像/3D 模型、HUD 光标位置。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
+	/// <param name="characterIndex">角色索引。</param>
 	public override void SetHoverIndex(int player, int characterIndex){
 		if (!this.closing){
 			int maxCharacterIndex = this.GetMaxCharacterIndex();
@@ -369,11 +410,19 @@ public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 		}
 	}
 
+	/// <summary>
+	/// 角色选择确认回调：调用基类逻辑后更新 HUD。
+	/// </summary>
+	/// <param name="characterIndex">角色索引。</param>
+	/// <param name="player">操作玩家。</param>
 	public override void OnCharacterSelectionAllowed (int characterIndex, int player){
 		base.OnCharacterSelectionAllowed (characterIndex, player);
 		this.UpdateHud();
 	}
 
+	/// <summary>
+	/// 界面隐藏时：销毁 3D 模型/背景并恢复 Canvas 为 Overlay 渲染模式。
+	/// </summary>
 	public override void OnHide(){
 		if (this.gameObjectPlayer1 != null){
 			GameObject.Destroy(this.gameObjectPlayer1);
@@ -390,6 +439,9 @@ public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 		base.OnHide ();
 	}
 
+	/// <summary>
+	/// 界面显示时：设置摄像机与 3D 背景（按展示模式）、创建角色按钮、播放音乐/音效并初始化默认悬停。
+	/// </summary>
 	public override void OnShow (){
 		// We add these lines before base.OnShow() because they will affect how will the engine display
 		// characters selected by default
@@ -485,10 +537,17 @@ public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 	#endregion
 
 	#region protected instance methods
+	/// <summary>
+	/// 获取最大角色索引（角色列表与按钮网格数量取小）。
+	/// </summary>
+	/// <returns>最大索引。</returns>
 	protected override int GetMaxCharacterIndex(){
 		return Mathf.Min(this.selectableCharacters.Length, this.characters.Length) - 1;
 	}
 
+	/// <summary>
+	/// 更新 HUD 光标状态：根据选择状态与双人是否同框显示各自的隐藏/选中动画参数。
+	/// </summary>
 	protected virtual void UpdateHud(){
 		if (UFE.gameMode == GameMode.StoryMode){
 			if (this.hudPlayer1 != null){
@@ -527,6 +586,11 @@ public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 		}
 	}
 
+	/// <summary>
+	/// 移动光标到指定角色（索引变化时播放移动音效）。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
+	/// <param name="characterIndex">角色索引。</param>
 	protected virtual void MoveCursor(int player, int characterIndex){
 		int previousIndex = this.GetHoverIndex(player);
 		this.SetHoverIndex(player, characterIndex);
@@ -536,6 +600,17 @@ public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 	#endregion
 
 	#region protected instance methods: methods required by the Special Navigation System (GUI)
+	/// <summary>
+	/// 光标移动处理（特殊导航系统回调）：角色未选中时按方向键在角色网格中查找相邻可选角色并移动光标。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
+	/// <param name="horizontalAxis">水平轴输入。</param>
+	/// <param name="verticalAxis">垂直轴输入。</param>
+	/// <param name="horizontalAxisDown">水平键是否按下。</param>
+	/// <param name="verticalAxisDown">垂直键是否按下。</param>
+	/// <param name="confirmButtonDown">确认键是否按下。</param>
+	/// <param name="cancelButtonDown">取消键是否按下。</param>
+	/// <param name="sound">光标音效。</param>
 	protected virtual void MoveCursor(
 		int player,
 		Fix64 horizontalAxis, 
@@ -594,10 +669,18 @@ public class DefaultCharacterSelectionScreen : CharacterSelectionScreen {
 		}
 	}
 	
+	/// <summary>
+	/// 取消选择回调（特殊导航系统）。
+	/// </summary>
+	/// <param name="sound">取消音效。</param>
 	protected virtual void TryDeselectCharacter(AudioClip sound){
 		this.TryDeselectCharacter();
 	}
 	
+	/// <summary>
+	/// 确认选择回调（特殊导航系统）。
+	/// </summary>
+	/// <param name="sound">选择音效。</param>
 	protected virtual void TrySelectCharacter(AudioClip sound){
 		this.TrySelectCharacter();
 	}

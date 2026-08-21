@@ -5,20 +5,41 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using FPLibrary;
 
+/// <summary>
+/// UI 屏幕扩展（UFEScreenExtensions）。
+/// <para>用途：为 UFEScreen 提供通用的菜单导航系统扩展方法——方向键移动光标（DefaultMoveCursorAction，支持 Slider 调节）、</para>
+/// <para>确认/取消动作（Button 点击/Toggle 切换）、查找并高亮下一个可交互物体、默认导航系统（DefaultNavigationSystem）与</para>
+/// <para>特殊导航系统（SpecialNavigationSystem，用于选人/选场等复杂界面）。</para>
+/// </summary>
 public static class UFEScreenExtensions{
 	#region public class definitions
+	/// <summary>
+	/// 动作回调（ActionCallback）：绑定一个可执行动作与对应的触发音效（用于导航系统的确认/取消动作）。
+	/// </summary>
 	public class ActionCallback{
+		/// <summary>动作委托（接收一个音效参数）。</summary>
 		public delegate void ActionDelegate(AudioClip sound);
+		/// <summary>要执行的动作。</summary>
 		public ActionDelegate Action{get; set;}
+		/// <summary>动作触发时播放的音效。</summary>
 		public AudioClip Sound{get; set;}
 
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="action">要执行的动作。</param>
+		/// <param name="sound">触发音效。</param>
 		public ActionCallback(ActionDelegate action = null, AudioClip sound = null){
 			this.Action = action;
 			this.Sound = sound;
 		}
 	}
 
+	/// <summary>
+	/// 移动光标回调（MoveCursorCallback）：绑定一个光标移动处理器与对应音效（用于特殊导航系统的光标移动）。
+	/// </summary>
 	public class MoveCursorCallback{
+		/// <summary>光标移动委托（接收轴/按键状态与音效）。</summary>
 		public delegate void ActionDelegate(
 			Fix64 horizontalAxis,
 			Fix64 verticalAxis,
@@ -29,10 +50,16 @@ public static class UFEScreenExtensions{
 			AudioClip sound
 		);
 
-
+		/// <summary>要执行的光标移动动作。</summary>
 		public ActionDelegate Action{get; set;}
+		/// <summary>光标移动时播放的音效。</summary>
 		public AudioClip Sound{get; set;}
 		
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="action">光标移动处理器。</param>
+		/// <param name="sound">移动音效。</param>
 		public MoveCursorCallback(ActionDelegate action = null, AudioClip sound = null){
 			this.Action = action;
 			this.Sound = sound;
@@ -41,10 +68,24 @@ public static class UFEScreenExtensions{
 	#endregion
 
 	#region public class properties
+	/// <summary>滑杆归一化调节速度（方向键改变 Slider 值的步长）。</summary>
 	public static float NormalizedSliderSpeed = 0.1f;
 	#endregion
 
 	#region public class methods
+	/// <summary>
+	/// 默认导航系统（双人版）：为玩家1与玩家2分别处理输入（任一玩家有操作即返回 true）。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="player1PreviousInputs">玩家1上一帧输入。</param>
+	/// <param name="player1CurrentInputs">玩家1当前帧输入。</param>
+	/// <param name="player2PreviousInputs">玩家2上一帧输入。</param>
+	/// <param name="player2CurrentInputs">玩家2当前帧输入。</param>
+	/// <param name="moveCursorSound">移动光标音效。</param>
+	/// <param name="confirmSound">确认音效。</param>
+	/// <param name="cancelSound">取消音效。</param>
+	/// <param name="cancelAction">取消动作。</param>
+	/// <returns>任一玩家有操作返回 true。</returns>
 	public static bool DefaultNavigationSystem(
 		this UFEScreen screen, 
 		IDictionary<InputReferences, InputEvents> player1PreviousInputs,
@@ -76,6 +117,17 @@ public static class UFEScreenExtensions{
 			);
 	}
 
+	/// <summary>
+	/// 默认导航系统（单人版）：处理输入框（InputField）特例或调用特殊导航系统处理普通菜单导航。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="previousInputs">上一帧输入。</param>
+	/// <param name="currentInputs">当前帧输入。</param>
+	/// <param name="moveCursorSound">移动光标音效。</param>
+	/// <param name="confirmSound">确认音效。</param>
+	/// <param name="cancelSound">取消音效。</param>
+	/// <param name="cancelAction">取消动作。</param>
+	/// <returns>有操作返回 true。</returns>
 	public static bool DefaultNavigationSystem(
 		this UFEScreen screen, 
 		IDictionary<InputReferences, InputEvents> previousInputs,
@@ -151,6 +203,11 @@ public static class UFEScreenExtensions{
 		return false;
 	}
 
+	/// <summary>
+	/// 查找屏幕中第一个可交互且属于该屏幕的 Selectable（优先返回 firstSelectableGameObject；否则按左上到右下的规则选择）。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <returns>找到的 Selectable；无则返回 null。</returns>
 	public static Selectable FindFirstSelectable(this UFEScreen screen){
 		List<Selectable> selectables = Selectable.allSelectables;
 		Transform firstSelectableTransform = null;
@@ -189,11 +246,22 @@ public static class UFEScreenExtensions{
 		return firstSelectable;
 	}
 	
+	/// <summary>
+	/// 查找屏幕中第一个可交互 Selectable 的 GameObject。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <returns>第一个可交互物体的 GameObject。</returns>
 	public static GameObject FindFirstSelectableGameObject(this UFEScreen screen){
 		Selectable selectable = screen.FindFirstSelectable();
 		return selectable != null ? selectable.gameObject : null;
 	}
 
+	/// <summary>
+	/// 按方向查找当前选中物体在屏幕中的下一个 Selectable。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="direction">查找方向。</param>
+	/// <returns>找到的 Selectable；无当前选中物则返回第一个可交互物体。</returns>
 	public static Selectable FindSelectable(this UFEScreen screen, Vector3 direction){
 		GameObject currentGameObject = UFE.eventSystem.currentSelectedGameObject;
 		if (currentGameObject == null){
@@ -203,6 +271,14 @@ public static class UFEScreenExtensions{
 		}
 	}
 	
+	/// <summary>
+	/// 按方向从指定 GameObject 查找下一个 Selectable（支持环绕、白名单过滤与 Automatic/Explicit/Horizontal/Vertical/None 五种导航模式）。
+	/// </summary>
+	/// <param name="currentGameObject">当前物体。</param>
+	/// <param name="direction">查找方向。</param>
+	/// <param name="wrapInput">是否环绕（在反方向找不到时循环到另一侧）。</param>
+	/// <param name="whiteList">可选的白名单（仅在这些可交互物体中查找）。</param>
+	/// <returns>找到的 Selectable；未找到返回 null。</returns>
 	public static Selectable FindSelectable(
 		this GameObject currentGameObject, 
 		Vector3 direction, 
@@ -453,11 +529,25 @@ public static class UFEScreenExtensions{
 		}
 	}
 	
+	/// <summary>
+	/// 查找屏幕中按方向的下一个 Selectable 的 GameObject。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="direction">查找方向。</param>
+	/// <returns>找到的 GameObject。</returns>
 	public static GameObject FindSelectableGameObject(this UFEScreen screen, Vector3 direction){
 		Selectable selectable = screen.FindSelectable(direction);
 		return selectable != null ? selectable.gameObject : null;
 	}
 	
+	/// <summary>
+	/// 按方向从指定 GameObject 查找下一个 Selectable 的 GameObject。
+	/// </summary>
+	/// <param name="currentGameObject">当前物体。</param>
+	/// <param name="direction">查找方向。</param>
+	/// <param name="wrapInput">是否环绕。</param>
+	/// <param name="whiteList">可选白名单。</param>
+	/// <returns>找到的 GameObject。</returns>
 	public static GameObject FindSelectableGameObject(
 		this GameObject currentGameObject, 
 		Vector3 direction, 
@@ -468,10 +558,22 @@ public static class UFEScreenExtensions{
 		return selectable != null ? selectable.gameObject : null;
 	}
 
+	/// <summary>
+	/// 高亮指定选项（按 Selectable）。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="option">要高亮的选项。</param>
+	/// <param name="pointer">可选指针事件。</param>
 	public static void HighlightOption(this UFEScreen screen, Selectable option, BaseEventData pointer = null){
 		screen.HighlightOption(option != null ? option.gameObject : null, pointer);
 	}
 
+	/// <summary>
+	/// 高亮指定选项（按 GameObject）：设置 EventSystem 选中物体；输入框自动激活。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="option">要高亮的 GameObject。</param>
+	/// <param name="pointer">可选指针事件。</param>
 	public static void HighlightOption(this UFEScreen screen, GameObject option, BaseEventData pointer = null){
 		UFE.eventSystem.SetSelectedGameObject(option, pointer);
 
@@ -485,6 +587,12 @@ public static class UFEScreenExtensions{
 		}
 	}
 
+	/// <summary>
+	/// 按方向移动光标到下一个 Selectable（若变化则播放移动音效并高亮）。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="direction">移动方向。</param>
+	/// <param name="moveCursorSound">移动音效。</param>
 	public static void MoveCursor(this UFEScreen screen, Vector3 direction, AudioClip moveCursorSound = null){
 		GameObject currentGameObject = UFE.eventSystem.currentSelectedGameObject;
 		GameObject nextGameObject = screen.FindSelectableGameObject(direction);
@@ -502,6 +610,18 @@ public static class UFEScreenExtensions{
 		}
 	}
 
+	/// <summary>
+	/// 特殊导航系统（双人版）：为玩家1与玩家2分别处理输入（任一玩家有操作返回 true）。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="player1PreviousInputs">玩家1上一帧输入。</param>
+	/// <param name="player1CurrentInputs">玩家1当前帧输入。</param>
+	/// <param name="player2PreviousInputs">玩家2上一帧输入。</param>
+	/// <param name="player2CurrentInputs">玩家2当前帧输入。</param>
+	/// <param name="moveCursorCallback">光标移动回调。</param>
+	/// <param name="confirmCallback">确认回调。</param>
+	/// <param name="cancelCallback">取消回调。</param>
+	/// <returns>任一玩家有操作返回 true。</returns>
 	public static bool SpecialNavigationSystem(
 		this UFEScreen screen, 
 		IDictionary<InputReferences, InputEvents> player1PreviousInputs,
@@ -530,6 +650,16 @@ public static class UFEScreenExtensions{
 			);
 	}
 
+	/// <summary>
+	/// 特殊导航系统（单人版）：读取水平/垂直轴与确认/取消按钮的边缘触发，依次调用光标移动、确认、取消回调。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="previousInputs">上一帧输入。</param>
+	/// <param name="currentInputs">当前帧输入。</param>
+	/// <param name="moveCursorCallback">光标移动回调。</param>
+	/// <param name="confirmCallback">确认回调。</param>
+	/// <param name="cancelCallback">取消回调。</param>
+	/// <returns>有操作返回 true。</returns>
 	public static bool SpecialNavigationSystem(
 		this UFEScreen screen, 
 		IDictionary<InputReferences, InputEvents> previousInputs,
@@ -624,6 +754,17 @@ public static class UFEScreenExtensions{
 	#endregion
 
 	#region private static methods
+	/// <summary>
+	/// 默认光标移动动作：无选中物时选择首个物体；当前为 Slider 时按方向键调节滑杆值，否则移动光标。
+	/// </summary>
+	/// <param name="screen">当前屏幕。</param>
+	/// <param name="horizontalAxis">水平轴输入。</param>
+	/// <param name="verticalAxis">垂直轴输入。</param>
+	/// <param name="horizontalAxisDown">水平键是否按下。</param>
+	/// <param name="verticalAxisDown">垂直键是否按下。</param>
+	/// <param name="confirmButtonDown">确认键是否按下。</param>
+	/// <param name="cancelButtonDown">取消键是否按下。</param>
+	/// <param name="sound">移动音效。</param>
 	private static void DefaultMoveCursorAction(
 		this UFEScreen screen,
 		Fix64 horizontalAxis,
@@ -690,6 +831,11 @@ public static class UFEScreenExtensions{
 		}
 	}
 
+	/// <summary>
+	/// 默认取消动作：播放取消音效并执行取消回调。
+	/// </summary>
+	/// <param name="action">取消动作。</param>
+	/// <param name="sound">取消音效。</param>
 	private static void DefaultCancelAction(this Action action, AudioClip sound){
 		if (sound != null){
 			UFE.PlaySound(sound);
@@ -700,6 +846,11 @@ public static class UFEScreenExtensions{
 		}
 	}
 
+	/// <summary>
+	/// 默认确认动作：若选中物是 Button 则触发其点击事件；若是 Toggle 则切换其状态。
+	/// </summary>
+	/// <param name="gameObject">选中的 GameObject。</param>
+	/// <param name="sound">确认音效。</param>
 	private static void DefaultConfirmAction(this GameObject gameObject, AudioClip sound){
 		// Check if the GameObject is defined...
 		if (gameObject != null){
@@ -729,6 +880,12 @@ public static class UFEScreenExtensions{
 		}
 	}
 
+	/// <summary>
+	/// 判断指定 Selectable 是否属于当前屏幕（沿父级链查找 UFEScreen 组件）。
+	/// </summary>
+	/// <param name="screen">目标屏幕。</param>
+	/// <param name="selectable">要判断的 Selectable。</param>
+	/// <returns>属于该屏幕返回 true。</returns>
 	private static bool HasSelectable(this UFEScreen screen, Selectable selectable){
 		if (selectable != null){
 			Transform t = selectable.transform;
@@ -747,6 +904,13 @@ public static class UFEScreenExtensions{
 		return false;
 	}
 
+	/// <summary>
+	/// 在指定白名单中查找方向上的下一个 Selectable（基于射线/投影夹角的最优选择，白名单为空时用 Unity 原生 FindSelectable）。
+	/// </summary>
+	/// <param name="s">当前 Selectable。</param>
+	/// <param name="dir">方向。</param>
+	/// <param name="whiteList">白名单。</param>
+	/// <returns>下一个 Selectable；无则返回 null。</returns>
 	private static Selectable FindSelectable(Selectable s, Vector3 dir, IList<Selectable> whiteList){
 		if (whiteList == null || whiteList.Count == 0){
 			return s.FindSelectable(dir);
@@ -779,7 +943,12 @@ public static class UFEScreenExtensions{
 		}
 	}
 
-
+	/// <summary>
+	/// 计算矩形边缘上沿指定方向的点（用于白名单方向查找的起点）。
+	/// </summary>
+	/// <param name="rect">矩形变换。</param>
+	/// <param name="dir">方向。</param>
+	/// <returns>矩形边缘上的点。</returns>
 	private static Vector3 GetPointOnRectEdge(RectTransform rect, Vector2 dir)
 	{
 		if (rect == null) {

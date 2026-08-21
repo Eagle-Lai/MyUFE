@@ -7,212 +7,411 @@ using AForge.Fuzzy;
 using AI4Unity.Fuzzy;
 using UFE3D;
 
+/// <summary>
+/// AI 信息定义（AIInfo）。
+/// <para>用途：本文件定义 Fuzzy AI（模糊逻辑 AI）的全部数据结构与配置类——</para>
+/// <para>包括伤害/距离/渴望度/生命/速度的模糊隶属度阈值（AIDefinitions 系列）、AI 高级参数（AIAdvancedOptions）、</para>
+/// <para>规则条件（AICondition）、事件（AIEvent）、反应（AIReaction）、规则（AIRule），</para>
+/// <para>以及核心类 UFE3D.AIInfo（ScriptableObject）——负责将规则转换为可求值的模糊推理系统（InferenceSystem）。</para>
+/// <para>Fuzzy AI 通过将战斗状态模糊化为语言变量，依据规则求值得出各动作的"渴望度"，从而选择最优动作。</para>
+/// </summary>
 
+/// <summary>
+/// AI 定义集合：各模糊变量的隶属度阈值配置。
+/// </summary>
 [Serializable]
 public class AIDefinitions{
+	/// <summary>伤害阈值定义。</summary>
 	public DamageDefinitions damage;
+	/// <summary>距离阈值定义。</summary>
 	public DistanceDefinitions distance;
+	/// <summary>渴望度阈值定义。</summary>
 	public DesirabilityDefinitions desirability;
+	/// <summary>生命状态阈值定义。</summary>
 	public HealthDefinitions health;
+	/// <summary>速度阈值定义。</summary>
 	public SpeedDefinitions speed;
 }
 
+/// <summary>
+/// 伤害阈值定义：伤害等级的模糊隶属度区间。
+/// </summary>
 [Serializable]
 public class DamageDefinitions{
+	/// <summary>非常弱的伤害阈值。</summary>
 	public float veryWeak = 0.05f;
+	/// <summary>弱的伤害阈值。</summary>
 	public float weak = 0.10f;
+	/// <summary>中的伤害阈值。</summary>
 	public float medium = 0.15f;
+	/// <summary>强的伤害阈值。</summary>
 	public float strong = 0.20f;
+	/// <summary>非常强的伤害阈值。</summary>
 	public float veryStrong = 0.25f;
 }
 
+/// <summary>
+/// 距离阈值定义：距离档位的模糊隶属度区间。
+/// </summary>
 [Serializable]
 public class DistanceDefinitions{
+	/// <summary>非常近的距离阈值。</summary>
 	public float veryClose = 0.05f;
+	/// <summary>近的距离阈值。</summary>
 	public float close = 0.25f;
+	/// <summary>中的距离阈值。</summary>
 	public float mid = 0.5f;
+	/// <summary>远的距离阈值。</summary>
 	public float far = 0.75f;
+	/// <summary>非常远的距离阈值。</summary>
 	public float veryFar = 0.95f;
 }
 
+/// <summary>
+/// 渴望度阈值定义：动作渴望度档位的模糊隶属度区间。
+/// </summary>
 [Serializable]
 public class DesirabilityDefinitions{
+	/// <summary>最差选项阈值。</summary>
 	public float theWorstOption = 0.00f;
+	/// <summary>非常不可取阈值。</summary>
 	public float veryUndesirable = 0.15f;
+	/// <summary>不可取阈值。</summary>
 	public float undesirable = 0.30f;
+	/// <summary>尚可阈值。</summary>
 	public float notBad = 0.45f;
+	/// <summary>可取阈值。</summary>
 	public float desirable = 0.60f;
+	/// <summary>非常可取阈值。</summary>
 	public float veryDesirable = 0.80f;
+	/// <summary>最佳选项阈值。</summary>
 	public float theBestOption = 1.00f;
 }
 
+/// <summary>
+/// 生命状态阈值定义：生命值档位的模糊隶属度区间。
+/// </summary>
 [Serializable]
 public class HealthDefinitions{
+	/// <summary>健康阈值。</summary>
 	public float healthy = 1.0f;
+	/// <summary>轻伤阈值。</summary>
 	public float scratched = 0.9f;
+	/// <summary>轻度受伤阈值。</summary>
 	public float lightlyWounded = 0.8f;
+	/// <summary>中度受伤阈值。</summary>
 	public float moderatelyWounded = 0.6f;
+	/// <summary>严重受伤阈值。</summary>
 	public float seriouslyWounded = 0.4f;
+	/// <summary>危急受伤阈值。</summary>
 	public float criticallyWounded = 0.2f;
+	/// <summary>濒死阈值。</summary>
 	public float almostDead = 0.1f;
+	/// <summary>死亡阈值。</summary>
 	public float dead = 0.0f;
 }
 
+/// <summary>
+/// AI 高级选项：Fuzzy AI 的决策/动作时机与行为倾向参数。
+/// </summary>
 [Serializable]
 public class AIAdvancedOptions{
+	/// <summary>决策间隔（秒）：AI 每次做决策的间隔。</summary>
 	public float timeBetweenDecisions = 0;
+	/// <summary>动作间隔（秒）：AI 执行连续动作的间隔。</summary>
 	public float timeBetweenActions = 0.05f;
+	/// <summary>侵略性（0~1）：主动进攻倾向。</summary>
 	public float aggressiveness = 0.5f;
+	/// <summary>规则遵循度（0~1）：0=加权随机选择，1=始终使用最优动作。</summary>
 	public float ruleCompliance = .9f; // 0 = Weighted Random Selection / 1 = Use the Best Available Move
+	/// <summary>连招效率（0~1）：成功执行连招的比率。</summary>
 	public float comboEfficiency = 1f;
+	/// <summary>移动持续时间（秒）：单个移动指令的持续时间。</summary>
     public float movementDuration = .1f;
+	/// <summary>按钮序列输入间隔。</summary>
     public int buttonSequenceInterval = 1;
+	/// <summary>攻击渴望度的计算方式（平均/受限和/最大/最小）。</summary>
 	public AIAttackDesirabilityCalculation attackDesirabilityCalculation = AIAttackDesirabilityCalculation.Max;
+	/// <summary>默认渴望度（无规则匹配时的回退值）。</summary>
 	public AIDesirability defaultDesirability = AIDesirability.TheWorstOption;
+	/// <summary>是否随机出招（无视渴望度）。</summary>
 	public bool playRandomMoves;
+	/// <summary>反应参数（何时攻击/格挡/输入）。</summary>
 	public AIReactionParameters reactionParameters = new AIReactionParameters();
 }
 
+/// <summary>
+/// AI 反应参数：控制 AI 在不同战况下的行为开关。
+/// </summary>
 [Serializable]
 public class AIReactionParameters{
+	/// <summary>敌人倒地时是否攻击。</summary>
 	public bool attackWhenEnemyIsDown = false;
+	/// <summary>敌人格挡时是否攻击。</summary>
 	public bool attackWhenEnemyIsBlocking = true;
+	/// <summary>敌人眩晕时是否停止格挡。</summary>
 	public bool stopBlockingWhenEnemyIsStunned = true;
 	
+	/// <summary>自身倒地时是否输入。</summary>
 	public bool inputWhenDown = false;
+	/// <summary>自身格挡时是否输入。</summary>
 	public bool inputWhenBlocking = true;
+	/// <summary>自身眩晕时是否输入。</summary>
 	public bool inputWhenStunned = true;
 
+	/// <summary>是否启用攻击类型过滤。</summary>
 	public bool enableAttackTypeFilter = true;
+	/// <summary>是否启用能量槽过滤。</summary>
 	public bool enableGaugeFilter = true;
+	/// <summary>是否启用距离过滤。</summary>
 	public bool enableDistanceFilter = true;
+	/// <summary>是否启用伤害过滤。</summary>
 	public bool enableDamageFilter = true;
+	/// <summary>是否启用命中确认类型过滤。</summary>
 	public bool enableHitConfirmTypeFilter = true;
+	/// <summary>是否启用攻击速度过滤。</summary>
 	public bool enableAttackSpeedFilter = false;
+	/// <summary>是否启用命中类型过滤。</summary>
 	public bool enableHitTypeFilter = true;
 }
 
+/// <summary>
+/// 速度阈值定义：移动速度档位的模糊隶属度区间。
+/// </summary>
 [Serializable]
 public class SpeedDefinitions{
+	/// <summary>非常慢速度阈值。</summary>
 	public float verySlow = 0.5f;
+	/// <summary>慢速度阈值。</summary>
 	public float slow = 1.0f;
+	/// <summary>正常速度阈值。</summary>
 	public float normal = 3.0f;
+	/// <summary>快速度阈值。</summary>
 	public float fast = 5.0f;
+	/// <summary>非常快速度阈值。</summary>
 	public float veryFast = 7.0f;
 }
 
 
+/// <summary>
+/// 生命状态：角色的生命值档位。
+/// </summary>
 public enum HealthStatus {
+	/// <summary>健康。</summary>
 	Healthy,
+	/// <summary>轻伤。</summary>
 	Scratched,
+	/// <summary>轻度受伤。</summary>
 	LightlyWounded,
+	/// <summary>中度受伤。</summary>
 	ModeratelyWounded,
+	/// <summary>严重受伤。</summary>
 	SeriouslyWounded,
+	/// <summary>危急受伤。</summary>
 	CriticallyWounded,
+	/// <summary>濒死。</summary>
 	AlmostDead,
+	/// <summary>死亡。</summary>
 	Dead
 }
 
+/// <summary>
+/// 目标角色：条件/反应作用的对象。
+/// </summary>
 public enum TargetCharacter {
+	/// <summary>自身。</summary>
 	Self,
+	/// <summary>对手。</summary>
 	Opponent
 }
 
+/// <summary>
+/// 攻击渴望度计算方式：多规则求值结果的合成方式。
+/// </summary>
 public enum AIAttackDesirabilityCalculation{
+	/// <summary>取平均值。</summary>
 	Average,
+	/// <summary>受限求和。</summary>
 	ClampedSum,
+	/// <summary>取最大值。</summary>
 	Max,
+	/// <summary>取最小值。</summary>
 	Min
 }
 
+/// <summary>
+/// AI 条件类型：规则条件可检查的战斗状态类别。
+/// </summary>
 public enum AIConditionType {
+	/// <summary>待机。</summary>
 	Idle,
+	/// <summary>水平移动。</summary>
 	HorizontalMovement,
+	/// <summary>垂直移动。</summary>
 	VerticalMovement,
+	/// <summary>生命状态。</summary>
 	HealthStatus,
+	/// <summary>能量槽状态。</summary>
 	GaugeStatus,
+	/// <summary>距离。</summary>
 	Distance,
+	/// <summary>正在攻击。</summary>
 	Attacking,
+	/// <summary>正在格挡。</summary>
 	Blocking,
+	/// <summary>眩晕。</summary>
 	Stunned,
+	/// <summary>倒地。</summary>
 	Down,
 	//ProjectileDistance, // In front of or behind the character?
 	//ProjectileSpeed,
 }
 
+/// <summary>
+/// AI 格挡姿势：格挡状态类别。
+/// </summary>
 public enum AIBlocking {
+	/// <summary>空中格挡。</summary>
 	Air,
+	/// <summary>站立格挡。</summary>
 	High,
+	/// <summary>下蹲格挡。</summary>
 	Low
 }
 
+/// <summary>
+/// AI 渴望度：动作的期望程度档位。
+/// </summary>
 public enum AIDesirability{
+	/// <summary>最差选项。</summary>
 	TheWorstOption,
+	/// <summary>非常不可取。</summary>
 	VeryUndesirable,
+	/// <summary>不可取。</summary>
 	Undesirable,
+	/// <summary>尚可。</summary>
 	NotBad,
+	/// <summary>可取。</summary>
 	Desirable,
+	/// <summary>非常可取。</summary>
 	VeryDesirable,
+	/// <summary>最佳选项。</summary>
 	TheBestOption
 }
 
+/// <summary>
+/// AI 反应类型：规则满足后 AI 采取的动作类别。
+/// </summary>
 public enum AIReactionType {
+	/// <summary>待机。</summary>
 	Idle,
+	/// <summary>前进。</summary>
 	MoveForward,
+	/// <summary>后退。</summary>
 	MoveBack,
+	/// <summary>下蹲。</summary>
 	Crouch,
+	/// <summary>垂直跳。</summary>
 	JumpStraight,
+	/// <summary>前跳。</summary>
 	JumpForward,
+	/// <summary>后跳。</summary>
 	JumpBack,
+	/// <summary>下蹲格挡。</summary>
 	CrouchBlock,
+	/// <summary>站立格挡。</summary>
 	StandBlock,
+	/// <summary>空中格挡。</summary>
 	JumpBlock,
+	/// <summary>出招。</summary>
 	PlayMove,
+	/// <summary>切换行为风格。</summary>
 	ChangeBehavior
 }
 
+/// <summary>
+/// AI 布尔值：规则中的布尔常量。
+/// </summary>
 public enum AIBoolean{
+	/// <summary>真。</summary>
 	TRUE,
+	/// <summary>假。</summary>
 	FALSE
 }
 
+/// <summary>
+/// AI 伤害档位：攻击伤害的分类。
+/// </summary>
 public enum AIDamage{
+	/// <summary>任意。</summary>
 	Any,
+	/// <summary>非常弱。</summary>
 	VeryWeak,
+	/// <summary>弱。</summary>
 	Weak,
+	/// <summary>中。</summary>
 	Medium,
+	/// <summary>强。</summary>
 	Strong,
+	/// <summary>非常强。</summary>
 	VeryStrong
 }
 
+/// <summary>
+/// AI 水平移动状态：角色的水平移动类别。
+/// </summary>
 public enum AIHorizontalMovement {
+	/// <summary>前进。</summary>
 	MovingForward,
+	/// <summary>静止。</summary>
 	Still,
+	/// <summary>后退。</summary>
 	MovingBack
 }
 
+/// <summary>
+/// AI 移动速度档位。
+/// </summary>
 public enum AIMovementSpeed {
+	/// <summary>任意。</summary>
 	Any,
+	/// <summary>非常慢。</summary>
 	VerySlow,
+	/// <summary>慢。</summary>
 	Slow,
+	/// <summary>正常。</summary>
 	Normal,
+	/// <summary>快。</summary>
 	Fast,
+	/// <summary>非常快。</summary>
 	VeryFast
 }
 
+/// <summary>
+/// AI 垂直移动状态：角色的垂直移动类别。
+/// </summary>
 public enum AIVerticalMovement {
 	//Down,
+	/// <summary>下蹲。</summary>
 	Crouching,
+	/// <summary>站立。</summary>
 	Standing,
+	/// <summary>跳跃。</summary>
 	Jumping
 }
 
+/// <summary>
+/// AI 条件（AICondition）：一条模糊规则中的单个条件。
+/// <para>通过 conditionType 指定检查的状态类别（攻击/生命/距离/格挡等），配合目标角色与布尔取反构成条件表达式。</para>
+/// <para>静态常量定义各条件的字符串标识（带数字前缀以加速字符串比较），供规则生成使用。</para>
+/// </summary>
 [Serializable]
 public class AICondition:ICloneable {
 	//-----------------------------------------------------------------------------------------------------------------
 	// Public class properties
 	//-----------------------------------------------------------------------------------------------------------------
 	// We use a numeric prefix for each condition to make the string comparisons faster
+	/// <summary>自身正在攻击条件标识。</summary>
 	public static readonly string Attacking_Self = "000_" + AIConditionType.Attacking + "_" +TargetCharacter.Self;
 	public static readonly string Attacking_Opponent = "001_" + AIConditionType.Attacking + TargetCharacter.Opponent;
 
@@ -274,47 +473,83 @@ public class AICondition:ICloneable {
 	public static readonly string VerticalMovement_Opponent = "039_" + AIConditionType.VerticalMovement + "_" + TargetCharacter.Opponent;
 
 	// Public instance properties
+	/// <summary>该条件是否启用。</summary>
 	public bool enabled = true;
+	/// <summary>布尔取反（FALSE 表示条件取反）。</summary>
 	public AIBoolean boolean = AIBoolean.TRUE;
 
+	/// <summary>目标角色（自身/对手）。</summary>
 	public TargetCharacter targetCharacter = TargetCharacter.Self;
+	/// <summary>条件类型。</summary>
 	public AIConditionType conditionType = AIConditionType.Idle;
+	/// <summary>水平移动条件。</summary>
 	public AIHorizontalMovement horizontalMovement = AIHorizontalMovement.Still;
+	/// <summary>垂直移动条件。</summary>
 	public AIVerticalMovement verticalMovement = AIVerticalMovement.Standing;
+	/// <summary>移动速度条件。</summary>
 	public AIMovementSpeed movementSpeed = AIMovementSpeed.Any;
+	/// <summary>生命状态条件。</summary>
 	public HealthStatus healthStatus = HealthStatus.Healthy;
+	/// <summary>能量槽条件。</summary>
 	public GaugeUsage gaugeStatus = GaugeUsage.Any;
+	/// <summary>距离条件。</summary>
 	public CharacterDistance playerDistance = CharacterDistance.Mid;
+	/// <summary>跳跃弧线阶段条件。</summary>
 	public JumpArc jumping = global::JumpArc.Any;
+	/// <summary>格挡姿势条件。</summary>
 	public AIBlocking blocking = AIBlocking.High;
+	/// <summary>招式分类条件（攻击类型/速度/能量消耗等）。</summary>
 	public MoveClassification moveClassification;
+	/// <summary>招式帧阶段条件（前摇/判定/后摇）。</summary>
 	public CurrentFrameData moveFrameData = CurrentFrameData.Any;
+	/// <summary>攻击伤害条件。</summary>
 	public AIDamage moveDamage = AIDamage.Any;
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现，使用序列化克隆）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this, true);
 	}
 }
 
+/// <summary>
+/// AI 事件（AIEvent）：一条规则中的条件组（多个条件 AND 组合），满足时触发反应。
+/// </summary>
 [Serializable]
 public class AIEvent: System.ICloneable {
+	/// <summary>该事件是否启用。</summary>
 	public bool enabled = true;
+	/// <summary>事件布尔取反。</summary>
 	public AIBoolean boolean = AIBoolean.TRUE;
+	/// <summary>事件包含的条件列表（AND 组合）。</summary>
 	public AICondition[] conditions = new AICondition[0];
 	
+	/// <summary>编辑器用：条件面板开关。</summary>
 	[HideInInspector] public bool conditionsToggle;
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this, true);
 	}
 }
 
+/// <summary>
+/// AI 反应（AIReaction）：规则条件满足后 AI 采取的动作及其渴望度。
+/// <para>支持待机/移动/跳跃/格挡/切换行为/出招（按攻击类型/伤害/命中类型/速度/能量消耗/距离筛选）等反应。</para>
+/// <para>静态常量定义各反应的字符串标识，供规则生成使用。</para>
+/// </summary>
 [Serializable]
 public class AIReaction: System.ICloneable {
 	//-----------------------------------------------------------------------------------------------------------------
 	// Public class properties
 	//-----------------------------------------------------------------------------------------------------------------
 	// We use a numeric prefix for each condition to make the string comparisons faster
+	/// <summary>下蹲反应标识。</summary>
 	public static readonly string Crouch = "000_" + AIReactionType.Crouch;
 	public static readonly string CrouchBlock = "001_" + AIReactionType.CrouchBlock;
 	public static readonly string Idle = "002_" + AIReactionType.Idle;
@@ -385,19 +620,35 @@ public class AIReaction: System.ICloneable {
 	public static readonly string ChangeBehaviour_VeryDefensive = "A105_" + AIReactionType.ChangeBehavior + "_" + AIBehavior.VeryDefensive;
 
 	// Public instance properties
+	/// <summary>反应类型。</summary>
 	public AIReactionType reactionType;
+	/// <summary>招式分类（选择攻击时使用）。</summary>
 	public MoveClassification moveClassification;			// When Attack is chosen
+	/// <summary>伤害档位（选择攻击时使用）。</summary>
 	public AIDamage moveDamage = AIDamage.Any;				// When Attack is chosen
+	/// <summary>特定招式（选择指定招式时使用）。</summary>
 	public MoveInfo specificMove;							// When Play Specific Move is chosen
+	/// <summary>按键（按按钮反应时使用）。</summary>
 	public ButtonPress buttonPress = ButtonPress.Button1;	// Press Button
+	/// <summary>目标行为风格（切换行为时使用）。</summary>
 	public AIBehavior behavior;								// Change Behavior
+	/// <summary>渴望度评分。</summary>
 	public AIDesirability desirability = AIDesirability.NotBad;	// Desirability score
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this, true);
 	}
 }
 
+/// <summary>
+/// AI 规则（AIRule）：一条完整的模糊规则（事件 + 反应）。
+/// <para>提供将规则转换为模糊推理系统可解析字符串的方法（ToRules/ToDebugInformation），</para>
+/// <para>内部通过 ConditionToString 生成 IF 条件部分、ReactionToStrings 生成 THEN 反应部分。</para>
+/// </summary>
 [Serializable]
 public class AIRule: System.ICloneable {
 	public static readonly string Rule_AND = " AND ";
@@ -419,20 +670,34 @@ public class AIRule: System.ICloneable {
 	public static readonly string Debug_THEN = "\nTHEN\t";
 	
 	// Public instance properties
+	/// <summary>规则名称。</summary>
 	public string ruleName;								// The name of the rule
+	/// <summary>事件列表（满足任一事件即触发反应）。</summary>
 	public AIEvent[] events = new AIEvent[0];			// Events
+	/// <summary>反应列表（事件满足时触发的动作）。</summary>
 	public AIReaction[] reactions = new AIReaction[0];	// Reactions triggered when one of the events is true
 
 	// Protected instance properties
+	/// <summary>编辑器用：调试开关。</summary>
 	[HideInInspector] public bool debugToggle;
+	/// <summary>编辑器用：事件面板开关。</summary>
 	[HideInInspector] public bool eventsToggle;
+	/// <summary>编辑器用：反应面板开关。</summary>
 	[HideInInspector] public bool reactionsToggle;
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this, true);
 	}
 
 	// Public instance methods
+	/// <summary>
+	/// 将本规则转换为模糊推理系统可解析的规则字符串列表（每个反应生成一条 IF...THEN 规则）。
+	/// </summary>
+	/// <returns>规则字符串列表。</returns>
 	public List<string> ToRules(){
 		List<string> rules = new List<string>();
 		List<string> reactions = this.ReactionToStrings();
@@ -450,6 +715,10 @@ public class AIRule: System.ICloneable {
 		return rules;
 	}
 
+	/// <summary>
+	/// 生成可读的规则调试信息（将规则符号替换为易读文本）。
+	/// </summary>
+	/// <returns>调试文本行列表。</returns>
 	public List<string> ToDebugInformation(){
 		List<string> debugInformation = new List<string>();
 		List<string> rules = this.ToRules();
@@ -475,6 +744,10 @@ public class AIRule: System.ICloneable {
 	}
 
 	// Protected instance methods
+	/// <summary>
+	/// 将规则事件转换为 IF 条件部分字符串（支持多个事件 OR、条件 AND、括号与取反）。
+	/// </summary>
+	/// <returns>条件字符串；无有效条件返回空字符串。</returns>
 	protected string ConditionToString(){
 		if (this.events != null && this.events.Length > 0){
 			StringBuilder sb = new StringBuilder();
@@ -790,6 +1063,10 @@ public class AIRule: System.ICloneable {
 		return string.Empty;
 	}
 
+	/// <summary>
+	/// 将规则反应转换为 THEN 反应部分字符串列表（每个反应生成一条，含渴望度）。
+	/// </summary>
+	/// <returns>反应字符串列表。</returns>
 	protected List<string> ReactionToStrings(){
 		List<string> reactions = new List<string>();
 
@@ -972,21 +1249,39 @@ public class AIRule: System.ICloneable {
 
 namespace UFE3D
 {
+	/// <summary>
+	/// AI 信息（AIInfo）：Fuzzy AI 的完整配置资产（ScriptableObject）。
+	/// <para>用途：保存规则集（aiRules）、规则生成器（rulesGenerator）、模糊阈值定义（aiDefinitions）与高级参数，</para>
+	/// <para>并提供 GenerateInferenceSystem 方法将规则集转换为可求值的模糊推理系统（InferenceSystem），</para>
+	/// <para>供 RuleBasedAI 在运行时决策。</para>
+	/// </summary>
     [Serializable]
     public class AIInfo : ScriptableObject
     {
         // public instance properties
+		/// <summary>AI 指令集名称。</summary>
         public string instructionsName;
+		/// <summary>是否输出调试信息。</summary>
         public bool debugMode;
+		/// <summary>是否调试反应权重。</summary>
         public bool debug_ReactionWeight;
+		/// <summary>高级选项（决策/动作时机与行为倾向）。</summary>
         public AIAdvancedOptions advancedOptions;
+		/// <summary>规则生成器（自动生成规则）。</summary>
         public AIRulesGenerator rulesGenerator;
+		/// <summary>用户规则列表。</summary>
         public AIRule[] aiRules = new AIRule[0];
+		/// <summary>模糊阈值定义。</summary>
         public AIDefinitions aiDefinitions;
 
         //-----------------------------------------------------------------------------------------------------------------
         // PUBLIC METHODS
         //-----------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// 获取渴望度枚举对应的数值评分。
+		/// </summary>
+		/// <param name="desirability">渴望度枚举。</param>
+		/// <returns>数值评分；未识别返回 0。</returns>
         public float GetDesirabilityScore(AIDesirability desirability)
         {
             switch (desirability)
@@ -1002,6 +1297,10 @@ namespace UFE3D
             }
         }
 
+		/// <summary>
+		/// 生成模糊推理系统：定义全部输入/输出语言变量，加载自动规则与用户规则到推理引擎。
+		/// </summary>
+		/// <returns>配置完成的推理系统。</returns>
         public AI4Unity.Fuzzy.InferenceSystem GenerateInferenceSystem()
         {
             AI4Unity.Fuzzy.InferenceSystem inferenceSystem = new AI4Unity.Fuzzy.InferenceSystem(DefuzzificationMethod.Average);
@@ -1174,6 +1473,13 @@ namespace UFE3D
         //-----------------------------------------------------------------------------------------------------------------
         // PROTECTED METHODS
         //-----------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// 定义布尔型语言变量（TRUE/FALSE 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineBooleanVariable(string name, float start = -1f, float end = 1f)
         {
             LinguisticVariable varAttacking = new LinguisticVariable(name, start, end);
@@ -1183,6 +1489,13 @@ namespace UFE3D
             return varAttacking;
         }
 
+		/// <summary>
+		/// 定义攻击类型语言变量（各 AttackType 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineAttackTypeVariable(string name, float start = -1f, float end = 6f)
         {
             LinguisticVariable varAttackType = new LinguisticVariable(name, start, end);
@@ -1197,6 +1510,13 @@ namespace UFE3D
             return varAttackType;
         }
 
+		/// <summary>
+		/// 定义能量槽语言变量（None~All 梯形隶属函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineGaugeVariable(string name, float start = -1f, float end = 4f)
         {
             LinguisticVariable varGaugeUsage = new LinguisticVariable(name, start, end);
@@ -1209,6 +1529,13 @@ namespace UFE3D
             return varGaugeUsage;
         }
 
+		/// <summary>
+		/// 定义命中确认类型语言变量（Hit/Throw 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineHitConfirmTypeVariable(string name, float start = -1f, float end = 1f)
         {
             LinguisticVariable varHitConfirmType = new LinguisticVariable(name, start, end);
@@ -1218,6 +1545,13 @@ namespace UFE3D
             return varHitConfirmType;
         }
 
+		/// <summary>
+		/// 定义帧速度语言变量（VerySlow~VeryFast 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineFrameSpeedVariable(string name, float start = -1f, float end = 4f)
         {
             LinguisticVariable varFrameSpeed = new LinguisticVariable(name, start, end);
@@ -1230,6 +1564,13 @@ namespace UFE3D
             return varFrameSpeed;
         }
 
+		/// <summary>
+		/// 定义命中类型语言变量（各 HitType 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineHitTypeVariable(string name, float start = -1f, float end = 7f)
         {
             LinguisticVariable varHitType = new LinguisticVariable(name, start, end);
@@ -1245,6 +1586,13 @@ namespace UFE3D
             return varHitType;
         }
 
+		/// <summary>
+		/// 定义帧阶段语言变量（前摇/判定/后摇 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineFrameDataVariable(string name, float start = -1f, float end = 3f)
         {
             LinguisticVariable varFrameData = new LinguisticVariable(name, start, end);
@@ -1255,6 +1603,13 @@ namespace UFE3D
             return varFrameData;
         }
 
+		/// <summary>
+		/// 定义格挡姿势语言变量（空中/站立/下蹲 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineBlockingVariable(string name, float start = -1f, float end = 2f)
         {
             LinguisticVariable varBlocking = new LinguisticVariable(name, start, end);
@@ -1265,6 +1620,13 @@ namespace UFE3D
             return varBlocking;
         }
 
+		/// <summary>
+		/// 定义水平移动语言变量（前进/静止/后退 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineHorizontalMovementVariable(string name, float start = -1f, float end = 2f)
         {
             LinguisticVariable varHorizontalMovement = new LinguisticVariable(name, start, end);
@@ -1275,6 +1637,13 @@ namespace UFE3D
             return varHorizontalMovement;
         }
 
+		/// <summary>
+		/// 定义跳跃弧线语言变量（起跳/跳跃/顶点/下落/落地 梯形隶属函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineJumpArcVariable(string name, float start = 0f, float end = 1f)
         {
             LinguisticVariable varJumpArc = new LinguisticVariable(name, start - 1f, end + 1f);
@@ -1302,6 +1671,13 @@ namespace UFE3D
             return varJumpArc;
         }
 
+		/// <summary>
+		/// 定义垂直移动语言变量（下蹲/站立/跳跃 单点函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineVerticalMovementVariable(string name, float start = 0f, float end = 2f)
         {
             LinguisticVariable varVerticalMovement = new LinguisticVariable(name, start, end);
@@ -1312,6 +1688,13 @@ namespace UFE3D
             return varVerticalMovement;
         }
 
+		/// <summary>
+		/// 定义伤害语言变量（VeryWeak~VeryStrong 梯形隶属函数，按配置阈值）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineDamageVariable(string name, float start = 0f, float end = 1f)
         {
             LinguisticVariable varDamage = new LinguisticVariable(name, start - 1f, end + 1f);
@@ -1339,6 +1722,13 @@ namespace UFE3D
             return varDamage;
         }
 
+		/// <summary>
+		/// 定义距离语言变量（VeryClose~VeryFar 梯形隶属函数，按配置阈值）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineDistanceVariable(string name, float start = 0f, float end = 1f)
         {
             LinguisticVariable varDistance = new LinguisticVariable(name, start - 1f, end + 1f);
@@ -1366,6 +1756,13 @@ namespace UFE3D
             return varDistance;
         }
 
+		/// <summary>
+		/// 定义生命状态语言变量（Dead~Healthy 梯形隶属函数，按配置阈值）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineHealthVariable(string name, float start = 0f, float end = 1f)
         {
             LinguisticVariable varHealth = new LinguisticVariable(name, start - 1f, end + 1f);
@@ -1419,6 +1816,11 @@ namespace UFE3D
             return varHealth;
         }
 
+		/// <summary>
+		/// 定义输出语言变量（渴望度 TheWorstOption~TheBestOption 梯形隶属函数）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineOutputVariable(string name)
         {
             float start = 0f;
@@ -1457,6 +1859,13 @@ namespace UFE3D
             return varOutput;
         }
 
+		/// <summary>
+		/// 定义移动速度语言变量（VerySlow~VeryFast 梯形隶属函数，按配置阈值）。
+		/// </summary>
+		/// <param name="name">变量名。</param>
+		/// <param name="start">变量范围起始。</param>
+		/// <param name="end">变量范围结束。</param>
+		/// <returns>语言变量对象。</returns>
         protected LinguisticVariable DefineMovementSpeedVariable(string name, float start = 0f, float end = 1000f)
         {
             LinguisticVariable varMovementSpeed = new LinguisticVariable(name, start - 1f, end + 1f);

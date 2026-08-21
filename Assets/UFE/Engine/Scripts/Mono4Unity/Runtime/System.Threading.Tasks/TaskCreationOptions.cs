@@ -29,17 +29,30 @@
 
 //#if NET_4_0 || MOBILE
 
+/// <summary>
+/// 任务创建选项（TaskCreationOptions）。
+/// <para>用途：从 Mono 移植——控制 Task 创建与调度行为的选项标志。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务创建选项枚举（Flags）。
+	/// </summary>
 	[FlagsAttribute, SerializableAttribute]
 	public enum TaskCreationOptions
 	{
+		/// <summary>默认选项。</summary>
 		None             = 0x0,
+		/// <summary>优先公平调度。</summary>
 		PreferFairness   = 0x1,
+		/// <summary>长时间运行任务（建议独立线程）。</summary>
 		LongRunning      = 0x2,
+		/// <summary>任务附加到父任务。</summary>
 		AttachedToParent = 0x4,
 #if NET_4_5
+		/// <summary>拒绝子任务附加。</summary>
 		DenyChildAttach  = 0x8,
+		/// <summary>隐藏调度器。</summary>
 		HideScheduler    = 0x10
 #endif
 	}

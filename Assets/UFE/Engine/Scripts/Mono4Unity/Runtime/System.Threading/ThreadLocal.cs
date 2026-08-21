@@ -30,13 +30,24 @@ using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
+/// <summary>
+/// 线程局部存储（ThreadLocal&lt;T&gt;）。
+/// <para>用途：从 Mono 移植——为每个线程维护独立的值，首次访问时按初始化工厂惰性创建，</para>
+/// <para>并检测递归初始化（Creating 标志）与缓存初始化异常。</para>
+/// </summary>
 namespace System.Threading
 {
 	//[HostProtectionAttribute(SecurityAction.LinkDemand, Synchronization = true,  ExternalThreading = true)]
+	/// <summary>
+	/// 线程局部存储泛型类：每个线程拥有独立的 T 值。
+	/// </summary>
 	public class ThreadLocal<T> : IDisposable
 	{
+		/// <summary>值初始化工厂。</summary>
 		readonly Func<T> initializer;
+		/// <summary>线程局部存储槽。</summary>
 		LocalDataStoreSlot localStore;
+		/// <summary>初始化异常缓存。</summary>
 		Exception cachedException;
 		
 		class DataSlotWrapper

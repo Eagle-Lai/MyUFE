@@ -33,31 +33,63 @@
 using System;
 using System.Collections;
 
+/// <summary>
+/// 红黑树（RBTree）。
+/// <para>用途：从 Mono 移植的红黑树实现（带子树大小统计以支持按排名/区间操作），</para>
+/// <para>作为 SortedSet/SortedDictionary 的底层数据结构，提供有序集合的插入/查找/删除与顺序遍历。</para>
+/// </summary>
 namespace System.Collections.Generic
 {
+	/// <summary>
+	/// 红黑树：自平衡二叉搜索树（节点着色、旋转保持平衡）。
+	/// </summary>
 	[Serializable]
 	internal class RBTree : IEnumerable, IEnumerable<RBTree.Node> {
+		/// <summary>
+		/// 节点辅助接口：负责键与节点比较及创建节点。
+		/// </summary>
+		/// <typeparam name="T">键类型。</typeparam>
 		public interface INodeHelper<T> {
+			/// <summary>比较键与节点。</summary>
+			/// <param name="key">键。</param>
+			/// <param name="node">节点。</param>
+			/// <returns>比较结果。</returns>
 			int Compare (T key, Node node);
+			/// <summary>由键创建节点。</summary>
+			/// <param name="key">键。</param>
+			/// <returns>新节点。</returns>
 			Node CreateNode (T key);
 		}
 
+		/// <summary>
+		/// 树节点抽象基类：左右子节点与编码了颜色（黑/红）和子树大小的 size_black 字段。
+		/// </summary>
 		public abstract class Node {
+			/// <summary>左子节点。</summary>
 			public Node left, right;
+			/// <summary>子树大小与颜色编码（最低位=黑/红，其余=子树大小）。</summary>
 			uint size_black;
 
+			/// <summary>黑色掩码。</summary>
 			const uint black_mask = 1;
+			/// <summary>大小位移。</summary>
 			const int black_shift = 1;
+			/// <summary>是否黑色节点。</summary>
 			public bool IsBlack {
 				get { return (size_black & black_mask) == black_mask; }
 				set { size_black = value ? (size_black | black_mask) : (size_black & ~black_mask); }
 			}
 
+			/// <summary>子树大小。</summary>
 			public uint Size {
 				get { return size_black >> black_shift; }
 				set { size_black = (value << black_shift) | (size_black & black_mask); }
 			}
 
+			/// <summary>
+			/// 重新计算并返回子树大小（= 自身 + 左右子树大小）。
+			/// </summary>
+			/// <returns>更新后的子树大小。</returns>
 			public uint FixSize ()
 			{
 				Size = 1;

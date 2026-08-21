@@ -28,15 +28,29 @@
 
 //#if NET_4_0 || MOBILE
 
+/// <summary>
+/// 任务工厂（TaskFactory）。
+/// <para>用途：从 Mono 移植——以统一默认选项（调度器/创建选项/延续选项/取消令牌）创建 Task 及其延续的工厂。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务工厂类。
+	/// </summary>
 	public class TaskFactory
 	{
+		/// <summary>默认任务调度器。</summary>
 		readonly TaskScheduler scheduler;
+		/// <summary>默认创建选项。</summary>
 		TaskCreationOptions creationOptions;
+		/// <summary>默认延续选项。</summary>
 		TaskContinuationOptions continuationOptions;
+		/// <summary>默认取消令牌。</summary>
 		CancellationToken cancellationToken;
 
+		/// <summary>
+		/// 默认构造函数。
+		/// </summary>
 		public TaskFactory ()
 			: this (CancellationToken.None, TaskCreationOptions.None, TaskContinuationOptions.None, null)
 		{

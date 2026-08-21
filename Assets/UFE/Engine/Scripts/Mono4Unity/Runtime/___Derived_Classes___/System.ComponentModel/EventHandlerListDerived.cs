@@ -33,11 +33,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// 事件处理器列表（EventHandlerListDerived）。
+/// <para>用途：从 Mono 移植的事件委托容器——以链表按键存储事件委托，</para>
+/// <para>支持按键添加/移除/合并事件处理器，并提供 Dispose 清理。</para>
+/// </summary>
 namespace System.ComponentModel {
 
+	/// <summary>
+	/// 事件委托链表项。
+	/// </summary>
 	internal class ListEntryDerived {
+		/// <summary>事件键。</summary>
 		public object key;
+		/// <summary>事件委托。</summary>
 		public Delegate value;
+		/// <summary>下一链表项。</summary>
 		public ListEntryDerived next;
 	}
 
@@ -48,16 +59,29 @@ namespace System.ComponentModel {
 	// <remarks>
 	//   Longer description
 	// </remarks>
+	/// <summary>
+	/// 事件处理器列表：按键存储事件委托的容器。
+	/// </summary>
 	public sealed class EventHandlerListDerived : IDisposable
 	{
+		/// <summary>链表头。</summary>
 		ListEntryDerived entries;
 
+		/// <summary>null 键对应的事件委托。</summary>
 		Delegate null_entry;
 
+		/// <summary>
+		/// 默认构造函数。
+		/// </summary>
 		public EventHandlerListDerived ()
 		{
 		}
 
+		/// <summary>
+		/// 按键索引器：获取/设置指定键的事件委托。
+		/// </summary>
+		/// <param name="key">事件键。</param>
+		/// <returns>事件委托。</returns>
 		public Delegate this [object key] {
 			get {
 				if (key == null)
@@ -74,6 +98,11 @@ namespace System.ComponentModel {
 			}
 		}
 
+		/// <summary>
+		/// 添加事件处理器（与已存在的合并）。
+		/// </summary>
+		/// <param name="key">事件键。</param>
+		/// <param name="value">事件委托。</param>
 		public void AddHandler (object key, Delegate value)
 		{
 			if (key == null) {
@@ -93,6 +122,10 @@ namespace System.ComponentModel {
 			entry.value = Delegate.Combine (entry.value, value);
 		}
 
+		/// <summary>
+		/// 合并另一个事件处理器列表中的所有处理器。
+		/// </summary>
+		/// <param name="listToAddFrom">源事件处理器列表。</param>
 		public void AddHandlers (EventHandlerListDerived listToAddFrom)
 		{
 			if (listToAddFrom == null)
@@ -105,6 +138,11 @@ namespace System.ComponentModel {
 			}
 		}
 
+		/// <summary>
+		/// 移除事件处理器。
+		/// </summary>
+		/// <param name="key">事件键。</param>
+		/// <param name="value">事件委托。</param>
 		public void RemoveHandler (object key, Delegate value)
 		{
 			if (key == null) {
@@ -119,11 +157,19 @@ namespace System.ComponentModel {
 			entry.value = Delegate.Remove (entry.value, value);
 		}
 
+		/// <summary>
+		/// 清理列表（释放所有委托引用）。
+		/// </summary>
 		public void Dispose ()
 		{
 			entries = null;
 		}
 		
+		/// <summary>
+		/// 按键查找链表项。
+		/// </summary>
+		/// <param name="key">事件键。</param>
+		/// <returns>链表项；未找到返回 null。</returns>
 		private ListEntryDerived FindEntry (object key)
 		{
 			ListEntryDerived entry = entries;
@@ -137,4 +183,3 @@ namespace System.ComponentModel {
 		}
 	}
 }
-

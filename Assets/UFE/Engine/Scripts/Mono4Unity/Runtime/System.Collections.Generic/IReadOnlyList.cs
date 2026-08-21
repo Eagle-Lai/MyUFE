@@ -28,10 +28,20 @@
 
 //#if NET_4_5
 
+/// <summary>
+/// 只读列表接口（IReadOnlyList&lt;T&gt;）。
+/// <para>用途：从 Mono 移植——提供按索引只读访问的列表接口。</para>
+/// </summary>
 namespace System.Collections.Generic
 {
+	/// <summary>
+	/// 只读列表接口：可按索引读取元素。
+	/// </summary>
 	public interface IReadOnlyList</*out*/ T> : IReadOnlyCollection<T>
 	{
+		/// <summary>按索引读取元素。</summary>
+		/// <param name="index">索引。</param>
+		/// <returns>对应元素。</returns>
 		T this [int index] { get; }
 	}
 }

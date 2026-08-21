@@ -31,8 +31,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
+/// <summary>
+/// 任务调度器（TaskScheduler）。
+/// <para>用途：从 Mono 移植的抽象任务调度器——负责把 Task 排队/执行到指定调度策略（线程池、同步上下文等），</para>
+/// <para>提供默认调度器（TpScheduler）与当前调度器的静态访问，支持内联执行与未观察异常事件。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务调度器抽象基类：负责任务的排队与执行。
+	/// </summary>
 	[DebuggerDisplay ("Id={Id}")]
 	[DebuggerTypeProxy (typeof (TaskSchedulerDebuggerView))]
 	public abstract class TaskScheduler

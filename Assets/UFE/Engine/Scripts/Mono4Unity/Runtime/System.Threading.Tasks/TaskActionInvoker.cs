@@ -30,11 +30,21 @@
 
 using System.Threading;
 
+/// <summary>
+/// 任务动作调用器（TaskActionInvoker）。
+/// <para>用途：从 Mono 移植的内部抽象——为 Task 包装要执行的动作委托（空动作/延迟动作/普通动作/工厂动作），</para>
+/// <para>提供统一的 Invoke 执行入口。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务动作调用器抽象基类。
+	/// </summary>
 	abstract class TaskActionInvoker
 	{
+		/// <summary>空动作调用器（单例）。</summary>
 		public static readonly TaskActionInvoker Empty = new EmptyTaskActionInvoker ();
+		/// <summary>延迟动作调用器（单例）。</summary>
 		public static readonly TaskActionInvoker Delay = new DelayTaskInvoker ();
 
 		sealed class EmptyTaskActionInvoker : TaskActionInvoker

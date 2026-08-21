@@ -6,11 +6,20 @@ using System.Collections.Generic;
 using System.Text;
 using UFE3D;
 
+/// <summary>
+/// AI 编辑器窗口（AIEditorWindow，编辑器专用）。
+/// <para>用途：UFE 的 Fuzzy AI 指令集编辑界面——允许编辑 AI 资产（AIInfo）的预定义规则、自定义规则、</para>
+/// <para>模糊变量定义（伤害/距离/渴望度/生命/速度）、高级选项与调试信息，并支持规则生成与实时调试。</para>
+/// </summary>
 public class AIEditorWindow : EditorWindow {
+	/// <summary>当前窗口单例。</summary>
 	public static AIEditorWindow aIEditorWindow;
+	/// <summary>传入的 AI 资产引用。</summary>
 	public static UFE3D.AIInfo sentAIInfo;
+	/// <summary>当前编辑的 AI 资产。</summary>
 	private UFE3D.AIInfo aiInfo;
 	
+	/// <summary>滚动位置。</summary>
 	private Vector2 scrollPos;
 	
 	private bool predefinedRulesOptions;
@@ -39,6 +48,9 @@ public class AIEditorWindow : EditorWindow {
 	private string enumStyle;
 	private GUIStyle labelStyle;
 	
+	/// <summary>
+	/// 打开 AI 编辑器窗口（菜单入口）。
+	/// </summary>
 	[MenuItem("Window/U.F.E./A.I. Editor")]
 	public static void Init(){
 		aIEditorWindow = EditorWindow.GetWindow<AIEditorWindow>(false, "A.I.", true);
@@ -46,11 +58,17 @@ public class AIEditorWindow : EditorWindow {
 		aIEditorWindow.Populate();
 	}
 	
+	/// <summary>
+	/// 选中变化回调：重新填充并重绘。
+	/// </summary>
 	void OnSelectionChange(){
 		Populate();
 		Repaint();
 	}
 	
+	/// <summary>
+	/// 启用回调：填充窗口数据。
+	/// </summary>
 	void OnEnable(){
 		Populate();
 	}

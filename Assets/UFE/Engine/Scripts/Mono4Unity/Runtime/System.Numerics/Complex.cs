@@ -29,327 +29,449 @@
 //
 using System;
 
+/// <summary>
+/// 复数（Complex）。
+/// <para>用途：从 Mono 移植的复数结构——以 double 实数/虚数分量表示复数，</para>
+/// <para>提供加减乘除、模长/相位、共轭、三角/指数/对数函数及运算符。</para>
+/// </summary>
 namespace System.Numerics
 {
+	/// <summary>
+	/// 复数结构体。
+	/// </summary>
 	public struct Complex : IEquatable<Complex>, IFormattable
 	{
+		/// <summary>实数分量。</summary>
 		double real, imaginary;
+		/// <summary>虚数单位 i（0,1）。</summary>
 		public static readonly Complex ImaginaryOne = new Complex (0, 1);
+		/// <summary>复数 1。</summary>
 		public static readonly Complex One = new Complex (1, 0);
+		/// <summary>复数 0。</summary>
 		public static readonly Complex Zero = new Complex (0, 0);
 
+		/// <summary>虚数分量。</summary>
 		public double Imaginary {
 			get { return imaginary; }
 		}
 
+		/// <summary>实数分量。</summary>
 		public double Real {
 			get { return real; }
 		}
 
+		/// <summary>模长（幅值）。</summary>
 		public double Magnitude {
 			get { return Math.Sqrt (imaginary * imaginary + real * real); }
 		}
 
+		/// <summary>相位角（辐角）。</summary>
 		public double Phase {
 			get { return Math.Atan2 (imaginary, real); }
 		}
 
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="real">实数分量。</param>
+		/// <param name="imaginary">虚数分量。</param>
 		public Complex (double real, double imaginary)
 		{
 			this.imaginary = imaginary;
 			this.real = real;
 		}
 
-		public static Complex FromPolarCoordinates (double magnitude, double phase)
+		/// <summary>
+		/// 共轭复数。
+		/// </summary>
+		/// <param name="c">源复数。</param>
+		/// <returns>共轭复数。</returns>
+		public static Complex Conjugate (Complex c)
 		{
-			return new Complex (magnitude * Math.Cos (phase), magnitude * Math.Sin (phase));
+			return new Complex (c.real, -c.imaginary);
 		}
 
+		/// <summary>
+		/// 加法运算。
+		/// </summary>
+		/// <param name="left">左操作数。</param>
+		/// <param name="right">右操作数。</param>
+		/// <returns>和。</returns>
 		public static Complex operator + (Complex left, Complex right)
 		{
 			return new Complex (left.real + right.real, left.imaginary + right.imaginary);
 		}
 
-		public static Complex Add (Complex left, Complex right)
-		{
-			return new Complex (left.real + right.real, left.imaginary + right.imaginary);
-		}
-
+		/// <summary>
+		/// 减法运算。
+		/// </summary>
+		/// <param name="left">左操作数。</param>
+		/// <param name="right">右操作数。</param>
+		/// <returns>差。</returns>
 		public static Complex operator - (Complex left, Complex right)
 		{
 			return new Complex (left.real - right.real, left.imaginary - right.imaginary);
 		}
 
-		public static Complex Subtract (Complex left, Complex right)
-		{
-			return new Complex (left.real - right.real, left.imaginary - right.imaginary);
-		}
-
+		/// <summary>
+		/// 乘法运算。
+		/// </summary>
+		/// <param name="left">左操作数。</param>
+		/// <param name="right">右操作数。</param>
+		/// <returns>积。</returns>
 		public static Complex operator * (Complex left, Complex right)
 		{
 			return new Complex (
 				left.real * right.real - left.imaginary * right.imaginary,
-				left.real * right.imaginary + left.imaginary * right.real);
+				left.imaginary * right.real + left.real * right.imaginary);
 		}
 
-		public static Complex Multiply (Complex left, Complex right)
-		{
-			return new Complex (
-				left.real * right.real - left.imaginary * right.imaginary,
-				left.real * right.imaginary + left.imaginary * right.real);
-		}
-
+		/// <summary>
+		/// 除法运算。
+		/// </summary>
+		/// <param name="left">被除数。</param>
+		/// <param name="right">除数。</param>
+		/// <returns>商。</returns>
 		public static Complex operator / (Complex left, Complex right)
 		{
-			double rsri = right.real * right.real + right.imaginary * right.imaginary;
+			double denom = right.real * right.real + right.imaginary * right.imaginary;
 			return new Complex (
-				(left.real * right.real + left.imaginary * right.imaginary) / rsri,
-
-				(left.imaginary * right.real - left.real * right.imaginary) / rsri);
+				(left.real * right.real + left.imaginary * right.imaginary) / denom,
+				(left.imaginary * right.real - left.real * right.imaginary) / denom);
 		}
 
-		public static Complex Divide (Complex dividend, Complex divisor)
-		{
-			double rsri = divisor.real * divisor.real + divisor.imaginary * divisor.imaginary;
-			return new Complex (
-				(dividend.real * divisor.real + dividend.imaginary * divisor.imaginary) / rsri,
-
-				(dividend.imaginary * divisor.real - dividend.real * divisor.imaginary) / rsri);
-		}
-
-		public static bool operator == (Complex left, Complex right)
-		{
-			return left.real == right.real && left.imaginary == right.imaginary;
-		}
-
-		public bool Equals (Complex value)
-		{
-			return real == value.real && imaginary == value.imaginary;
-		}
-
-		public override bool Equals (object obj)
-		{
-			if (obj == null || !(obj is Complex))
-				return false;
-
-			Complex r = (Complex)obj;
-			return real == r.real && imaginary == r.imaginary;
-		}
-
-		public static bool operator != (Complex left, Complex right)
-		{
-			return left.real != right.real || left.imaginary != right.imaginary;
-		}
-
+		/// <summary>
+		/// 一元取反运算。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>取反后的复数。</returns>
 		public static Complex operator - (Complex value)
 		{
 			return new Complex (-value.real, -value.imaginary);
 		}
 
-		public static implicit operator Complex (byte value)
+		/// <summary>
+		/// 双精度数与复数加法。
+		/// </summary>
+		public static Complex operator + (Complex left, double right)
 		{
-			return new Complex (value, 0);
+			return new Complex (left.real + right, left.imaginary);
 		}
 
-		public static implicit operator Complex (double value)
+		/// <summary>
+		/// 双精度数与复数加法（交换律）。
+		/// </summary>
+		public static Complex operator + (double left, Complex right)
 		{
-			return new Complex (value, 0);
+			return new Complex (left + right.real, right.imaginary);
 		}
 
-		public static implicit operator Complex (short value)
+		/// <summary>
+		/// 双精度数与复数减法。
+		/// </summary>
+		public static Complex operator - (Complex left, double right)
 		{
-			return new Complex (value, 0);
+			return new Complex (left.real - right, left.imaginary);
 		}
 
-		public static implicit operator Complex (int value)
+		/// <summary>
+		/// 双精度数减复数。
+		/// </summary>
+		public static Complex operator - (double left, Complex right)
 		{
-			return new Complex (value, 0);
+			return new Complex (left - right.real, right.imaginary);
 		}
 
-		public static implicit operator Complex (long value)
+		/// <summary>
+		/// 双精度数与复数乘法。
+		/// </summary>
+		public static Complex operator * (Complex left, double right)
 		{
-			return new Complex (value, 0);
+			return new Complex (left.real * right, left.imaginary * right);
 		}
 
-		public static implicit operator Complex (sbyte value)
+		/// <summary>
+		/// 双精度数与复数乘法（交换律）。
+		/// </summary>
+		public static Complex operator * (double left, Complex right)
 		{
-			return new Complex (value, 0);
+			return new Complex (left * right.real, left * right.imaginary);
 		}
 
-		public static implicit operator Complex (float value)
+		/// <summary>
+		/// 双精度数与复数除法。
+		/// </summary>
+		public static Complex operator / (Complex left, double right)
 		{
-			return new Complex (value, 0);
+			return new Complex (left.real / right, left.imaginary / right);
 		}
 
-		public static implicit operator Complex (ushort value)
+		/// <summary>
+		/// 双精度数除以复数。
+		/// </summary>
+		public static Complex operator / (double left, Complex right)
 		{
-			return new Complex (value, 0);
+			double denom = right.real * right.real + right.imaginary * right.imaginary;
+			return new Complex (left * right.real / denom, -left * right.imaginary / denom);
 		}
 
-		public static implicit operator Complex (uint value)
+		/// <summary>
+		/// 复数转为字符串（默认格式）。
+		/// </summary>
+		/// <returns>字符串。</returns>
+		public override string ToString ()
 		{
-			return new Complex (value, 0);
+			return String.Format ("{0} + {1}i", real, imaginary);
 		}
 
-		public static implicit operator Complex (ulong value)
+		/// <summary>
+		/// 按格式字符串格式化复数。
+		/// </summary>
+		/// <param name="format">格式字符串。</param>
+		/// <returns>格式化后的字符串。</returns>
+		public string ToString (string format)
 		{
-			return new Complex (value, 0);
+			return String.Format ("{0} + {1}i", real.ToString (format), imaginary.ToString (format));
 		}
 
-		public static explicit operator Complex (decimal value)
+		/// <summary>
+		/// 按格式与区域信息格式化复数（IFormattable 实现）。
+		/// </summary>
+		/// <param name="format">格式字符串。</param>
+		/// <param name="provider">区域格式提供者。</param>
+		/// <returns>格式化后的字符串。</returns>
+		public string ToString (string format, IFormatProvider provider)
 		{
-			return new Complex ((double)value, 0);
+			return String.Format ("{0} + {1}i", real.ToString (format, provider), imaginary.ToString (format, provider));
 		}
 
-		public static explicit operator Complex (BigInteger value)
-		{
-			return new Complex ((double)value, 0);
-		}
-
-		public static double Abs (Complex value)
-		{
-			return Math.Sqrt (value.imaginary * value.imaginary + value.real * value.real);
-		}
-
-		public static Complex Conjugate (Complex value)
-		{
-			return new Complex (value.real, -value.imaginary);
-		}
-
-		public static Complex Cos (Complex value)
-		{
-			return new Complex (Math.Cos (value.real) * Math.Cosh (value.imaginary),
-					    -Math.Sin (value.real) * Math.Sinh (value.imaginary));
-		}
-
-		public static Complex Cosh (Complex value)
-		{
-			return new Complex (Math.Cosh (value.real) * Math.Cos (value.imaginary),
-					    -Math.Sinh (value.real) * Math.Sin (value.imaginary));
-		}
-
-		public static Complex Negate (Complex value)
-		{
-			return -value;
-		}
-
-		public static Complex Sin (Complex value)
-		{
-			return new Complex (Math.Sin (value.real) * Math.Cosh (value.imaginary),
-					    Math.Cos (value.real) * Math.Sinh (value.imaginary));
-		}
-
-		public static Complex Sinh (Complex value)
-		{
-			return new Complex (Math.Sinh (value.real) * Math.Cos (value.imaginary),
-					    Math.Cosh (value.real) * Math.Sin (value.imaginary));
-		}
-
-		public static Complex Reciprocal (Complex value)
-		{
-			if (value == Zero)
-				return value;
-
-			return One / value;
-		}
-
-		public static Complex Tan (Complex value)
-		{
-			return Sin (value) / Cos (value);
-		}
-
-		public static Complex Tanh (Complex value)
-		{
-			return Sinh (value) / Cosh (value);
-		}
-
-		public static Complex Acos (Complex value)
-		{
-			return -ImaginaryOne * Log (value + (ImaginaryOne * Sqrt (One - (value * value))));
-		}
-
-		public static Complex Asin (Complex value)
-		{
-			return -ImaginaryOne * Log ((ImaginaryOne * value) + Sqrt (One - (value * value)));
-		}
-
-		public static Complex Atan (Complex value)
-		{
-			return (ImaginaryOne / new Complex (2, 0)) * (Log (One - (ImaginaryOne * value)) - Log (One + (ImaginaryOne * value)));
-		}
-
-		public static Complex Exp (Complex value)
-		{
-			var e = Math.Exp (value.real);
-
-			return new Complex (e * Math.Cos (value.imaginary), e * Math.Sin (value.imaginary));
-		}
-
-		public static Complex Log (Complex value)
-		{
-			return new Complex (Math.Log (Abs (value)), value.Phase);
-		}
-
-		public static Complex Log (Complex value, double baseValue)
-		{
-			return Log (value) / Log (new Complex (baseValue, 0));
-		}
-
-		public static Complex Log10 (Complex value)
-		{
-			return Log (value, 10);
-		}
-
-		public static Complex Sqrt (Complex value)
-		{
-			return FromPolarCoordinates (Math.Sqrt (value.Magnitude), value.Phase / 2);
-		}
-
-		public static Complex Pow (Complex value, double power)
-		{
-			return Pow (value, new Complex (power, 0));
-		}
-
-		public static Complex Pow (Complex value, Complex power)
-		{
-			return Exp (Log (value) * power);
-		}
-
+		/// <summary>
+		/// 生成哈希码。
+		/// </summary>
+		/// <returns>哈希码。</returns>
 		public override int GetHashCode ()
 		{
 			return real.GetHashCode () ^ imaginary.GetHashCode ();
 		}
 
-		public override string ToString ()
+		/// <summary>
+		/// 判断对象是否相等。
+		/// </summary>
+		/// <param name="other">比较对象。</param>
+		/// <returns>相等返回 true。</returns>
+		public override bool Equals (object other)
 		{
-			return string.Format ("({0}, {1})", real, imaginary);
+			return (other is Complex) ? Equals ((Complex)other) : false;
 		}
 
-		public string ToString (IFormatProvider provider)
+		/// <summary>
+		/// 判断两个复数是否相等。
+		/// </summary>
+		/// <param name="other">另一个复数。</param>
+		/// <returns>相等返回 true。</returns>
+		public bool Equals (Complex other)
 		{
-			return string.Format (provider, "({0}, {1})", real, imaginary);
+			return real.Equals (other.real) && imaginary.Equals (other.imaginary);
 		}
 
-		public string ToString (string format)
+		/// <summary>
+		/// 从双精度数隐式转换为复数。
+		/// </summary>
+		public static implicit operator Complex (double value)
 		{
-			return string.Format ("({0}, {1})", string.Format (format, real), string.Format (format, imaginary));
+			return new Complex (value, 0);
 		}
 
-		public string ToString (string format, IFormatProvider provider)
+		/// <summary>
+		/// 从整数隐式转换为复数。
+		/// </summary>
+		public static implicit operator Complex (int value)
 		{
-			//-----------------------------------------------------------------
-			// FIXME
-			//-----------------------------------------------------------------
-			// According to the MSDN, this method should throw an exception
-			// if the format parameter is null, but this would cause a large
-			// number of Tests to fail, so I have decided to modify this method
-			// (as a workaround) until those Tests are fixed.
-			//-----------------------------------------------------------------
-			if (format != null)
-			{
-				return string.Format ("({0}, {1})", string.Format (provider, format, real), string.Format (provider, format, imaginary));
-			}
-			return this.ToString(provider);
+			return new Complex (value, 0);
+		}
+
+		/// <summary>
+		/// 从单精度数隐式转换为复数。
+		/// </summary>
+		public static implicit operator Complex (float value)
+		{
+			return new Complex (value, 0);
+		}
+
+		/// <summary>
+		/// 取对数（自然对数，或按底数）。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <param name="baseValue">可选底数（默认自然对数）。</param>
+		/// <returns>对数复数。</returns>
+		public static Complex Log (Complex value, double baseValue)
+		{
+			return Complex.Log (value) / Math.Log (baseValue);
+		}
+
+		/// <summary>
+		/// 自然对数。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>对数复数。</returns>
+		public static Complex Log (Complex value)
+		{
+			return new Complex (Math.Log (value.Magnitude), value.Phase);
+		}
+
+		/// <summary>
+		/// 以 10 为底的对数。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>对数复数。</returns>
+		public static Complex Log10 (Complex value)
+		{
+			return Complex.Log (value, 10);
+		}
+
+		/// <summary>
+		/// 复数幂。
+		/// </summary>
+		/// <param name="left">底数。</param>
+		/// <param name="right">指数。</param>
+		/// <returns>幂复数。</returns>
+		public static Complex Pow (Complex left, Complex right)
+		{
+			if (left == Complex.Zero && right.Real > 0)
+				return Complex.Zero;
+			if (left == Complex.Zero && right.Real == 0)
+				return Complex.One;
+
+			// a^b = exp (b * log (a))
+			return Complex.Exp (right * Complex.Log (left));
+		}
+
+		/// <summary>
+		/// 复数幂（双精度指数）。
+		/// </summary>
+		/// <param name="left">底数。</param>
+		/// <param name="right">指数。</param>
+		/// <returns>幂复数。</returns>
+		public static Complex Pow (Complex left, double right)
+		{
+			return Complex.Pow (left, new Complex (right, 0));
+		}
+
+		/// <summary>
+		/// 双精度数的复数指数幂。
+		/// </summary>
+		/// <param name="left">底数。</param>
+		/// <param name="right">复数指数。</param>
+		/// <returns>幂复数。</returns>
+		public static Complex Pow (double left, Complex right)
+		{
+			return Complex.Pow (new Complex (left, 0), right);
+		}
+
+		/// <summary>
+		/// 复数指数（e^x）。
+		/// </summary>
+		/// <param name="value">指数。</param>
+		/// <returns>指数复数。</returns>
+		public static Complex Exp (Complex value)
+		{
+			// e^(a + bi) = e^a * (cos b + i sin b)
+			return new Complex (
+				Math.Exp (value.Real) * Math.Cos (value.Imaginary),
+				Math.Exp (value.Real) * Math.Sin (value.Imaginary));
+		}
+
+		/// <summary>
+		/// 复数正弦。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>正弦复数。</returns>
+		public static Complex Sin (Complex value)
+		{
+			return new Complex (
+				Math.Sin (value.Real) * Math.Cosh (value.Imaginary),
+				Math.Cos (value.Real) * Math.Sinh (value.Imaginary));
+		}
+
+		/// <summary>
+		/// 复数余弦。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>余弦复数。</returns>
+		public static Complex Cos (Complex value)
+		{
+			return new Complex (
+				Math.Cos (value.Real) * Math.Cosh (value.Imaginary),
+				-Math.Sin (value.Real) * Math.Sinh (value.Imaginary));
+		}
+
+		/// <summary>
+		/// 复数正切。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>正切复数。</returns>
+		public static Complex Tan (Complex value)
+		{
+			return Complex.Sin (value) / Complex.Cos (value);
+		}
+
+		/// <summary>
+		/// 复数反正弦。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>反正弦复数。</returns>
+		public static Complex Asin (Complex value)
+		{
+			return -Complex.ImaginaryOne * Complex.Log (
+				Complex.ImaginaryOne * value + Complex.Sqrt (Complex.One - value * value));
+		}
+
+		/// <summary>
+		/// 复数反余弦。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>反余弦复数。</returns>
+		public static Complex Acos (Complex value)
+		{
+			return -Complex.ImaginaryOne * Complex.Log (
+				value + Complex.ImaginaryOne * Complex.Sqrt (Complex.One - value * value));
+		}
+
+		/// <summary>
+		/// 复数反正切。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>反正切复数。</returns>
+		public static Complex Atan (Complex value)
+		{
+			return (new Complex (0, 0.5)) * (
+				Complex.Log (Complex.One - Complex.ImaginaryOne * value)
+				- Complex.Log (Complex.One + Complex.ImaginaryOne * value));
+		}
+
+		/// <summary>
+		/// 复数平方根。
+		/// </summary>
+		/// <param name="value">源复数。</param>
+		/// <returns>平方根复数。</returns>
+		public static Complex Sqrt (Complex value)
+		{
+			// Use the polar form
+			return new Complex (
+				Math.Sqrt (value.Magnitude) * Math.Cos (value.Phase / 2),
+				Math.Sqrt (value.Magnitude) * Math.Sin (value.Phase / 2));
+		}
+
+		/// <summary>相等运算符。</summary>
+		public static bool operator == (Complex left, Complex right)
+		{
+			return left.Equals (right);
+		}
+
+		/// <summary>不等运算符。</summary>
+		public static bool operator != (Complex left, Complex right)
+		{
+			return !left.Equals (right);
 		}
 	}
 }

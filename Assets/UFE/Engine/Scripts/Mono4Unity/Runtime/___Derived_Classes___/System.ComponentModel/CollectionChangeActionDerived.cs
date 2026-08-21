@@ -28,14 +28,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+/// <summary>
+/// 集合变更动作（CollectionChangeActionDerived）。
+/// <para>用途：从 Mono 移植——描述集合如何被改变（添加/移除/刷新）。</para>
+/// </summary>
 namespace System.ComponentModel
 {
 	/// <summary>
 	/// Specifies how the collection is changed.
 	/// </summary>
+	/// <summary>集合变更动作枚举。</summary>
 	public enum CollectionChangeActionDerived {
+		/// <summary>添加元素。</summary>
 		Add = 1,
+		/// <summary>移除元素。</summary>
 		Remove = 2,
+		/// <summary>刷新集合。</summary>
 		Refresh = 3
 	}
 }

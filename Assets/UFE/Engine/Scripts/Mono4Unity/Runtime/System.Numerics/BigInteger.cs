@@ -61,14 +61,27 @@ Optimization
 	Use a carry variable to make shift opts do half the number of array ops.
 	Schoolbook multiply is O(n^2), use Karatsuba /Toom-3 for large numbers
 */
+/// <summary>
+/// 大整数（BigInteger）。
+/// <para>用途：从 Mono 移植的任意精度整数结构——以 32 位无符号数组（小端序，LSB 在索引 0）存储任意大小的整数，</para>
+/// <para>提供加减乘除/取模/移位/位运算/解析/格式化/最大公约数/模幂等运算。</para>
+/// <para>大段代码源自 DLR（IronPython）实现。</para>
+/// </summary>
 namespace System.Numerics {
+	/// <summary>
+	/// 大整数结构体（任意精度整数）。
+	/// </summary>
 	public struct BigInteger : IComparable, IFormattable, IComparable<BigInteger>, IEquatable<BigInteger>
 	{
 		//LSB on [0]
+		/// <summary>小端序 32 位块数组（存储大整数数值，LSB 在索引 0）。</summary>
 		readonly uint[] data;
+		/// <summary>符号（1 正 / -1 负 / 0 零）。</summary>
 		readonly short sign;
 
+		/// <summary>零值缓存数组。</summary>
 		static readonly uint[] ZERO = new uint [1];
+		/// <summary>一值缓存数组。</summary>
 		static readonly uint[] ONE = new uint [1] { 1 };
 
 		BigInteger (short sign, uint[] data)
@@ -359,25 +372,36 @@ namespace System.Numerics {
 			}
 		}		
 
+		/// <summary>是否为零。</summary>
 		public bool IsZero {
 			get { return sign == 0; }
 		}		
 
+		/// <summary>符号（1 正 / -1 负 / 0 零）。</summary>
 		public int Sign {
 			get { return sign; }
 		}
 
+		/// <summary>大整数 -1。</summary>
 		public static BigInteger MinusOne {
 			get { return new BigInteger (-1, ONE); }
 		}
 
+		/// <summary>大整数 1。</summary>
 		public static BigInteger One {
 			get { return new BigInteger (1, ONE); }
 		}
 
+		/// <summary>大整数 0。</summary>
 		public static BigInteger Zero {
 			get { return new BigInteger (0, ZERO); }
 		}
+
+		/// <summary>
+		/// 显式转换为 int（溢出时抛出 OverflowException）。
+		/// </summary>
+		/// <param name="value">大整数。</param>
+		/// <returns>int 值。</returns>
 
 		public static explicit operator int (BigInteger value)
 		{
@@ -583,6 +607,9 @@ namespace System.Numerics {
 			return new BigInteger (value);
 		}
 
+		/// <summary>
+		/// 大整数加法运算符。
+		/// </summary>
 		public static BigInteger operator+ (BigInteger left, BigInteger right)
 		{
 			if (left.sign == 0)
@@ -604,6 +631,9 @@ namespace System.Numerics {
 			return new BigInteger (right.sign, CoreSub (right.data, left.data));
 		}
 
+		/// <summary>
+		/// 大整数减法运算符。
+		/// </summary>
 		public static BigInteger operator- (BigInteger left, BigInteger right)
 		{
 			if (right.sign == 0)
@@ -626,6 +656,9 @@ namespace System.Numerics {
 			return new BigInteger (left.sign, CoreAdd (left.data, right.data));
 		}
 
+		/// <summary>
+		/// 大整数乘法运算符。
+		/// </summary>
 		public static BigInteger operator* (BigInteger left, BigInteger right)
 		{
 			if (left.sign == 0 || right.sign == 0)
@@ -674,6 +707,9 @@ namespace System.Numerics {
 			return new BigInteger ((short)(left.sign * right.sign), res);
 		}
 
+		/// <summary>
+		/// 大整数除法运算符（整除）。
+		/// </summary>
 		public static BigInteger operator/ (BigInteger dividend, BigInteger divisor)
 		{
 			if (divisor.sign == 0)
@@ -697,6 +733,9 @@ namespace System.Numerics {
 			return new BigInteger ((short)(dividend.sign * divisor.sign), quotient);
 		}
 
+		/// <summary>
+		/// 大整数取模运算符。
+		/// </summary>
 		public static BigInteger operator% (BigInteger dividend, BigInteger divisor)
 		{
 			if (divisor.sign == 0)
@@ -1400,6 +1439,11 @@ namespace System.Numerics {
 			return new String (digits.ToArray ());
 		}
 
+		/// <summary>
+		/// 解析十进制字符串为大整数。
+		/// </summary>
+		/// <param name="value">数字字符串。</param>
+		/// <returns>大整数。</returns>
 		public static BigInteger Parse (string value)
 		{
 			Exception ex;
@@ -1515,6 +1559,12 @@ namespace System.Numerics {
 			return true;
 		}
 
+		/// <summary>
+		/// 取两个大整数中的较小值。
+		/// </summary>
+		/// <param name="left">左操作数。</param>
+		/// <param name="right">右操作数。</param>
+		/// <returns>较小值。</returns>
 		public static BigInteger Min (BigInteger left, BigInteger right)
 		{
 			int ls = left.sign;
@@ -1535,6 +1585,12 @@ namespace System.Numerics {
 		}
 
 
+		/// <summary>
+		/// 取两个大整数中的较大值。
+		/// </summary>
+		/// <param name="left">左操作数。</param>
+		/// <param name="right">右操作数。</param>
+		/// <returns>较大值。</returns>
 		public static BigInteger Max (BigInteger left, BigInteger right)
 		{
 			int ls = left.sign;
@@ -1554,6 +1610,11 @@ namespace System.Numerics {
 			return right;
 		}
 
+		/// <summary>
+		/// 取大整数的绝对值。
+		/// </summary>
+		/// <param name="value">目标大整数。</param>
+		/// <returns>绝对值。</returns>
 		public static BigInteger Abs (BigInteger value)
 		{
 			return new BigInteger ((short)Math.Abs (value.sign), value.data);
@@ -1594,6 +1655,12 @@ namespace System.Numerics {
 			return new BigInteger ((short)(dividend.sign * divisor.sign), quotient);
 		}
 
+        /// <summary>
+        /// 大整数幂运算。
+        /// </summary>
+        /// <param name="value">底数。</param>
+        /// <param name="exponent">指数。</param>
+        /// <returns>幂结果。</returns>
         public static BigInteger Pow (BigInteger value, int exponent)
 		{
 			if (exponent < 0)
@@ -1637,6 +1704,12 @@ namespace System.Numerics {
 			return result;
 		}
 
+		/// <summary>
+		/// 计算两个大整数的最大公约数（欧几里得算法）。
+		/// </summary>
+		/// <param name="left">左操作数。</param>
+		/// <param name="right">右操作数。</param>
+		/// <returns>最大公约数。</returns>
 		public static BigInteger GreatestCommonDivisor (BigInteger left, BigInteger right)
 		{
 			if (left.data.Length == 1 && left.data [0] == 1)

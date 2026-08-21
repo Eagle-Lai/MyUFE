@@ -3,25 +3,42 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 简单 AI 编辑器窗口（SimpleAIBehaviourEditorWindow，编辑器专用）。
+/// <para>用途：编辑 SimpleAIBehaviour 资产——按步骤（按键+帧数）可视化配置 AI 行为剧本。</para>
+/// </summary>
 public class SimpleAIBehaviourEditorWindow : EditorWindow{
 	#region public class properties
+	/// <summary>当前窗口单例。</summary>
 	public static SimpleAIBehaviourEditorWindow window;
 	#endregion
 
 	#region private class properties
+	/// <summary>当前编辑的行为资产。</summary>
 	private SimpleAIBehaviour behaviour;
 
+	/// <summary>标题样式名。</summary>
 	private string titleStyle;
+	/// <summary>添加按钮样式名。</summary>
 	private string addButtonStyle;
+	/// <summary>子组样式名。</summary>
 	private string subGroupStyle;
+	/// <summary>数组元素样式名。</summary>
 	private string arrayElementStyle;
+	/// <summary>折叠样式名。</summary>
 	private string foldStyle;
+	/// <summary>枚举样式名。</summary>
 	private string enumStyle;
+	/// <summary>标签样式。</summary>
 	private GUIStyle labelStyle;
+	/// <summary>滚动位置。</summary>
 	private Vector2 scrollPos;
 	#endregion
 
 	#region public class methods
+	/// <summary>
+	/// 打开简单 AI 编辑器窗口（菜单入口）。
+	/// </summary>
 	[MenuItem("Window/U.F.E./Simple AI Editor")]
 	public static void Init(){
 		window = EditorWindow.GetWindow<SimpleAIBehaviourEditorWindow>(false, "Simple AI", true);

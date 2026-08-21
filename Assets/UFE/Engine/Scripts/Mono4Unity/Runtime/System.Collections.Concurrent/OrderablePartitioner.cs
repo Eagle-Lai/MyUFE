@@ -29,14 +29,29 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 可排序分区器（OrderablePartitioner&lt;TSource&gt;）。
+/// <para>用途：从 Mono 移植——在并行分区中为每个元素分配有序键的分区器抽象，</para>
+/// <para>用于需要保持元素顺序的并行处理。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
+	/// <summary>
+	/// 可排序分区器：每个元素带顺序键（KeyValuePair&lt;long, TSource&gt;）。
+	/// </summary>
 	public abstract class OrderablePartitioner<TSource> : Partitioner<TSource>
 	{
+		/// <summary>每个分区内键是否有序。</summary>
 		bool keysOrderedInEachPartition;
+		/// <summary>跨分区键是否有序。</summary>
 		bool keysOrderedAcrossPartitions;
+		/// <summary>键是否已归一化。</summary>
 		bool keysNormalized;
 
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="keysOrderedInEachPartition">每个分区内键是否有序。</param>
 		protected OrderablePartitioner (bool keysOrderedInEachPartition,
 		                                bool keysOrderedAcrossPartitions, 
 		                                bool keysNormalized) : base ()

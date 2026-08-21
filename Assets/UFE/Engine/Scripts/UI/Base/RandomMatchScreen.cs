@@ -5,18 +5,30 @@ using UnityEngine.UI;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
 
+/// <summary>
+/// 随机匹配界面（RandomMatchScreen）。
+/// <para>用途：在线快速匹配界面基类——按页搜索在线比赛，优先加入未满的比赛，无可用比赛时自动创建新比赛。</para>
+/// <para>匹配失败/无比赛时跳转到连接丢失界面。</para>
+/// </summary>
 public class RandomMatchScreen : UFEScreen {
 	#region public instance fields
+	/// <summary>每页比赛数量。</summary>
 	public int pageSize = 20;
 	#endregion
 
 	#region protected instance field
+	/// <summary>是否正在连接中。</summary>
 	protected bool _connecting = false;
+	/// <summary>当前搜索页索引。</summary>
 	protected int _currentPage = 0;
+	/// <summary>已发现的比赛列表。</summary>
 	protected IList<MultiplayerAPI.MatchInformation> _foundMatches = new List<MultiplayerAPI.MatchInformation>();
 	#endregion
 
 	#region public override methods
+	/// <summary>
+	/// 界面显示时：停止旧搜索、切换到在线模式并开始加入或创建比赛。
+	/// </summary>
 	public override void OnShow(){
 		base.OnShow ();
 
@@ -29,16 +41,25 @@ public class RandomMatchScreen : UFEScreen {
 	#endregion
 
 	#region public instance methods
+	/// <summary>
+	/// 返回主菜单（停止搜索）。
+	/// </summary>
 	public virtual void GoToMainMenuScreen(){
 		this.StopSearchingMatchGames();
 		UFE.StartMainMenuScreen();
 	}
 
+	/// <summary>
+	/// 进入连接丢失界面（停止搜索）。
+	/// </summary>
 	public virtual void GoToConnectionLostScreen(){
 		this.StopSearchingMatchGames();
 		UFE.StartConnectionLostScreen();
 	}
 
+	/// <summary>
+	/// 开始搜索在线比赛（注册发现/错误回调）。
+	/// </summary>
 	public virtual void JoinOrCreateMatchGame()
     {
         this._connecting = true;
@@ -51,6 +72,9 @@ public class RandomMatchScreen : UFEScreen {
         UFE.multiplayerAPI.StartSearchingMatches(this._currentPage, this.pageSize, null);
     }
 
+	/// <summary>
+	/// 停止搜索在线比赛并清空发现列表。
+	/// </summary>
 	public virtual void StopSearchingMatchGames(){
 		UFE.multiplayerAPI.OnMatchesDiscovered -= this.OnMatchesDiscovered;
 		UFE.multiplayerAPI.OnMatchDiscoveryError -= this.OnMatchDiscoveryError;
@@ -61,6 +85,10 @@ public class RandomMatchScreen : UFEScreen {
 	#endregion
 
 	#region protected instance methods
+	/// <summary>
+	/// 比赛创建成功回调：取消注册并停止搜索。
+	/// </summary>
+	/// <param name="match">创建的比赛信息。</param>
 	protected virtual void OnMatchCreated(MultiplayerAPI.CreatedMatchInformation match){
 		UFE.multiplayerAPI.OnMatchCreated -= this.OnMatchCreated;
 		UFE.multiplayerAPI.OnMatchCreationError -= this.OnMatchCreationError;
@@ -68,6 +96,9 @@ public class RandomMatchScreen : UFEScreen {
 		this.StopSearchingMatchGames();
 	}
 
+	/// <summary>
+	/// 比赛创建失败回调：进入连接丢失界面。
+	/// </summary>
 	protected virtual void OnMatchCreationError(){
 		UFE.multiplayerAPI.OnMatchCreated -= this.OnMatchCreated;
 		UFE.multiplayerAPI.OnMatchCreationError -= this.OnMatchCreationError;
@@ -75,6 +106,10 @@ public class RandomMatchScreen : UFEScreen {
 		this.GoToConnectionLostScreen();
 	}
 
+	/// <summary>
+	/// 发现比赛回调：保存发现列表并尝试连接。
+	/// </summary>
+	/// <param name="matches">发现的比赛列表。</param>
 	protected virtual void OnMatchesDiscovered(ReadOnlyCollection<MultiplayerAPI.MatchInformation> matches) {
 		UFE.multiplayerAPI.OnMatchesDiscovered -= this.OnMatchesDiscovered;
 		UFE.multiplayerAPI.OnMatchDiscoveryError -= this.OnMatchDiscoveryError;
@@ -100,6 +135,9 @@ public class RandomMatchScreen : UFEScreen {
 		this.TryConnect();
 	}
 
+	/// <summary>
+	/// 比赛发现错误回调：进入连接丢失界面。
+	/// </summary>
 	protected virtual void OnMatchDiscoveryError() {
 		UFE.multiplayerAPI.OnMatchesDiscovered -= this.OnMatchesDiscovered;
 		UFE.multiplayerAPI.OnMatchDiscoveryError -= this.OnMatchDiscoveryError;
@@ -107,6 +145,10 @@ public class RandomMatchScreen : UFEScreen {
 		this.GoToConnectionLostScreen();
 	}
 
+	/// <summary>
+	/// 加入成功回调：切换在线模式并停止搜索。
+	/// </summary>
+	/// <param name="match">加入的比赛信息。</param>
 	protected virtual void OnJoined(MultiplayerAPI.JoinedMatchInformation match){
 		UFE.multiplayerAPI.OnJoined -= this.OnJoined;
 		UFE.multiplayerAPI.OnJoinError -= this.OnJoinError;
@@ -115,6 +157,9 @@ public class RandomMatchScreen : UFEScreen {
 		this.StopSearchingMatchGames();
 	}
 
+	/// <summary>
+	/// 加入失败回调：尝试连接其他发现的比赛。
+	/// </summary>
 	protected virtual void OnJoinError(){
 		UFE.multiplayerAPI.OnJoined -= this.OnJoined;
 		UFE.multiplayerAPI.OnJoinError -= this.OnJoinError;
@@ -124,10 +169,16 @@ public class RandomMatchScreen : UFEScreen {
 		this.TryConnect();
 	}
 
+	/// <summary>
+	/// 未找到 LAN 游戏回调：进入连接丢失界面。
+	/// </summary>
 	protected virtual void OnLanGameNotFound(){
 		this.GoToConnectionLostScreen();
 	}
 
+	/// <summary>
+	/// 尝试连接：依次尝试加入未满的比赛，无可用比赛则创建新比赛。
+	/// </summary>
 	protected virtual void TryConnect(){
 		// First, we check that we aren't already connected to a client or a server...
 		if (!UFE.multiplayerAPI.IsConnected() && !this._connecting){

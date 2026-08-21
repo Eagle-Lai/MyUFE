@@ -1,8 +1,16 @@
 using UnityEngine;
 using UnityEditor;
 
+/// <summary>
+/// UFE 输入设置工具（UFEInputSetup，编辑器专用）。
+/// <para>用途：提供菜单命令用 UFE 预设的 InputManager.asset 覆盖项目的输入管理器配置，</para>
+/// <para>执行前自动备份原文件，完成后提示重启 Unity。</para>
+/// </summary>
 public class UFEInputSetup : EditorWindow {
 	// creates a menu entry that replaces a file.
+	/// <summary>
+	/// 覆盖项目 InputManager.asset 文件（菜单入口）。
+	/// </summary>
 	[MenuItem("Window/U.F.E./Project Settings/Override Input Manager")]
 	static void ReplaceInputManagerAssetFile() {
 		string path = Application.dataPath;

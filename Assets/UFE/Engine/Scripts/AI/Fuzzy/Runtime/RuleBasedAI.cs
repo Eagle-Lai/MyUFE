@@ -6,13 +6,31 @@ using AForge.Fuzzy;
 using AI4Unity.Fuzzy;
 using UFE3D;
 
+/// <summary>
+/// 规则型模糊 AI（RuleBasedAI）。
+/// <para>用途：Fuzzy AI 的核心决策控制器——通过模糊推理系统（InferenceSystem）对当前战斗状态求值，</para>
+/// <para>计算每个可能动作（移动/跳跃/格挡/出招/切换行为）的渴望度权重，选择最优动作并模拟其输入序列。</para>
+/// <para>继承 RandomAI 以复用输入缓冲机制；支持多核异步求值、难度参数覆盖、蓄力技模拟与连招逻辑。</para>
+/// </summary>
 public class RuleBasedAI : RandomAI{
 	#region auxiliar classes definitions
+	/// <summary>
+	/// 移动信息（MovementInfo）：AI 可执行的单个动作及其渴望度权重与模拟输入序列。
+	/// </summary>
 	protected class MovementInfo{
+		/// <summary>动作名称。</summary>
 		public string name;
+		/// <summary>模拟输入序列（按帧排列的按钮数组）。</summary>
 		public ButtonPress[][] simulatedInput;
+		/// <summary>渴望度权重。</summary>
 		public float weight;
 		
+		/// <summary>
+		/// 构造函数：创建移动信息。
+		/// </summary>
+		/// <param name="name">动作名称。</param>
+		/// <param name="simulatedInput">模拟输入序列。</param>
+		/// <param name="weight">渴望度权重。</param>
 		public MovementInfo(string name, ButtonPress[][] simulatedInput = null, float weight = 0f){
 			this.name = name;
 			this.weight = weight;
@@ -33,20 +51,33 @@ public class RuleBasedAI : RandomAI{
 	#endregion
 	
 	#region protected readonly class fields
+	/// <summary>能量消耗"无"标签名（缓存加速）。</summary>
 	protected static readonly string gaugeUsageNone = GaugeUsage.None.ToString();
+	/// <summary>能量消耗"四分之一"标签名。</summary>
 	protected static readonly string gaugeUsageQuarter = GaugeUsage.Quarter.ToString();
+	/// <summary>能量消耗"一半"标签名。</summary>
 	protected static readonly string gaugeUsageHalf = GaugeUsage.Half.ToString();
+	/// <summary>能量消耗"四分之三"标签名。</summary>
 	protected static readonly string gaugeUsageThreeQuarters = GaugeUsage.ThreeQuarters.ToString();
+	/// <summary>能量消耗"全部"标签名。</summary>
 	protected static readonly string gaugeUsageAll = GaugeUsage.All.ToString();
 	
+	/// <summary>伤害"非常弱"标签名。</summary>
 	protected static readonly string damageVeryWeak = AIDamage.VeryWeak.ToString();
+	/// <summary>伤害"弱"标签名。</summary>
 	protected static readonly string damageWeak = AIDamage.Weak.ToString();
+	/// <summary>伤害"中"标签名。</summary>
 	protected static readonly string damageMedium = AIDamage.Medium.ToString();
+	/// <summary>伤害"强"标签名。</summary>
 	protected static readonly string damageStrong = AIDamage.Strong.ToString();
+	/// <summary>伤害"非常强"标签名。</summary>
 	protected static readonly string damageVeryStrong = AIDamage.VeryStrong.ToString();
 	#endregion
 
 	#region public instance properties
+	/// <summary>
+	/// 当前帧输入字典（读缓冲索引1）。
+	/// </summary>
 	public override Dictionary<InputReferences, InputEvents> inputs{
 		get{
 			return inputBuffer[1];
@@ -56,6 +87,9 @@ public class RuleBasedAI : RandomAI{
 		}
 	}
 
+	/// <summary>
+	/// 上一帧输入字典（读缓冲索引0）。
+	/// </summary>
 	public virtual Dictionary<InputReferences, InputEvents> previousInputs{
 		get{
 			return inputBuffer[0];
@@ -68,40 +102,65 @@ public class RuleBasedAI : RandomAI{
 	#endregion
 
 	#region protected instance fields
+	/// <summary>当前 AI 信息资产。</summary>
 	protected AIInfo ai = null;
+	/// <summary>初始 AI 信息资产（行为切换的恢复基准）。</summary>
 	protected AIInfo initialAI = null;
+	/// <summary>输入缓冲（[0]=上一帧，[1]=当前帧，[2+]=未来帧）。</summary>
 	protected List<Dictionary<InputReferences, InputEvents>> inputBuffer;
 
 	// Information about the character positions
+	/// <summary>自身上一帧位置（移动速度计算用）。</summary>
 	protected Vector3? previousPositionSelf;
+	/// <summary>对手上一帧位置（移动速度计算用）。</summary>
 	protected Vector3? previousPositionOpponent;
 	
 	// Information retrieved during the last decision process
+	/// <summary>上次决策的输出结果（变量名→值）。</summary>
 	Dictionary<string, float> aiOutput = null;
+	/// <summary>模糊推理线程包装（多核求值）。</summary>
 	InferenceSystemThread inferenceEngine = null;
 	
 	// Cached information to improve performance
+	/// <summary>空按钮序列（缓存）。</summary>
 	protected ButtonPress[] noButtonsPressed = new ButtonPress[0];
+	/// <summary>候选动作列表。</summary>
 	protected List<MovementInfo> movements = new List<MovementInfo>();
+	/// <summary>能量槽语言变量（缓存）。</summary>
 	protected LinguisticVariable gaugeVar;
+	/// <summary>伤害语言变量（缓存）。</summary>
 	protected LinguisticVariable damageVar;
 	
 	//protected List<ButtonPress[][]> movesSimulatedInput = new List<ButtonPress[][]>();
+	/// <summary>待机动作模拟输入。</summary>
 	protected ButtonPress[][] idleSimulatedInput = null;
+	/// <summary>前进动作模拟输入。</summary>
 	protected ButtonPress[][] moveForwardSimulatedInput = null;
+	/// <summary>后退动作模拟输入。</summary>
 	protected ButtonPress[][] moveBackwardSimulatedInput = null;
+	/// <summary>下蹲动作模拟输入。</summary>
 	protected ButtonPress[][] crouchSimulatedInput = null;
+	/// <summary>下蹲格挡动作模拟输入。</summary>
 	protected ButtonPress[][] crouchBlockSimulatedInput = null;
+	/// <summary>后跳动作模拟输入。</summary>
 	protected ButtonPress[][] jumpBackwardSimulatedInput = null;
+	/// <summary>空中格挡动作模拟输入。</summary>
 	protected ButtonPress[][] jumpBlockSimulatedInput = null;
+	/// <summary>前跳动作模拟输入。</summary>
 	protected ButtonPress[][] jumpForwardSimulatedInput = null;
+	/// <summary>垂直跳动作模拟输入。</summary>
 	protected ButtonPress[][] jumpStraightSimulatedInput = null;
+	/// <summary>站立格挡动作模拟输入。</summary>
 	protected ButtonPress[][] standBlockSimulatedInput = null;
 	#endregion
 
 
 
 	#region public override methods
+	/// <summary>
+	/// 初始化 AI：订阅回合开始事件、创建输入缓冲（≥2 帧）、初始化推理引擎并调用基类初始化。
+	/// </summary>
+	/// <param name="inputs">输入引用列表。</param>
 	public override void Initialize (IEnumerable<InputReferences> inputs){
 		UFE.OnRoundBegins -= OnRoundBegins;
 		UFE.OnRoundBegins += OnRoundBegins;
@@ -132,6 +191,10 @@ public class RuleBasedAI : RandomAI{
 		base.Initialize (inputs);
 	}
 
+	/// <summary>
+	/// 固定帧更新（AI 决策主循环）：维护输入缓冲，在需要新决策时调用 ChooseMovement 选择动作，
+	/// 并按其模拟输入序列逐帧注入未来输入帧。
+	/// </summary>
 	public override void DoFixedUpdate(){
 		// Store initial AI
 		if (initialAI == null && ai != null) initialAI = ai;
@@ -274,6 +337,9 @@ public class RuleBasedAI : RandomAI{
 		}
 	}
 	
+	/// <summary>
+	/// 每帧更新：等待推理系统求值完成，按决策间隔触发新的 AI 请求（RequestAIUpdate）。
+	/// </summary>
 	public override void DoUpdate(){
 		// First, check if the inference engine is defined...
 		if (this.inferenceEngine != null && UFE.config.aiOptions.engine == AIEngine.FuzzyAI){
@@ -307,6 +373,11 @@ public class RuleBasedAI : RandomAI{
 		}
 	}
 	
+	/// <summary>
+	/// 读取输入：从输入缓冲返回当前输入（引擎为 Fuzzy AI 时），否则回退到基类随机 AI。
+	/// </summary>
+	/// <param name="inputReference">输入引用。</param>
+	/// <returns>输入事件。</returns>
 	public override InputEvents ReadInput (InputReferences inputReference){
 		if (UFE.config.aiOptions.engine == AIEngine.FuzzyAI){
 			if(
@@ -326,15 +397,27 @@ public class RuleBasedAI : RandomAI{
 	#endregion
 	
 	#region public instance methods
+	/// <summary>
+	/// 获取当前 AI 信息资产。
+	/// </summary>
+	/// <returns>AI 信息资产。</returns>
 	public virtual AIInfo GetAIInformation(){
 		return this.ai;
 	}
 	
+	/// <summary>
+	/// 设置 AI 信息（ScriptableObject 版本，供反射调用）。
+	/// </summary>
+	/// <param name="ai">AI 信息资产（作为 ScriptableObject 传入）。</param>
 	public void SetAIInformation(ScriptableObject ai){
 		// This method is required to access the method below using Reflection
 		this.SetAIInformation(ai as AIInfo);
 	}
 	
+	/// <summary>
+	/// 设置 AI 信息资产：生成推理系统、创建推理线程、缓存语言变量并重新初始化。
+	/// </summary>
+	/// <param name="ai">AI 信息资产。</param>
 	public virtual void SetAIInformation(AIInfo ai){
 		this.ai = ai;
 		
@@ -369,10 +452,22 @@ public class RuleBasedAI : RandomAI{
 	#endregion
 	
 	#region protected instance methods
+	/// <summary>
+	/// 回合开始回调：非持久行为模式下于后续回合恢复初始 AI（防止行为漂移）。
+	/// </summary>
+	/// <param name="round">回合编号。</param>
 	protected virtual void OnRoundBegins(int round){
 		if (!UFE.config.aiOptions.persistentBehavior && round > 1 && initialAI != null) SetAIInformation(initialAI);
 	}
 
+	/// <summary>
+	/// 选择动作（AI 决策核心）：根据推理输出计算各候选动作（下蹲/待机/跳跃/格挡/出招/切换行为）的渴望度权重，
+	/// 按规则遵循度决定使用最优动作或加权随机选择，并返回选中的动作及其模拟输入序列。
+	/// </summary>
+	/// <param name="self">自身控制脚本。</param>
+	/// <param name="opponent">对手控制脚本。</param>
+	/// <param name="deltaTime">帧间隔。</param>
+	/// <returns>选中的移动信息。</returns>
 	protected virtual MovementInfo ChooseMovement(ControlsScript self, ControlsScript opponent, float deltaTime){
 		// Find out if this AI is controlling the first or the second player.
 		if (self != null && opponent != null){
@@ -1167,6 +1262,13 @@ public class RuleBasedAI : RandomAI{
 		}
 	}
 	
+	/// <summary>
+	/// 游戏开始回调：初始化 AI 的模拟输入序列（格挡按钮、跳跃、下蹲、移动、招式按钮序列与蓄力技模拟），
+	/// 并缓存有效招式集合与输出变量。
+	/// </summary>
+	/// <param name="player1">玩家1角色。</param>
+	/// <param name="player2">玩家2角色。</param>
+	/// <param name="stage">场地。</param>
 	protected virtual void OnGameBegin(UFE3D.CharacterInfo player1, UFE3D.CharacterInfo player2, StageOptions stage){
 		ControlsScript self = UFE.GetControlsScript(this.player);
 		//this.movesSimulatedInput.Clear();
@@ -1339,6 +1441,12 @@ public class RuleBasedAI : RandomAI{
 		}
 	}
 	
+	/// <summary>
+	/// 将单个输入帧重复生成指定帧数的模拟输入序列（用于按住类动作如移动/格挡）。
+	/// </summary>
+	/// <param name="originalInput">输入帧（按钮数组）。</param>
+	/// <param name="frames">重复帧数。</param>
+	/// <returns>模拟输入序列。</returns>
 	protected virtual ButtonPress[][] Repeat(ButtonPress[] originalInput, int frames){
 		ButtonPress[][] input = new ButtonPress[frames][];
 		
@@ -1349,6 +1457,13 @@ public class RuleBasedAI : RandomAI{
 		return input;
 	}
 	
+	/// <summary>
+	/// 发起 AI 推理请求：收集当前战斗状态（位置/速度/生命/能量/距离/招式信息/攻击判定等）为模糊输入变量，
+	/// 调用推理系统异步求值各动作渴望度；处理远程玩家状态并可选输出调试信息。
+	/// </summary>
+	/// <param name="self">自身控制脚本。</param>
+	/// <param name="opponent">对手控制脚本。</param>
+	/// <param name="deltaTime">帧间隔。</param>
 	protected virtual void RequestAIUpdate(ControlsScript self, ControlsScript opponent, float deltaTime){
 		if (self != null && opponent != null){
 			// If both ControlsScript are defined, retrieve the current position of each character...
@@ -1669,6 +1784,14 @@ public class RuleBasedAI : RandomAI{
 		}
 	}
 	
+	/// <summary>
+	/// 校验反应是否可在当前战况下执行（待机/移动/跳跃/下蹲/格挡/出招/切换行为的可行性条件）。
+	/// <para>例如：已倒地不能下蹲、已在下蹲不能跳、对方非眩晕时停止格挡等。</para>
+	/// </summary>
+	/// <param name="reactionType">反应类型。</param>
+	/// <param name="self">自身控制脚本。</param>
+	/// <param name="opponent">对手控制脚本。</param>
+	/// <returns>可执行返回 true。</returns>
 	protected virtual bool ValidateReaction(AIReactionType reactionType, ControlsScript self, ControlsScript opponent){
 		if (self == null || opponent == null){
 			return false;

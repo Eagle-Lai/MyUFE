@@ -32,8 +32,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+/// <summary>
+/// 阻塞集合（BlockingCollection&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的线程安全阻塞集合——包装 IProducerConsumerCollection&lt;T&gt;，</para>
+/// <para>提供带容量上限的 Add/Take（集合满时阻塞添加、空时阻塞取出）与超时/取消支持。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
+	/// <summary>
+	/// 阻塞集合：支持阻塞添加/取出的线程安全集合。
+	/// </summary>
 	[ComVisible (false)]
 	[DebuggerDisplay ("Count={Count}")]
 	[DebuggerTypeProxy (typeof (CollectionDebuggerView<>))]

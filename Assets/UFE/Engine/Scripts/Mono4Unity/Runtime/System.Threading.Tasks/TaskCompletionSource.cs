@@ -30,10 +30,19 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 任务完成源（TaskCompletionSource&lt;TResult&gt;）。
+/// <para>用途：从 Mono 移植——由外部手动控制 Task 完成状态（SetResult/SetException/SetCanceled）的辅助类，</para>
+/// <para>用于把异步回调包装成 Task 供等待/延续。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务完成源：手动设置底层任务的结果/异常/取消。
+	/// </summary>
 	public class TaskCompletionSource<TResult>
 	{
+		/// <summary>底层任务。</summary>
 		readonly Task<TResult> source;
 
 		public TaskCompletionSource ()

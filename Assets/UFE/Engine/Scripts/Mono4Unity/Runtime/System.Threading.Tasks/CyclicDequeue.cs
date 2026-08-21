@@ -30,6 +30,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
+/// <summary>
+/// 环形双端队列（CyclicDeque&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的无锁环形数组双端队列——支持线程独占的底部压入/弹出（PushBottom/PopBottom）</para>
+/// <para>与跨线程偷取的顶部弹出（PopTop），是 ConcurrentBag 的底层数据结构。</para>
+/// </summary>
 #if INSIDE_MONO_PARALLEL
 namespace Mono.Threading.Tasks
 #else
@@ -39,6 +44,9 @@ namespace System.Threading.Tasks
 #if INSIDE_MONO_PARALLEL
 	public
 #endif
+	/// <summary>
+	/// 环形双端队列类。
+	/// </summary>
 	class CyclicDeque<T> : IConcurrentDeque<T>
 	{
 		const int BaseSize = 11;

@@ -4,36 +4,69 @@ using FPLibrary;
 using UFENetcode;
 using UFE3D;
 
+/// <summary>
+/// 角色物理脚本（PhysicsScript）。
+/// <para>用途：处理角色的移动/跳跃/重力/推挤/弹跳等全部物理模拟，负责水平与垂直方向的力计算和落地检测。</para>
+/// <para>所有物理量均使用定点数（Fix64）以保证网络对战各客户端确定性一致。</para>
+/// </summary>
 public class PhysicsScript : MonoBehaviour {
     #region trackable definitions
+	/// <summary>空中停留时间（秒，用于动画速度计算）。</summary>
     public Fix64 airTime;
+	/// <summary>当前应用的重力加速度。</summary>
     public Fix64 appliedGravity;
+	/// <summary>当前已使用的空中跳跃次数。</summary>
     public int currentAirJumps;
+	/// <summary>是否冻结物理（停止一切物理作用）。</summary>
     public bool freeze;
+	/// <summary>地面弹跳次数。</summary>
     public int groundBounceTimes;
+	/// <summary>水平方向力。</summary>
     public Fix64 horizontalForce;
+	/// <summary>是否正在地面弹跳。</summary>
     public bool isGroundBouncing;
+	/// <summary>是否正在落地。</summary>
     public bool isLanding;
+	/// <summary>是否正在起跳。</summary>
     public bool isTakingOff;
+	/// <summary>是否正在墙壁弹跳。</summary>
     public bool isWallBouncing;
+	/// <summary>当前移动方向（-1 左 / 1 右）。</summary>
     public Fix64 moveDirection;
+	/// <summary>是否覆盖空中动画（强制使用指定动画）。</summary>
     public bool overrideAirAnimation;
+	/// <summary>覆盖受击动画的基础动作（眩晕状态下使用）。</summary>
     public BasicMoveInfo overrideStunAnimation;
+	/// <summary>垂直方向力（速度）。</summary>
     public Fix64 verticalForce;
+	/// <summary>垂直方向总力（用于跳跃弧线计算）。</summary>
     public Fix64 verticalTotalForce;
+	/// <summary>墙壁弹跳次数。</summary>
     public int wallBounceTimes;
     #endregion
 
+	/// <summary>角色控制脚本引用。</summary>
     public ControlsScript controlScript;
+	/// <summary>招式集合脚本引用。</summary>
     public MoveSetScript moveSetScript;
 
+	/// <summary>本角色世界变换（定点数）快捷属性。</summary>
     private FPTransform worldTransform { get { return controlScript.worldTransform; } set { controlScript.worldTransform = value; } }
+	/// <summary>对手世界变换（定点数）快捷属性。</summary>
     private FPTransform opWorldTransform { get { return controlScript.opControlsScript.worldTransform; } set { controlScript.opControlsScript.worldTransform = value; } }
 
+	/// <summary>
+	/// 启动：根据角色重量和全局重力初始化重力加速度。
+	/// </summary>
     public void Start(){
 		appliedGravity = controlScript.myInfo.physics._weight * UFE.config._gravity;
 	}
 	
+	/// <summary>
+	/// 地面移动：设置水平力并更新子状态（前进/后退）。
+	/// </summary>
+	/// <param name="mirror">朝向（1 右 / -1 左）。</param>
+	/// <param name="direction">移动方向值。</param>
 	public void Move(int mirror, Fix64 direction){
 		if (!IsGrounded()) return;
 		if (freeze) return;
@@ -53,10 +86,17 @@ public class PhysicsScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 使用角色默认跳跃力执行跳跃。
+	/// </summary>
     public void Jump() {
         Jump(controlScript.myInfo.physics._jumpForce);
     }
 
+	/// <summary>
+	/// 使用指定跳跃力执行跳跃（含二段跳/三段跳逻辑）。
+	/// </summary>
+	/// <param name="jumpForce">跳跃初速度。</param>
     public void Jump(Fix64 jumpForce) {
 		if (isTakingOff && currentAirJumps > 0) return;
 		if (controlScript.currentMove != null) return;
@@ -76,18 +116,34 @@ public class PhysicsScript : MonoBehaviour {
 		//ApplyForces(controlScript.currentMove);
 	}
 
+	/// <summary>
+	/// 角色当前是否在跳跃中（空中跳跃次数大于0）。
+	/// </summary>
+	/// <returns>true 表示在空中。</returns>
 	public bool IsJumping() {
 		return (currentAirJumps > 0);
 	}
 	
+	/// <summary>
+	/// 角色当前是否在移动。
+	/// </summary>
+	/// <returns>true 表示移动方向不为0。</returns>
 	public bool IsMoving() {
 		return (moveDirection != 0);
 	}
 
+	/// <summary>
+	/// 重置落地标志。
+	/// </summary>
     public void ResetLanding() {
         isLanding = false;
     }
 
+	/// <summary>
+	/// 重置水平/垂直方向力。
+	/// </summary>
+	/// <param name="resetX">是否重置水平力。</param>
+	/// <param name="resetY">是否重置垂直力。</param>
 	public void ResetForces(bool resetX, bool resetY) {
         if (resetX) {
             horizontalForce = 0;
@@ -96,6 +152,11 @@ public class PhysicsScript : MonoBehaviour {
 		if (resetY) verticalForce = 0;
 	}
 	
+	/// <summary>
+	/// 施加推挤力（受击/击中后的位移），支持累积力与重置下落力规则。
+	/// </summary>
+	/// <param name="push">要施加的力。</param>
+	/// <param name="mirror">朝向（决定水平力方向）。</param>
 	public void AddForce(FPVector push, int mirror) {
 		push.x *= mirror;
         isGroundBouncing = false;
@@ -110,6 +171,10 @@ public class PhysicsScript : MonoBehaviour {
 		setVerticalData(verticalForce);
 	}
 	
+	/// <summary>
+	/// 根据施加力计算空中时间与垂直总力（用于跳跃弧线归一化）。
+	/// </summary>
+	/// <param name="appliedForce">当前垂直力。</param>
 	private void setVerticalData(Fix64 appliedForce) {
         Fix64 maxHeight = (appliedForce * appliedForce) / (appliedGravity * 2);
 		maxHeight += worldTransform.position.y;
@@ -117,20 +182,35 @@ public class PhysicsScript : MonoBehaviour {
 		verticalTotalForce = appliedGravity * airTime;
 	}
 
+	/// <summary>
+	/// 应用新的角色重量（改变重力加速度）。
+	/// </summary>
+	/// <param name="newWeight">新重量。</param>
 	public void ApplyNewWeight(Fix64 newWeight) {
 		appliedGravity = newWeight * UFE.config._gravity;
 	}
 
+	/// <summary>
+	/// 恢复角色默认重量。
+	/// </summary>
 	public void ResetWeight(){
 		appliedGravity = controlScript.myInfo.physics._weight * UFE.config._gravity;
 	}
 	
+	/// <summary>
+	/// 计算指定力可产生的空中停留时间。
+	/// </summary>
+	/// <param name="appliedForce">垂直力。</param>
+	/// <returns>空中时间（秒）。</returns>
 	public Fix64 GetPossibleAirTime(Fix64 appliedForce) {
         Fix64 maxHeight = (appliedForce * appliedForce) / (appliedGravity * 2);
 		maxHeight += worldTransform.position.y;
         return FPMath.Sqrt(maxHeight * 2 / appliedGravity);
 	}
 
+	/// <summary>
+	/// 强制落地：清零所有力、重置跳跃/弹跳状态并回到站立。
+	/// </summary>
 	public void ForceGrounded() {
 		verticalForce = 0;
 		horizontalForce = 0;
@@ -144,10 +224,18 @@ public class PhysicsScript : MonoBehaviour {
 		controlScript.currentState = PossibleStates.Stand;
 	}
 	
+	/// <summary>
+	/// 应用当前所有力（无指定招式）。
+	/// </summary>
 	public void ApplyForces() {
 		ApplyForces(null);
 	}
 
+	/// <summary>
+	/// 应用当前所有力：处理摩擦、重力、墙壁/地面弹跳、拉近（PullIn）、边界限制、落地检测与对应动画切换。
+	/// <para>这是物理模拟的核心方法，由 ControlsScript 每固定帧调用。</para>
+	/// </summary>
+	/// <param name="move">当前执行的招式（用于忽略重力/摩擦等招式属性）。</param>
 	public void ApplyForces(MoveInfo move) {
 		if (freeze) return;
 
@@ -613,6 +701,10 @@ public class PhysicsScript : MonoBehaviour {
 		if (horizontalForce == 0 && verticalForce == 0) moveDirection = 0;
     }
 
+	/// <summary>
+	/// 判断角色是否着地（Y 坐标不高于场地地面高度）。
+	/// </summary>
+	/// <returns>true 表示着地。</returns>
 	public bool IsGrounded() {
         if (worldTransform.position.y <= UFE.config.selectedStage._groundHeight) {
             return true;

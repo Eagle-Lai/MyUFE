@@ -33,10 +33,19 @@
 
 using System.Collections.Generic;
 
+/// <summary>
+/// 线程池调度器（TpScheduler）。
+/// <para>用途：从 Mono 移植的默认任务调度器——将任务通过 ThreadPool 排队执行，</para>
+/// <para>长时间运行（LongRunning）任务改为独立后台线程执行。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 线程池任务调度器。
+	/// </summary>
 	sealed class TpScheduler: TaskScheduler
 	{
+		/// <summary>线程池回调（缓存）。</summary>
 		static readonly WaitCallback callback = TaskExecuterCallback;
 
 		protected internal override void QueueTask (Task task)

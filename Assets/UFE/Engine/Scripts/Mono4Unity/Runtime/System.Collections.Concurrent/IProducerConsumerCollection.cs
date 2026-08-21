@@ -27,13 +27,31 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// 生产者-消费者集合接口（IProducerConsumerCollection&lt;T&gt;）。
+/// <para>用途：从 Mono 移植——定义线程安全的生产/消费集合统一接口（TryAdd 添加、TryTake 取出）。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
+	/// <summary>
+	/// 生产者-消费者集合接口：并发安全的添加/取出操作。
+	/// </summary>
 	public interface IProducerConsumerCollection<T> : IEnumerable<T>, ICollection, IEnumerable
 	{
+		/// <summary>尝试添加元素。</summary>
+		/// <param name="item">元素。</param>
+		/// <returns>成功返回 true。</returns>
 		bool TryAdd (T item);
+		/// <summary>尝试取出一个元素。</summary>
+		/// <param name="item">输出取出的元素。</param>
+		/// <returns>成功返回 true。</returns>
 		bool TryTake (out T item);
+		/// <summary>复制到新数组。</summary>
+		/// <returns>元素数组。</returns>
 		T[] ToArray ();
+		/// <summary>从指定索引开始复制到数组。</summary>
+		/// <param name="array">目标数组。</param>
+		/// <param name="index">起始索引。</param>
 		void CopyTo (T[] array, int index);
 	}
 }

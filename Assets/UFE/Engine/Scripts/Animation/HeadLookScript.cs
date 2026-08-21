@@ -2,26 +2,55 @@ using UnityEngine;
 using System;
 using System.Collections;
 
+/// <summary>
+/// 头部注视系统（HeadLookScript）。
+/// <para>用途：让角色的头部/颈部骨骼链平滑地转向注视目标（如看向对手），增强角色表现力。</para>
+/// <para>通过多段骨骼弯曲（BendingSegment）实现，LateUpdate 中计算水平/垂直角度并分发旋转到各关节。</para>
+/// </summary>
+
+/// <summary>
+/// 弯曲骨骼段：头部注视中一段可弯曲的骨骼链（如 颈部→头部）。
+/// </summary>
 [System.Serializable]
 public class BendingSegment: ICloneable {
+	/// <summary>骨骼链起始关节。</summary>
 	public Transform firstTransform;
+	/// <summary>骨骼链末端关节。</summary>
 	public Transform lastTransform;
+	/// <summary>绑定的身体部位。</summary>
 	public BodyPart bodyPart = BodyPart.head;
+	/// <summary>角度差阈值（低于该角度不弯曲）。</summary>
 	public float thresholdAngleDifference = 0;
+	/// <summary>弯曲倍率（0~1，越小越不明显）。</summary>
 	public float bendingMultiplier = 0.7f;
+	/// <summary>最大角度差（超过部分不再增加弯曲）。</summary>
 	public float maxAngleDifference = 30;
+	/// <summary>最大弯曲角度。</summary>
 	public float maxBendingAngle = 80;
+	/// <summary>响应速度（角度插值速度）。</summary>
 	public float responsiveness = 4;
+	/// <summary>水平角度（内部计算）。</summary>
 	internal float angleH;
+	/// <summary>垂直角度（内部计算）。</summary>
 	internal float angleV;
+	/// <summary>当前朝上方向（内部计算）。</summary>
 	internal Vector3 dirUp;
+	/// <summary>参考注视方向（内部计算）。</summary>
 	internal Vector3 referenceLookDir;
+	/// <summary>参考朝上方向（内部计算）。</summary>
 	internal Vector3 referenceUpDir;
+	/// <summary>骨骼链长度（关节数）。</summary>
 	internal int chainLength;
+	/// <summary>各关节原始旋转（用于恢复动画）。</summary>
 	internal Quaternion[] origRotations;
 
+	/// <summary>默认构造函数。</summary>
 	public BendingSegment(){}
 
+	/// <summary>
+	/// 拷贝构造函数：复制所有参数与原始旋转数组。
+	/// </summary>
+	/// <param name="other">源段。</param>
 	public BendingSegment(BendingSegment other){
 		this.firstTransform = other.firstTransform;
 		this.lastTransform = other.lastTransform;
@@ -44,41 +73,76 @@ public class BendingSegment: ICloneable {
 		}
 	}
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this);
 	}
 }
 
+/// <summary>
+/// 不受影响的关节：头部注视中不参与弯曲（或部分影响）的关节。
+/// </summary>
 [System.Serializable]
 public class NonAffectedJoints: ICloneable {
+	/// <summary>关节 Transform。</summary>
 	public Transform joint;
+	/// <summary>绑定的身体部位。</summary>
 	public BodyPart bodyPart;
+	/// <summary>影响系数（0=完全不受影响，1=完全跟随）。</summary>
 	public float effect = 0;
 
+	/// <summary>默认构造函数。</summary>
 	public NonAffectedJoints(){}
 
+	/// <summary>
+	/// 拷贝构造函数。
+	/// </summary>
+	/// <param name="other">源对象。</param>
 	public NonAffectedJoints(NonAffectedJoints other){
 		this.joint = other.joint;
 		this.bodyPart = other.bodyPart;
 		this.effect = other.effect;
 	}
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this);
 	}
 }
 
+/// <summary>
+/// 头部注视脚本（HeadLookScript）。
+/// <para>在 LateUpdate 中根据目标位置计算各骨骼段的水平/垂直弯曲角度，并将旋转平滑分发到骨骼链关节。</para>
+/// <para>支持覆盖动画（overrideAnimation）与不受影响关节的修正。</para>
+/// </summary>
 public class HeadLookScript : MonoBehaviour {
 	
+	/// <summary>根节点（用于参考方向）。</summary>
 	public Transform rootNode;
+	/// <summary>弯曲骨骼段列表。</summary>
 	public BendingSegment[] segments;
+	/// <summary>不受影响的关节列表。</summary>
 	public NonAffectedJoints[] nonAffectedJoints;
+	/// <summary>头部注视向量（局部空间前方向）。</summary>
 	public Vector3 headLookVector = Vector3.forward;
+	/// <summary>头部朝上向量（局部空间上方向）。</summary>
 	public Vector3 headUpVector = Vector3.up;
+	/// <summary>注视目标的世界位置。</summary>
 	public Vector3 target = Vector3.zero;
+	/// <summary>注视效果强度（0~1）。</summary>
 	public float effect = 1;
+	/// <summary>是否覆盖动画（强制执行头部旋转）。</summary>
 	public bool overrideAnimation = false;
 	
+	/// <summary>
+	/// 启动：初始化各骨骼段的参考方向、链长度与原始旋转。
+	/// </summary>
 	void Start () {
 		if (rootNode == null) {
 			rootNode = transform;
@@ -112,6 +176,11 @@ public class HeadLookScript : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 每帧末尾更新：计算并应用头部注视旋转。
+	/// <para>对每段骨骼计算水平/垂直角度（含阈值/倍率/最大角度限制），平滑插值后分发到链上所有关节；</para>
+	/// <para>最后按影响系数修正不受影响关节的方向。</para>
+	/// </summary>
 	void LateUpdate () {
 		if (Time.deltaTime == 0)
 			return;
@@ -247,6 +316,13 @@ public class HeadLookScript : MonoBehaviour {
 	}
 	
 	// The angle between dirA and dirB around axis
+	/// <summary>
+	/// 计算 dirA 到 dirB 绕指定轴的有符号角度。
+	/// </summary>
+	/// <param name="dirA">方向 A。</param>
+	/// <param name="dirB">方向 B。</param>
+	/// <param name="axis">旋转轴。</param>
+	/// <returns>有符号角度（绕轴正方向为正）。</returns>
 	public static float AngleAroundAxis (Vector3 dirA, Vector3 dirB, Vector3 axis) {
 		// Project A and B onto the plane orthogonal target axis
 		dirA = dirA - Vector3.Project(dirA, axis);

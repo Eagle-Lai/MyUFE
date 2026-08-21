@@ -30,11 +30,25 @@
 
 using System;
 
+/// <summary>
+/// 结构性相等接口（IStructuralEquatable）。
+/// <para>用途：从 Mono 移植——支持按指定比较器判断两个对象是否结构相等并计算结构哈希。</para>
+/// </summary>
 namespace System.Collections
 {
+	/// <summary>
+	/// 结构性相等接口：支持按元素比较相等性与计算哈希。
+	/// </summary>
 	public interface IStructuralEquatable {
+		/// <summary>按指定比较器判断当前对象与另一个对象是否结构相等。</summary>
+		/// <param name="other">待比较对象。</param>
+		/// <param name="comparer">比较器。</param>
+		/// <returns>相等返回 true。</returns>
 		bool Equals (object other, IEqualityComparer comparer);
 
+		/// <summary>按指定比较器计算对象的结构哈希码。</summary>
+		/// <param name="comparer">比较器。</param>
+		/// <returns>哈希码。</returns>
 		int GetHashCode (IEqualityComparer comparer);
 	}
 }

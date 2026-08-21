@@ -31,15 +31,27 @@
 using System;
 using System.Diagnostics;
 
+/// <summary>
+/// 任务调试器视图（TaskDebuggerView）。
+/// <para>用途：从 Mono 移植的调试器类型代理——以友好形式展示 Task 的关键属性（状态/异常/方法等）。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
 	//
 	// Custom debugger type proxy for tasks
 	//
+	/// <summary>
+	/// 任务调试器视图类。
+	/// </summary>
 	sealed class TaskDebuggerView
 	{
+		/// <summary>目标任务。</summary>
 		readonly Task task;
 
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="task">目标任务。</param>
 		public TaskDebuggerView (Task task)
 		{
 			this.task = task;

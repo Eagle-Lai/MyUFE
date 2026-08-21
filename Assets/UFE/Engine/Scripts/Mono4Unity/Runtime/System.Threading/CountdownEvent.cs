@@ -28,13 +28,24 @@
 
 //#if NET_4_0 || MOBILE
 
+/// <summary>
+/// 倒计时事件（CountdownEvent）。
+/// <para>用途：从 Mono 移植的同步原语——维护一个倒计数值，每次 Signal 递减，</para>
+/// <para>当计数归零时事件被置位，等待中的线程得以通过；支持 AddCount/Reset/Wait（含超时与取消）。</para>
+/// </summary>
 namespace System.Threading
 {
+	/// <summary>
+	/// 倒计时事件：计数归零后等待线程全部放行。
+	/// </summary>
 	[System.Diagnostics.DebuggerDisplayAttribute ("Initial Count={InitialCount}, Current Count={CurrentCount}")]
 	public class CountdownEvent : IDisposable
 	{
+		/// <summary>当前倒计数。</summary>
 		int initialCount;
+		/// <summary>初始倒计数（Reset 恢复用）。</summary>
 		int initial;
+		/// <summary>底层事件句柄。</summary>
 		ManualResetEventSlim evt;
 
 		public CountdownEvent (int initialCount)

@@ -28,10 +28,18 @@
 
 //#if NET_4_5
 
+/// <summary>
+/// 只读集合接口（IReadOnlyCollection&lt;T&gt;）。
+/// <para>用途：从 Mono 移植——提供只读集合的元素数量访问，配合 IEnumerable&lt;T&gt; 支持只读遍历。</para>
+/// </summary>
 namespace System.Collections.Generic
 {
+	/// <summary>
+	/// 只读集合接口：可枚举且暴露元素数量。
+	/// </summary>
 	public interface IReadOnlyCollection</*out*/ T> : IEnumerable<T>
 	{
+		/// <summary>集合元素数量。</summary>
 		int Count { get; }
 	}
 }

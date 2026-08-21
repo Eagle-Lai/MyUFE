@@ -29,7 +29,16 @@
 
 using System;
 
+/// <summary>
+/// 列表变更事件委托（ListChangedEventHandlerDerived）。
+/// <para>用途：从 Mono 移植——处理列表（IBindingList）内容变更事件的委托签名。</para>
+/// </summary>
 namespace System.ComponentModel {
+	/// <summary>
+	/// 列表变更事件委托。
+	/// </summary>
+	/// <param name="sender">事件发送者。</param>
+	/// <param name="e">列表变更事件参数。</param>
 	public delegate void ListChangedEventHandlerDerived(object sender, 
 						     ListChangedEventArgsDerived e);
-}						    
+}

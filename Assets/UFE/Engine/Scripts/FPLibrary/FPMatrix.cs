@@ -21,53 +21,72 @@ namespace FPLibrary
 {
 
     /// <summary>
+    /// 定点 3x3 矩阵（FPMatrix）。
+    /// <para>用途：以九个 Fix64 分量表示 3x3 旋转/变换矩阵，提供矩阵加减乘除、转置、求逆、</para>
+    /// <para>行列式、创建旋转/缩放/观察矩阵等运算，供定点变换使用以保证网络确定性。</para>
+    /// </summary>
+
+    /// <summary>
     /// 3x3 Matrix.
     /// </summary>
+    /// <summary>定点 3x3 矩阵结构体。</summary>
     public struct FPMatrix
     {
         /// <summary>
         /// M11
         /// </summary>
+        /// <summary>第一行第一列（第 1 行向量）。</summary>
         public Fix64 M11; // 1st row vector
         /// <summary>
         /// M12
         /// </summary>
+        /// <summary>第一行第二列。</summary>
         public Fix64 M12;
         /// <summary>
         /// M13
         /// </summary>
+        /// <summary>第一行第三列。</summary>
         public Fix64 M13;
         /// <summary>
         /// M21
         /// </summary>
+        /// <summary>第二行第一列（第 2 行向量）。</summary>
         public Fix64 M21; // 2nd row vector
         /// <summary>
         /// M22
         /// </summary>
+        /// <summary>第二行第二列。</summary>
         public Fix64 M22;
         /// <summary>
         /// M23
         /// </summary>
+        /// <summary>第二行第三列。</summary>
         public Fix64 M23;
         /// <summary>
         /// M31
         /// </summary>
+        /// <summary>第三行第一列（第 3 行向量）。</summary>
         public Fix64 M31; // 3rd row vector
         /// <summary>
         /// M32
         /// </summary>
+        /// <summary>第三行第二列。</summary>
         public Fix64 M32;
         /// <summary>
         /// M33
         /// </summary>
+        /// <summary>第三行第三列。</summary>
         public Fix64 M33;
 
+		/// <summary>内部单位矩阵（缓存）。</summary>
         internal static FPMatrix InternalIdentity;
 
         /// <summary>
         /// Identity matrix.
         /// </summary>
+        /// <summary>单位矩阵。</summary>
         public static readonly FPMatrix Identity;
+		/// <summary>零矩阵。</summary>
         public static readonly FPMatrix Zero;
 
         static FPMatrix()
@@ -94,6 +113,13 @@ namespace FPLibrary
             }
         }
 
+		/// <summary>
+		/// 由偏航角/俯仰角/翻滚角创建旋转矩阵。
+		/// </summary>
+		/// <param name="yaw">偏航角（绕 Y 轴）。</param>
+		/// <param name="pitch">俯仰角（绕 X 轴）。</param>
+		/// <param name="roll">翻滚角（绕 Z 轴）。</param>
+		/// <returns>旋转矩阵。</returns>
         public static FPMatrix CreateFromYawPitchRoll(Fix64 yaw, Fix64 pitch, Fix64 roll)
         {
             FPMatrix matrix;
@@ -103,6 +129,11 @@ namespace FPLibrary
             return matrix;
         }
 
+		/// <summary>
+		/// 创建绕 X 轴旋转的旋转矩阵。
+		/// </summary>
+		/// <param name="radians">旋转弧度。</param>
+		/// <returns>旋转矩阵。</returns>
         public static FPMatrix CreateRotationX(Fix64 radians)
         {
             FPMatrix matrix;
@@ -135,6 +166,11 @@ namespace FPLibrary
             result.M33 = num2;
         }
 
+		/// <summary>
+		/// 创建绕 Y 轴旋转的旋转矩阵。
+		/// </summary>
+		/// <param name="radians">旋转弧度。</param>
+		/// <returns>旋转矩阵。</returns>
         public static FPMatrix CreateRotationY(Fix64 radians)
         {
             FPMatrix matrix;
@@ -167,6 +203,11 @@ namespace FPLibrary
             result.M33 = num2;
         }
 
+		/// <summary>
+		/// 创建绕 Z 轴旋转的旋转矩阵。
+		/// </summary>
+		/// <param name="radians">旋转弧度。</param>
+		/// <returns>旋转矩阵。</returns>
         public static FPMatrix CreateRotationZ(Fix64 radians)
         {
             FPMatrix matrix;
@@ -233,6 +274,10 @@ namespace FPLibrary
         /// <returns>The determinant of the matrix.</returns>
         #region public FP Determinant()
         //public FP Determinant()
+		/// <summary>矩阵乘法（返回新矩阵）。</summary>
+		/// <param name="matrix1">矩阵1。</param>
+		/// <param name="matrix2">矩阵2。</param>
+		/// <returns>乘积矩阵。</returns>
         //{
         //    return M11 * M22 * M33 -M11 * M23 * M32 -M12 * M21 * M33 +M12 * M23 * M31 + M13 * M21 * M32 - M13 * M22 * M31;
         //}
@@ -322,6 +367,11 @@ namespace FPLibrary
         /// <param name="matrix">The matrix to invert.</param>
         /// <returns>The inverted JMatrix.</returns>
         #region public static JMatrix Inverse(JMatrix matrix)
+		/// <summary>
+		/// 计算矩阵的逆矩阵。
+		/// </summary>
+		/// <param name="matrix">源矩阵。</param>
+		/// <returns>逆矩阵。</returns>
         public static FPMatrix Inverse(FPMatrix matrix)
         {
             FPMatrix result;
@@ -329,6 +379,10 @@ namespace FPLibrary
             return result;
         }
 
+		/// <summary>
+		/// 计算矩阵的行列式值。
+		/// </summary>
+		/// <returns>行列式值。</returns>
         public Fix64 Determinant()
         {
             return M11 * M22 * M33 + M12 * M23 * M31 + M13 * M21 * M32 -
@@ -456,12 +510,24 @@ namespace FPLibrary
         /// <returns>JMatrix representing an orientation.</returns>
         #region public static JMatrix CreateFromQuaternion(JQuaternion quaternion)
 
+		/// <summary>
+		/// 创建从 position 看向 target 的观察矩阵。
+		/// </summary>
+		/// <param name="position">观察者位置。</param>
+		/// <param name="target">目标位置。</param>
+		/// <returns>观察矩阵。</returns>
 		public static FPMatrix CreateFromLookAt(FPVector position, FPVector target){
 			FPMatrix result;
 			LookAt (target - position, FPVector.up, out result);
 			return result;
 		}
 
+		/// <summary>
+		/// 按朝向与上方向量创建观察矩阵。
+		/// </summary>
+		/// <param name="forward">前方向。</param>
+		/// <param name="upwards">上方向。</param>
+		/// <returns>观察矩阵。</returns>
         public static FPMatrix LookAt(FPVector forward, FPVector upwards) {
             FPMatrix result;
             LookAt(forward, upwards, out result);
@@ -469,6 +535,12 @@ namespace FPLibrary
             return result;
         }
 
+		/// <summary>
+		/// 按朝向与上方向量创建观察矩阵（引用版本）。
+		/// </summary>
+		/// <param name="forward">前方向。</param>
+		/// <param name="upwards">上方向。</param>
+		/// <param name="result">观察矩阵。</param>
         public static void LookAt(FPVector forward, FPVector upwards, out FPMatrix result) {
             FPVector zaxis = forward; zaxis.Normalize();
             FPVector xaxis = FPVector.Cross(upwards, zaxis); xaxis.Normalize();
@@ -485,6 +557,11 @@ namespace FPLibrary
             result.M33 = zaxis.z;
         }
 
+		/// <summary>
+		/// 从四元数创建旋转矩阵。
+		/// </summary>
+		/// <param name="quaternion">旋转四元数。</param>
+		/// <returns>旋转矩阵。</returns>
         public static FPMatrix CreateFromQuaternion(FPQuaternion quaternion)
         {
             FPMatrix result;
@@ -526,6 +603,11 @@ namespace FPLibrary
         /// <param name="matrix">The matrix which should be transposed.</param>
         /// <returns>The transposed JMatrix.</returns>
         #region public static JMatrix Transpose(JMatrix matrix)
+		/// <summary>
+		/// 计算矩阵的转置矩阵。
+		/// </summary>
+		/// <param name="matrix">源矩阵。</param>
+		/// <returns>转置矩阵。</returns>
         public static FPMatrix Transpose(FPMatrix matrix)
         {
             FPMatrix result;
@@ -567,6 +649,10 @@ namespace FPLibrary
         #endregion
 
 
+		/// <summary>
+		/// 计算矩阵的迹（主对角线元素之和）。
+		/// </summary>
+		/// <returns>矩阵迹。</returns>
         public Fix64 Trace()
         {
             return this.M11 + this.M22 + this.M33;
@@ -659,6 +745,12 @@ namespace FPLibrary
         /// <param name="angle">The angle.</param>
         /// <param name="result">The resulting rotation matrix</param>
         #region public static void CreateFromAxisAngle(ref JVector axis, FP angle, out JMatrix result)
+		/// <summary>
+		/// 绕指定轴旋转指定角度创建旋转矩阵（引用版本）。
+		/// </summary>
+		/// <param name="axis">旋转轴。</param>
+		/// <param name="angle">旋转弧度。</param>
+		/// <param name="result">旋转矩阵。</param>
         public static void CreateFromAxisAngle(ref FPVector axis, Fix64 angle, out FPMatrix result)
         {
             Fix64 x = axis.x;
@@ -689,6 +781,12 @@ namespace FPLibrary
         /// <param name="axis">The axis.</param>
         /// <param name="angle">The angle.</param>
         /// <returns>The resulting rotation matrix</returns>
+		/// <summary>
+		/// 绕指定轴旋转指定角度创建旋转矩阵。
+		/// </summary>
+		/// <param name="angle">旋转弧度。</param>
+		/// <param name="axis">旋转轴。</param>
+		/// <returns>旋转矩阵。</returns>
         public static FPMatrix AngleAxis(Fix64 angle, FPVector axis)
         {
             FPMatrix result; CreateFromAxisAngle(ref axis, angle, out result);

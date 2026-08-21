@@ -24,23 +24,38 @@ namespace FPLibrary
 {
 
     /// <summary>
+    /// 定点四元数（FPQuaternion）。
+    /// <para>用途：以四个 Fix64 分量（x/y/z/w）表示三维旋转，提供四元数的乘除、共轭、归一化、</para>
+    /// <para>旋转向量、欧拉角转换、LookRotation 等运算，用于定点旋转以保证网络确定性。</para>
+    /// </summary>
+
+    /// <summary>
     /// A Quaternion representing an orientation.
     /// </summary>
+    /// <summary>定点四元数结构体（表示三维旋转）。</summary>
     [Serializable]
     public struct FPQuaternion
     {
 
         /// <summary>The X component of the quaternion.</summary>
+        /// <summary>X 分量。</summary>
         public Fix64 x;
         /// <summary>The Y component of the quaternion.</summary>
+        /// <summary>Y 分量。</summary>
         public Fix64 y;
         /// <summary>The Z component of the quaternion.</summary>
+        /// <summary>Z 分量。</summary>
         public Fix64 z;
         /// <summary>The W component of the quaternion.</summary>
+        /// <summary>W 分量（标量部分）。</summary>
         public Fix64 w;
 
+        /// <summary>单位四元数（零旋转）。</summary>
         public static readonly FPQuaternion identity;
 
+        /// <summary>
+        /// 静态构造函数：初始化单位四元数。
+        /// </summary>
         static FPQuaternion() {
             identity = new FPQuaternion(0, 0, 0, 1);
         }
@@ -60,6 +75,13 @@ namespace FPLibrary
             this.w = w;
         }
 
+		/// <summary>
+		/// 设置四元数各分量。
+		/// </summary>
+		/// <param name="new_x">新 X 分量。</param>
+		/// <param name="new_y">新 Y 分量。</param>
+		/// <param name="new_z">新 Z 分量。</param>
+		/// <param name="new_w">新 W 分量。</param>
         public void Set(Fix64 new_x, Fix64 new_y, Fix64 new_z, Fix64 new_w) {
             this.x = new_x;
             this.y = new_y;
@@ -94,6 +116,12 @@ namespace FPLibrary
             }
         }
 
+		/// <summary>
+		/// 计算两个旋转四元数之间的夹角（度）。
+		/// </summary>
+		/// <param name="a">旋转 a。</param>
+		/// <param name="b">旋转 b。</param>
+		/// <returns>夹角角度。</returns>
         public static Fix64 Angle(FPQuaternion a, FPQuaternion b) {
             FPQuaternion aInv = FPQuaternion.Inverse(a);
             FPQuaternion f = b * aInv;
@@ -114,6 +142,12 @@ namespace FPLibrary
         /// <param name="quaternion2">The second quaternion.</param>
         /// <returns>The sum of both quaternions.</returns>
         #region public static JQuaternion Add(JQuaternion quaternion1, JQuaternion quaternion2)
+		/// <summary>
+		/// 四元数相加（返回新四元数）。
+		/// </summary>
+		/// <param name="quaternion1">四元数1。</param>
+		/// <param name="quaternion2">四元数2。</param>
+		/// <returns>和四元数。</returns>
         public static FPQuaternion Add(FPQuaternion quaternion1, FPQuaternion quaternion2)
         {
             FPQuaternion result;
@@ -121,14 +155,32 @@ namespace FPLibrary
             return result;
         }
 
+		/// <summary>
+		/// 按前方向量创建朝向四元数（默认上方向为 Y 轴）。
+		/// </summary>
+		/// <param name="forward">前方向量。</param>
+		/// <returns>朝向四元数。</returns>
         public static FPQuaternion LookRotation(FPVector forward) {
             return CreateFromMatrix(FPMatrix.LookAt(forward, FPVector.up));
         }
 
+		/// <summary>
+		/// 按前方向量与上方向量创建朝向四元数。
+		/// </summary>
+		/// <param name="forward">前方向量。</param>
+		/// <param name="upwards">上方向量。</param>
+		/// <returns>朝向四元数。</returns>
         public static FPQuaternion LookRotation(FPVector forward, FPVector upwards) {
             return CreateFromMatrix(FPMatrix.LookAt(forward, upwards));
         }
 
+		/// <summary>
+		/// 球面线性插值（Slerp）：在 from 与 to 之间按 t 平滑插值旋转。
+		/// </summary>
+		/// <param name="from">起始旋转。</param>
+		/// <param name="to">目标旋转。</param>
+		/// <param name="t">插值参数（0~1）。</param>
+		/// <returns>插值结果旋转。</returns>
         public static FPQuaternion Slerp(FPQuaternion from, FPQuaternion to, Fix64 t) {
             t = FPMath.Clamp(t, 0, 1);
 
@@ -166,6 +218,13 @@ namespace FPLibrary
             return Multiply(Multiply(from, Fix64.Sin((1 - maxDegreesDelta) * halfTheta)) + Multiply(to, Fix64.Sin(maxDegreesDelta * halfTheta)), 1 / Fix64.Sin(halfTheta));
         }
 
+		/// <summary>
+		/// 由欧拉角（度）创建旋转四元数。
+		/// </summary>
+		/// <param name="x">绕 X 轴旋转角度。</param>
+		/// <param name="y">绕 Y 轴旋转角度。</param>
+		/// <param name="z">绕 Z 轴旋转角度。</param>
+		/// <returns>旋转四元数。</returns>
         public static FPQuaternion Euler(Fix64 x, Fix64 y, Fix64 z) {
             x *= Fix64.Deg2Rad;
             y *= Fix64.Deg2Rad;
@@ -177,10 +236,21 @@ namespace FPLibrary
             return rotation;
         }
 
+		/// <summary>
+		/// 由欧拉角向量（度）创建旋转四元数。
+		/// </summary>
+		/// <param name="eulerAngles">欧拉角向量。</param>
+		/// <returns>旋转四元数。</returns>
         public static FPQuaternion Euler(FPVector eulerAngles) {
             return Euler(eulerAngles.x, eulerAngles.y, eulerAngles.z);
         }
 
+		/// <summary>
+		/// 绕指定轴旋转指定角度（度）创建旋转四元数。
+		/// </summary>
+		/// <param name="angle">旋转角度（度）。</param>
+		/// <param name="axis">旋转轴。</param>
+		/// <returns>旋转四元数。</returns>
         public static FPQuaternion AngleAxis(Fix64 angle, FPVector axis) {
             axis = axis * Fix64.Deg2Rad;
             axis.Normalize();
@@ -198,6 +268,13 @@ namespace FPLibrary
             return rotation;
         }
 
+		/// <summary>
+		/// 由偏航角/俯仰角/翻滚角创建旋转四元数（引用版本）。
+		/// </summary>
+		/// <param name="yaw">偏航角（度）。</param>
+		/// <param name="pitch">俯仰角（度）。</param>
+		/// <param name="roll">翻滚角（度）。</param>
+		/// <param name="result">旋转四元数。</param>
         public static void CreateFromYawPitchRoll(Fix64 yaw, Fix64 pitch, Fix64 roll, out FPQuaternion result)
         {
             Fix64 num9 = roll * Fix64.Half;
@@ -230,6 +307,11 @@ namespace FPLibrary
         }
         #endregion
 
+		/// <summary>
+		/// 计算四元数的共轭（取反向量部分）。
+		/// </summary>
+		/// <param name="value">源四元数。</param>
+		/// <returns>共轭四元数。</returns>
         public static FPQuaternion Conjugate(FPQuaternion value)
         {
             FPQuaternion quaternion;
@@ -240,15 +322,32 @@ namespace FPLibrary
             return quaternion;
         }
 
+		/// <summary>
+		/// 计算两个四元数的点积。
+		/// </summary>
+		/// <param name="a">四元数 a。</param>
+		/// <param name="b">四元数 b。</param>
+		/// <returns>点积值。</returns>
         public static Fix64 Dot(FPQuaternion a, FPQuaternion b) {
             return a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
         }
 
+		/// <summary>
+		/// 计算四元数的逆（逆旋转）。
+		/// </summary>
+		/// <param name="rotation">源旋转四元数。</param>
+		/// <returns>逆旋转四元数。</returns>
         public static FPQuaternion Inverse(FPQuaternion rotation) {
             Fix64 invNorm = Fix64.One / ((rotation.x * rotation.x) + (rotation.y * rotation.y) + (rotation.z * rotation.z) + (rotation.w * rotation.w));
             return FPQuaternion.Multiply(FPQuaternion.Conjugate(rotation), invNorm);
         }
 
+		/// <summary>
+		/// 创建将 fromVector 旋转到 toVector 的旋转四元数。
+		/// </summary>
+		/// <param name="fromVector">起始方向。</param>
+		/// <param name="toVector">目标方向。</param>
+		/// <returns>旋转四元数。</returns>
         public static FPQuaternion FromToRotation(FPVector fromVector, FPVector toVector) {
             FPVector w = FPVector.Cross(fromVector, toVector);
             FPQuaternion q = new FPQuaternion(w.x, w.y, w.z, FPVector.Dot(fromVector, toVector));
@@ -258,12 +357,26 @@ namespace FPLibrary
             return q;
         }
 
+		/// <summary>
+		/// 四元数线性插值（参数夹取到 0~1）。
+		/// </summary>
+		/// <param name="a">起始旋转。</param>
+		/// <param name="b">目标旋转。</param>
+		/// <param name="t">插值参数。</param>
+		/// <returns>插值结果旋转。</returns>
         public static FPQuaternion Lerp(FPQuaternion a, FPQuaternion b, Fix64 t) {
             t = FPMath.Clamp(t, Fix64.Zero, Fix64.One);
 
             return LerpUnclamped(a, b, t);
         }
 
+		/// <summary>
+		/// 四元数线性插值（参数不夹取）。
+		/// </summary>
+		/// <param name="a">起始旋转。</param>
+		/// <param name="b">目标旋转。</param>
+		/// <param name="t">插值参数。</param>
+		/// <returns>插值结果旋转。</returns>
         public static FPQuaternion LerpUnclamped(FPQuaternion a, FPQuaternion b, Fix64 t) {
             FPQuaternion result = FPQuaternion.Multiply(a, (1 - t)) + FPQuaternion.Multiply(b, t);
             result.Normalize();
@@ -278,6 +391,12 @@ namespace FPLibrary
         /// <param name="quaternion2">The second quaternion.</param>
         /// <returns>The difference of both quaternions.</returns>
         #region public static JQuaternion Subtract(JQuaternion quaternion1, JQuaternion quaternion2)
+		/// <summary>
+		/// 四元数相减（返回新四元数）。
+		/// </summary>
+		/// <param name="quaternion1">四元数1。</param>
+		/// <param name="quaternion2">四元数2。</param>
+		/// <returns>差四元数。</returns>
         public static FPQuaternion Subtract(FPQuaternion quaternion1, FPQuaternion quaternion2)
         {
             FPQuaternion result;
@@ -307,6 +426,12 @@ namespace FPLibrary
         /// <param name="quaternion2">The second quaternion.</param>
         /// <returns>The product of both quaternions.</returns>
         #region public static JQuaternion Multiply(JQuaternion quaternion1, JQuaternion quaternion2)
+		/// <summary>
+		/// 四元数相乘（组合旋转，返回新四元数）。
+		/// </summary>
+		/// <param name="quaternion1">四元数1。</param>
+		/// <param name="quaternion2">四元数2。</param>
+		/// <returns>乘积四元数。</returns>
         public static FPQuaternion Multiply(FPQuaternion quaternion1, FPQuaternion quaternion2)
         {
             FPQuaternion result;
@@ -374,6 +499,9 @@ namespace FPLibrary
         /// Sets the length of the quaternion to one.
         /// </summary>
         #region public void Normalize()
+		/// <summary>
+		/// 归一化当前四元数（保持单位长度）。
+		/// </summary>
         public void Normalize()
         {
             Fix64 num2 = (((this.x * this.x) + (this.y * this.y)) + (this.z * this.z)) + (this.w * this.w);
@@ -391,6 +519,11 @@ namespace FPLibrary
         /// <param name="matrix">A matrix representing an orientation.</param>
         /// <returns>JQuaternion representing an orientation.</returns>
         #region public static JQuaternion CreateFromMatrix(JMatrix matrix)
+		/// <summary>
+		/// 从旋转矩阵创建四元数。
+		/// </summary>
+		/// <param name="matrix">旋转矩阵。</param>
+		/// <returns>旋转四元数。</returns>
         public static FPQuaternion CreateFromMatrix(FPMatrix matrix)
         {
             FPQuaternion result;
@@ -493,6 +626,12 @@ namespace FPLibrary
         /**
          *  @brief Rotates a {@link FPVector} by the {@link FPQuanternion}.
          **/
+		/// <summary>
+		/// 四元数旋转向量运算符：用四元数旋转三维向量。
+		/// </summary>
+		/// <param name="quat">旋转四元数。</param>
+		/// <param name="vec">待旋转向量。</param>
+		/// <returns>旋转后的向量。</returns>
         public static FPVector operator *(FPQuaternion quat, FPVector vec) {
             Fix64 num = quat.x * 2f;
             Fix64 num2 = quat.y * 2f;
@@ -519,10 +658,19 @@ namespace FPLibrary
             return string.Format("({0:f1}, {1:f1}, {2:f1}, {3:f1})", x.AsFloat(), y.AsFloat(), z.AsFloat(), w.AsFloat());
         }
 
+		/// <summary>
+		/// 转换为 Unity 四元数。
+		/// </summary>
+		/// <returns>Unity 四元数。</returns>
         public Quaternion ToQuaternion(){
             return new Quaternion((float)this.x, (float)this.y, (float)this.z, (float)this.w);
         }
 
+		/// <summary>
+		/// 从 Unity 四元数转换为定点四元数。
+		/// </summary>
+		/// <param name="quat">Unity 四元数。</param>
+		/// <returns>定点四元数。</returns>
         public static FPQuaternion ToFPQuaternion(Quaternion quat){
             return new FPQuaternion((Fix64)quat.x, (Fix64)quat.y, (Fix64)quat.z, (Fix64)quat.w);
         }

@@ -18,16 +18,30 @@ using UnityEngine;
 // ----------------------------------------------------------------------------
 // GUIText 兼容组件：在 OnGUI 中渲染文本，模拟旧 GUIText 的显示行为
 // ----------------------------------------------------------------------------
+/// <summary>
+/// GUIText 兼容组件（GUITextCompat）。
+/// <para>用途：以 uGUI 的 GUI.Label 模拟旧版 GUIText 的屏幕文本显示行为（含锚点/对齐/颜色/富文本）。</para>
+/// </summary>
 [ExecuteInEditMode]
 public class GUITextCompat : MonoBehaviour {
+	/// <summary>要显示的文本内容。</summary>
 	public string text = "";
+	/// <summary>像素偏移量。</summary>
 	public Vector2 pixelOffset = Vector2.zero;
+	/// <summary>文本锚点（参照位置）。</summary>
 	public TextAnchor anchor = TextAnchor.UpperLeft;
+	/// <summary>文本对齐方式。</summary>
 	public TextAlignment alignment = TextAlignment.Left;
+	/// <summary>文本颜色。</summary>
 	public Color color = Color.white;
+	/// <summary>是否启用富文本。</summary>
 	public bool richText = true;
 
+	/// <summary>缓存的 GUIStyle。</summary>
 	private GUIStyle cachedStyle;
+	/// <summary>
+	/// 获取 GUIStyle（懒加载，基于默认标签样式）。
+	/// </summary>
 	private GUIStyle Style {
 		get {
 			if (cachedStyle == null) {
@@ -37,6 +51,9 @@ public class GUITextCompat : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// OnGUI 渲染：按锚点计算屏幕位置并绘制文本。
+	/// </summary>
 	private void OnGUI() {
 		if (!this.enabled) return;
 

@@ -26,9 +26,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+/// <summary>
+/// 集合变更通知接口（INotifyCollectionChanged）。
+/// <para>用途：从 Mono 移植——实现该接口的集合在内容变化（添加/移除/重置等）时触发 CollectionChanged 事件。</para>
+/// </summary>
 namespace System.Collections.Specialized {
 
+	/// <summary>
+	/// 集合变更通知接口。
+	/// </summary>
 	public interface INotifyCollectionChanged {
+		/// <summary>集合内容变化时触发的事件。</summary>
 		event NotifyCollectionChangedEventHandler CollectionChanged;
 	}
 }

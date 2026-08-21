@@ -6,15 +6,28 @@ using System.Collections.Generic;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 角色编辑器窗口（CharacterEditorWindow，编辑器专用）。
+/// <para>用途：UFE 的角色编辑界面——编辑角色基本信息/物理/头部注视/自定义按键/招式集合/AI 指令集，</para>
+/// <para>并支持角色模型与判定盒实时预览与绑定。</para>
+/// </summary>
 public class CharacterEditorWindow : EditorWindow {
+	/// <summary>当前窗口单例。</summary>
 	public static CharacterEditorWindow characterEditorWindow;
+	/// <summary>传入的角色资产引用。</summary>
 	public static UFE3D.CharacterInfo sentCharacterInfo;
+	/// <summary>当前编辑的角色资产。</summary>
 	private UFE3D.CharacterInfo characterInfo;
+	/// <summary>实例化的招式集合缓存（按索引）。</summary>
     private Dictionary<int, MoveSetData> instantiatedMoveSet = new Dictionary<int, MoveSetData>();
 
+	/// <summary>滚动位置。</summary>
 	private Vector2 scrollPos;
+	/// <summary>预览角色模型。</summary>
 	private GameObject character;
+	/// <summary>预览判定盒脚本。</summary>
 	private HitBoxesScript hitBoxesScript;
+	/// <summary>角色预览开关。</summary>
 	private bool characterPreviewToggle;
 
 	private int bloodTypeChoice;
@@ -50,6 +63,9 @@ public class CharacterEditorWindow : EditorWindow {
 	private string enumStyle;
 
 	[MenuItem("Window/U.F.E./Character Editor")]
+	/// <summary>
+	/// 打开角色编辑器窗口（菜单入口）。
+	/// </summary>
 	public static void Init(){
 		characterEditorWindow = EditorWindow.GetWindow<CharacterEditorWindow>(false, "Character", true);
 		characterEditorWindow.Show();
@@ -123,6 +139,9 @@ public class CharacterEditorWindow : EditorWindow {
 			Application.OpenURL("http://www.ufe3d.com/doku.php/"+ page);
 	}
     
+	/// <summary>
+	/// 每帧更新：进入播放模式前关闭角色预览。
+	/// </summary>
 	void Update(){
 		if (EditorApplication.isPlayingOrWillChangePlaymode && character != null) {
 			ClosePreview();
@@ -165,6 +184,9 @@ public class CharacterEditorWindow : EditorWindow {
 		}
 	}
 	
+	/// <summary>
+	/// 窗口 GUI：绘制角色编辑器界面（未选中角色时提示创建/选择）。
+	/// </summary>
 	public void OnGUI(){
 		if (characterInfo == null){
 			GUILayout.BeginHorizontal("GroupBox");

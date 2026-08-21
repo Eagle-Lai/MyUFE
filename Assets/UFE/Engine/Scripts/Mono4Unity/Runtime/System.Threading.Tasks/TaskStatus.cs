@@ -27,17 +27,32 @@
 //#if NET_4_0 || MOBILE
 using System;
 
+/// <summary>
+/// 任务状态（TaskStatus）。
+/// <para>用途：从 Mono 移植——描述 Task 生命周期中的当前状态。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务状态枚举。
+	/// </summary>
 	public enum TaskStatus
 	{
+		/// <summary>任务已创建但尚未调度。</summary>
 		Created,
+		/// <summary>任务已创建并等待激活。</summary>
 		WaitingForActivation,
+		/// <summary>任务已调度等待运行。</summary>
 		WaitingToRun,
+		/// <summary>任务正在运行。</summary>
 		Running,
+		/// <summary>任务已完成但等待子任务完成。</summary>
 		WaitingForChildrenToComplete,
+		/// <summary>任务成功运行到完成。</summary>
 		RanToCompletion,
+		/// <summary>任务被取消。</summary>
 		Canceled,
+		/// <summary>任务执行出错。</summary>
 		Faulted
 	}
 }

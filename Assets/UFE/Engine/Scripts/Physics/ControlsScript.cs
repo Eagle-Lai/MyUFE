@@ -5,101 +5,188 @@ using UnityEngine.UI;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 角色控制脚本（ControlsScript）。
+/// <para>用途：UFE 引擎中最核心的角色控制器——管理角色的战斗状态机（当前状态/招式/命中/硬直）、</para>
+/// <para>输入读取与移动/跳跃/格挡/弹反/攻击指令、受击处理（GetHit/格挡/弹反/硬直/击倒）、</para>
+/// <para>能量槽管理、朝向旋转、演出（Intro/Outro）、招式实例化、训练模式与调试信息等全部战斗逻辑。</para>
+/// <para>同时兼任帧同步状态（[RecordVar]）的载体，保证网络对战确定性。</para>
+/// </summary>
 public class ControlsScript : MonoBehaviour {
 
     #region trackable definitions
+	/// <summary>离开键盘（AFK）计时器。</summary>
     public Fix64 afkTimer;
+	/// <summary>空中连击次数。</summary>
     public int airJuggleHits;
+	/// <summary>空中受身恢复类型。</summary>
     public AirRecoveryType airRecoveryType;
+	/// <summary>是否应用根骨骼运动。</summary>
     public bool applyRootMotion;
+	/// <summary>是否处于格挡硬直。</summary>
     public bool blockStunned;
+	/// <summary>本连击总伤害。</summary>
     public Fix64 comboDamage;
+	/// <summary>本次命中伤害（连击段伤害）。</summary>
     public Fix64 comboHitDamage;
+	/// <summary>连击数。</summary>
     public int comboHits;
+	/// <summary>连续破防次数。</summary>
     public int consecutiveCrumple;
+	/// <summary>当前基础动作引用。</summary>
     public BasicMoveReference currentBasicMove;
+	/// <summary>当前已消耗能量。</summary>
     public Fix64 currentDrained;
+	/// <summary>当前受击动画名。</summary>
     public string currentHitAnimation;
+	/// <summary>当前主状态（站立/下蹲/跳跃/倒地）。</summary>
     public PossibleStates currentState;
+	/// <summary>当前子状态（静止/移动/格挡/眩晕）。</summary>
     public SubStates currentSubState;
 
+	/// <summary>双取消（Double Cancel）招式。</summary>
     public MoveInfo DCMove;
+	/// <summary>双取消后的姿态。</summary>
     public CombatStances DCStance;
+	/// <summary>是否先手命中。</summary>
     public bool firstHit;
+	/// <summary>每秒能量消耗速率。</summary>
     public Fix64 gaugeDPS;
+	/// <summary>本帧是否检测到命中。</summary>
     public bool hitDetected;
+	/// <summary>受击动画速度。</summary>
     public Fix64 hitAnimationSpeed;
+	/// <summary>受击硬直衰减速度。</summary>
     public Fix64 hitStunDeceleration;
+	/// <summary>能量消耗期间是否禁止回复。</summary>
     public bool inhibitGainWhileDraining;
+	/// <summary>是否正在空中受身恢复。</summary>
     public bool isAirRecovering;
+	/// <summary>是否正在格挡。</summary>
     public bool isBlocking;
+	/// <summary>是否已死亡。</summary>
     public bool isDead;
+	/// <summary>是否忽略碰撞质量。</summary>
     public bool ignoreCollisionMass;
+	/// <summary>开场演出是否已播放。</summary>
     public bool introPlayed;
+	/// <summary>是否高亮（训练模式/演出用）。</summary>
     public bool lit;
+	/// <summary>本角色信息（运行时克隆数据）。</summary>
     public UFE3D.CharacterInfo myInfo;
+	/// <summary>当前朝向（1 右 / -1 左）。</summary>
     public int mirror;
+	/// <summary>归一化距离（0~1，与对手距离）。</summary>
     public Fix64 normalizedDistance;
+	/// <summary>归一化跳跃弧线（0~1）。</summary>
     public Fix64 normalizedJumpArc;
+	/// <summary>退场演出是否已播放。</summary>
     public bool outroPlayed;
+	/// <summary>是否进入格挡预备状态。</summary>
     public bool potentialBlock;
+	/// <summary>弹反预备时间（>0 表示在弹反判定窗口内）。</summary>
     public Fix64 potentialParry;
+	/// <summary>回合消息是否已广播。</summary>
     public bool roundMsgCasted;
+	/// <summary>本场已胜回合数。</summary>
     public int roundsWon;
+	/// <summary>是否震屏。</summary>
     public bool shakeCamera;
+	/// <summary>是否震动角色。</summary>
     public bool shakeCharacter;
+	/// <summary>角色震屏密度。</summary>
     public Fix64 shakeDensity;
+	/// <summary>摄像机震屏密度。</summary>
     public Fix64 shakeCameraDensity;
+	/// <summary>起身覆盖选项（演出用）。</summary>
     public StandUpOptions standUpOverride;
+	/// <summary>标准 Y 轴旋转（初始朝向）。</summary>
     public Fix64 standardYRotation;
+	/// <summary>存储招式的剩余时间。</summary>
     public Fix64 storedMoveTime;
+	/// <summary>眩晕/硬直剩余时间。</summary>
     public Fix64 stunTime;
+	/// <summary>总能量消耗量。</summary>
     public Fix64 totalDrain;
 
+	/// <summary>当前拉近（PullIn）目标。</summary>
     public PullIn activePullIn;
+	/// <summary>当前命中的判定数据。</summary>
     public Hit currentHit;
+	/// <summary>当前执行的招式。</summary>
     public MoveInfo currentMove;
+	/// <summary>存储的招式（缓冲待执行）。</summary>
     public MoveInfo storedMove;
 
+	/// <summary>物理脚本属性。</summary>
     public PhysicsScript Physics { get { return this.myPhysicsScript; } set { myPhysicsScript = value; } }
+	/// <summary>招式集合脚本属性。</summary>
     public MoveSetScript MoveSet { get { return this.myMoveSetScript; } set { myMoveSetScript = value; } }
+	/// <summary>判定盒脚本属性。</summary>
     public HitBoxesScript HitBoxes { get { return this.myHitBoxesScript; } set { myHitBoxesScript = value; } }
 
+	/// <summary>各按钮被按住的时间字典。</summary>
     public Dictionary<ButtonPress, Fix64> inputHeldDown = new Dictionary<ButtonPress, Fix64>();
+	/// <summary>本方已发射的飞行道具列表。</summary>
     public List<ProjectileMoveScript> projectiles = new List<ProjectileMoveScript>();
 
+	/// <summary>本角色世界变换（定点数）。</summary>
     public FPTransform worldTransform;
+	/// <summary>本角色局部变换（定点数，角色模型层）。</summary>
     public FPTransform localTransform;
     #endregion
 
 
+	/// <summary>角色模型原始着色器（用于高亮/特效恢复）。</summary>
     public Shader[] normalShaders;
+	/// <summary>角色模型原始颜色（用于高亮/特效恢复）。</summary>
     public Color[] normalColors;
     
+	/// <summary>物理脚本内部引用。</summary>
 	private PhysicsScript myPhysicsScript;
+	/// <summary>招式集合脚本内部引用。</summary>
 	private MoveSetScript myMoveSetScript;
+	/// <summary>判定盒脚本内部引用。</summary>
     private HitBoxesScript myHitBoxesScript;
 
+	/// <summary>对手物理脚本引用。</summary>
 	private PhysicsScript opPhysicsScript;
+	/// <summary>对手判定盒脚本引用。</summary>
 	private HitBoxesScript opHitBoxesScript;
 
+	/// <summary>头部注视脚本引用。</summary>
 	public HeadLookScript headLookScript;
+	/// <summary>模拟摄像机（演出用）。</summary>
 	public GameObject emulatedCam;
+	/// <summary>摄像机脚本引用。</summary>
 	public CameraScript cameraScript;
 
+	/// <summary>调试文本引用。</summary>
     public Text debugger;
+	/// <summary>AI 调试文本。</summary>
     public string aiDebugger { get; set; }
+	/// <summary>角色调试信息配置。</summary>
     public CharacterDebugInfo debugInfo;
+	/// <summary>玩家编号（1 或 2）。</summary>
     public int playerNum;
 
     //private ActionSequence[] currentActionSequence;
     
+	/// <summary>角色模型实例（Inspector 隐藏）。</summary>
     [HideInInspector] public GameObject character;
+	/// <summary>对手根对象（Inspector 隐藏）。</summary>
     [HideInInspector] public GameObject opponent;
+	/// <summary>对手角色信息（Inspector 隐藏）。</summary>
     [HideInInspector] public UFE3D.CharacterInfo opInfo;
+	/// <summary>挑战模式引用（Inspector 隐藏）。</summary>
     [HideInInspector] public ChallengeMode challengeMode;
+	/// <summary>对手控制脚本引用（Inspector 隐藏）。</summary>
     [HideInInspector] public ControlsScript opControlsScript;
 
+	/// <summary>
+	/// 启动初始化：设置输入按住计时、创建定点变换、设置出生位置与朝向、实例化角色模型、
+	/// 初始化物理/招式/判定盒/摄像机/头部注视脚本、设置移动锁定并广播游戏开始。
+	/// </summary>
     void Start() {
         foreach (ButtonPress bp in System.Enum.GetValues(typeof(ButtonPress))) {
             inputHeldDown.Add(bp, 0);
@@ -213,6 +300,11 @@ public class ControlsScript : MonoBehaviour {
         }
 	}
 	
+	/// <summary>
+	/// 判断摇杆是否处于静止状态（锁定移动/倒地/基础动作禁用时视为静止）。
+	/// </summary>
+	/// <param name="currentInputs">当前输入字典。</param>
+	/// <returns>静止返回 true。</returns>
 	private bool isAxisRested(IDictionary<InputReferences, InputEvents> currentInputs){
 		if (currentState == PossibleStates.Down) return true;
 		if (UFE.config.lockMovements) return true;
@@ -229,6 +321,10 @@ public class ControlsScript : MonoBehaviour {
 		return true;
 	}
 
+	/// <summary>
+	/// 强制镜像朝向（Legacy 用缩放翻转，Mecanim 用镜像动画）。
+	/// </summary>
+	/// <param name="toggle">是否镜像。</param>
 	public void ForceMirror(bool toggle)
     {
         if (UFE.config.characterRotationOptions.autoMirror)
@@ -247,14 +343,26 @@ public class ControlsScript : MonoBehaviour {
         myHitBoxesScript.currentMirror = toggle;
     }
 	
+	/// <summary>
+	/// 反转标准 Y 轴旋转（换边时使用）。
+	/// </summary>
 	public void InvertRotation(){
 		standardYRotation = -standardYRotation;
 	}
 
+	/// <summary>
+	/// 测试角色旋转（不强制镜像）。
+	/// </summary>
+	/// <param name="rotationSpeed">旋转速度。</param>
 	private void testCharacterRotation(Fix64 rotationSpeed){
 		testCharacterRotation(rotationSpeed, false);
 	}
 
+	/// <summary>
+	/// 测试角色旋转：按与对手的 X 位置关系自动镜像，并平滑旋转角色朝向。
+	/// </summary>
+	/// <param name="rotationSpeed">旋转速度。</param>
+	/// <param name="forceMirror">是否强制镜像（网络禁用旋转融合时）。</param>
 	private void testCharacterRotation(Fix64 rotationSpeed, bool forceMirror){
         if ((mirror == -1 || forceMirror) && worldTransform.position.x > opControlsScript.worldTransform.position.x) {
 			mirror = 1;
@@ -287,6 +395,9 @@ public class ControlsScript : MonoBehaviour {
 
 	}
 	
+	/// <summary>
+	/// 固定角色朝向为标准 Y 轴旋转（倒地时跳过）。
+	/// </summary>
 	private void fixCharacterRotation(){
 		if (currentState == PossibleStates.Down) return;
         
@@ -294,6 +405,9 @@ public class ControlsScript : MonoBehaviour {
         localTransform.rotation = fixedRotation;
 	}
 
+	/// <summary>
+	/// 校验并执行角色旋转：根据姿态/招式/跳跃/眩晕/格挡等条件决定是否测试镜像旋转。
+	/// </summary>
 	private void validateRotation(){
 		if (!myPhysicsScript.IsGrounded() || myPhysicsScript.freeze || currentMove != null) fixCharacterRotation();
 
@@ -308,6 +422,14 @@ public class ControlsScript : MonoBehaviour {
 		testCharacterRotation(UFE.config.characterRotationOptions._rotationSpeed);
 	}
 
+	/// <summary>
+	/// 角色每固定帧主循环（由 FluxCapacitor 帧同步驱动）：
+	/// <para>初始化对手引用与服装、应用训练/挑战模式生命能量规则、更新判定盒映射、解析招式、读取输入、</para>
+	/// <para>校验旋转、能量消耗、输入查看器、根骨骼运动、待机回归、AFK 动画、身体碰撞推挤、震屏、</para>
+	/// <para>弹反窗口、头部注视、执行招式、硬直、物理、开场演出、挑战检测、同步 Unity 变换与调试输出。</para>
+	/// </summary>
+	/// <param name="previousInputs">上一帧输入字典。</param>
+	/// <param name="currentInputs">当前帧输入字典。</param>
 	public void DoFixedUpdate(
 		IDictionary<InputReferences, InputEvents> previousInputs,
 		IDictionary<InputReferences, InputEvents> currentInputs
@@ -724,6 +846,12 @@ public class ControlsScript : MonoBehaviour {
         return ButtonPress.Button1;
     }*/
 
+	/// <summary>
+	/// 翻译输入：处理摇杆轴（水平/垂直）与按钮输入——移动、跳跃、下蹲、格挡预备、弹反窗口、
+	/// 斜方向输入注入、双按钮执行（Plink）、松键/按键出招判定。
+	/// </summary>
+	/// <param name="previousInputs">上一帧输入字典。</param>
+	/// <param name="currentInputs">当前帧输入字典。</param>
 	private void translateInputs(
 		IDictionary<InputReferences, InputEvents> previousInputs,
 		IDictionary<InputReferences, InputEvents> currentInputs
@@ -1119,6 +1247,10 @@ public class ControlsScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 重置能量消耗状态：切换回双取消姿态、执行双取消招式并清空消耗数据。
+	/// </summary>
+	/// <param name="clearGauge">是否强制将能量清零。</param>
     public void ResetDrainStatus(bool clearGauge) {
         myMoveSetScript.ChangeMoveStances(DCStance);
         if (DCMove != null) CastMove(DCMove, true);
@@ -1131,6 +1263,12 @@ public class ControlsScript : MonoBehaviour {
         DCMove = null;
     }
 	
+	/// <summary>
+	/// 应用眩晕/硬直：递减硬直时间、播放受击动画减速、按受击类型切换起身/站立动画、硬直结束释放眩晕。
+	/// <para>根据当前受击动画（空中连击/击退/高位/中位/扫腿/破防/墙弹/地面弹跳）选择对应的起身动画。</para>
+	/// </summary>
+	/// <param name="previousInputs">上一帧输入字典。</param>
+	/// <param name="currentInputs">当前帧输入字典。</param>
 	public void ApplyStun(
 		IDictionary<InputReferences, InputEvents> previousInputs,
 		IDictionary<InputReferences, InputEvents> currentInputs
@@ -1277,6 +1415,13 @@ public class ControlsScript : MonoBehaviour {
 		}
 	}
     
+	/// <summary>
+	/// 施展招式：可立即覆盖当前招式或存入缓冲（storedMove），并可选强制落地。
+	/// </summary>
+	/// <param name="move">要施展的招式。</param>
+	/// <param name="overrideCurrentMove">是否覆盖当前招式（true 立即执行，false 存入缓冲）。</param>
+	/// <param name="forceGrounded">是否强制角色落地。</param>
+	/// <param name="castWarning">是否在招式不属于该角色时输出错误警告。</param>
     public void CastMove(MoveInfo move, bool overrideCurrentMove = false, bool forceGrounded = false, bool castWarning = false) {
 		if (move == null) return;
 		if (castWarning && !myMoveSetScript.HasMove(move.moveName)) 
@@ -1294,6 +1439,10 @@ public class ControlsScript : MonoBehaviour {
         if (forceGrounded) myPhysicsScript.ForceGrounded();
 	}
 
+	/// <summary>
+	/// 设置当前招式：应用招式起始帧的身体部位可见性变化并触发出招事件。
+	/// </summary>
+	/// <param name="move">要设置的招式（可为 null 表示清除）。</param>
 	public void SetMove(MoveInfo move){
         if (blockStunned) return;
 
@@ -1319,6 +1468,11 @@ public class ControlsScript : MonoBehaviour {
         UFE.FireMove(currentMove, myInfo);
 	}
 
+	/// <summary>
+	/// 推进招式执行（每帧调用）：驱动招式帧计时、播放动画、能量消耗/回复、飞行道具生成、
+	/// 粒子特效/施加力/部位可见性/慢动作/音效/提示/姿态切换/对手控制（演出）/摄像机演出等全部招式事件。
+	/// </summary>
+	/// <param name="move">当前执行的招式。</param>
 	public void ReadMove(MoveInfo move){
 		if (move == null) return;
 
@@ -1708,6 +1862,11 @@ public class ControlsScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 检测招式命中：遍历招式的全部命中判定，在生效帧内进行碰撞检测，
+	/// 并分发处理为拆投/投技/弹反/格挡/普通命中，同时应用推挤力、角落推挤与打击停顿（Hit Pause）。
+	/// </summary>
+	/// <param name="move">当前执行的招式。</param>
     public void CheckHits(MoveInfo move) {
         HurtBox[] activeHurtBoxes = null;
         foreach (Hit hit in move.hits)
@@ -1850,6 +2009,10 @@ public class ControlsScript : MonoBehaviour {
 
 
     // Imediately cancels any move being executed
+	/// <summary>
+	/// 立即取消当前执行的招式：重置招式帧、清除判定盒/格挡区域/碰撞质量、
+	/// 恢复头部注视与旋转、根据起身覆盖选项设置状态，并释放摄像机。
+	/// </summary>
     public void KillCurrentMove(){
 		if (currentMove == null) return;
 		currentMove.currentFrame = 0;
@@ -1882,6 +2045,12 @@ public class ControlsScript : MonoBehaviour {
 	}
 
 	// Release character to be playable again
+	/// <summary>
+	/// 释放眩晕状态：清空硬直/连击数据、恢复重量与物理状态、重置起身覆盖、恢复头部注视并重新读取输入。
+	/// <para>若角色仍在空中则进入空中受身恢复状态。</para>
+	/// </summary>
+	/// <param name="previousInputs">上一帧输入字典。</param>
+	/// <param name="currentInputs">当前帧输入字典。</param>
 	private void ReleaseStun(
 		IDictionary<InputReferences, InputEvents> previousInputs,
 		IDictionary<InputReferences, InputEvents> currentInputs
@@ -1917,6 +2086,9 @@ public class ControlsScript : MonoBehaviour {
 		translateInputs(previousInputs, currentInputs);
 	}
 
+	/// <summary>
+	/// 释放摄像机：恢复主相机父级、销毁模拟摄像机、恢复双方动画与物理、重置摄像机控制权。
+	/// </summary>
 	private void ReleaseCam(){
 		if (cameraScript.GetCameraOwner() != gameObject.name) return;
 		if (outroPlayed && UFE.config.roundOptions.freezeCamAfterOutro) return;
@@ -1934,6 +2106,11 @@ public class ControlsScript : MonoBehaviour {
 		opPhysicsScript.freeze = false;
 	}
 
+	/// <summary>
+	/// 测试格挡姿态是否有效：中段可站立格挡、上段需站立、下段需下蹲、且按空中/地面格挡限制判断。
+	/// </summary>
+	/// <param name="hitType">攻击命中类型。</param>
+	/// <returns>可格挡返回 true。</returns>
 	public bool TestBlockStances(HitType hitType){
 		if (UFE.config.blockOptions.blockType == BlockType.None) return false;
 		if ((hitType == HitType.Mid || hitType == HitType.MidKnockdown || hitType == HitType.Launcher) && myPhysicsScript.IsGrounded()) return true;
@@ -1943,6 +2120,11 @@ public class ControlsScript : MonoBehaviour {
 		return true;
 	}
 	
+	/// <summary>
+	/// 测试弹反姿态是否有效：中段可站立弹反、上段需站立、下段需下蹲、且按空中/地面弹反限制判断。
+	/// </summary>
+	/// <param name="hitType">攻击命中类型。</param>
+	/// <returns>可弹反返回 true。</returns>
 	public bool TestParryStances(HitType hitType){
 		if (UFE.config.blockOptions.parryType == ParryType.None) return false;
 		if ((hitType == HitType.Mid || hitType == HitType.MidKnockdown || hitType == HitType.Launcher) && myPhysicsScript.IsGrounded()) return true;
@@ -1952,6 +2134,10 @@ public class ControlsScript : MonoBehaviour {
 		return true;
 	}
 	
+	/// <summary>
+	/// 更新格挡状态：根据预备格挡标记启用/禁用格挡，并播放/停止对应的格挡姿态动画。
+	/// </summary>
+	/// <param name="flag">是否尝试进入格挡。</param>
 	public void CheckBlocking(bool flag){
 		if (myPhysicsScript.freeze) return;
 		if (myPhysicsScript.isTakingOff) return;
@@ -1983,6 +2169,11 @@ public class ControlsScript : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 高亮角色（弹反演出用）：开启时用 VertexLit 着色器+弹反颜色，关闭时恢复原始着色器与颜色。
+	/// </summary>
+	/// <param name="target">目标角色对象。</param>
+	/// <param name="flag">是否开启高亮。</param>
 	private void HighlightOn(GameObject target, bool flag){
 		Renderer[] charRenders = target.GetComponentsInChildren<Renderer>();
 		if (flag && !lit){
@@ -2000,10 +2191,18 @@ public class ControlsScript : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 关闭角色高亮。
+	/// </summary>
 	private void HighlightOff(){
 		HighlightOn(character, false);
 	}
 
+	/// <summary>
+	/// 校验命中是否有效：检查最大连击数、命中目标状态（地面/下蹲/空中/眩晕/倒地）与玩家条件。
+	/// </summary>
+	/// <param name="hit">命中判定数据。</param>
+	/// <returns>可命中返回 true。</returns>
 	public bool ValidateHit(Hit hit){
 		if (comboHits >= UFE.config.comboOptions.maxCombo) return false;
 		if (!hit.groundHit && myPhysicsScript.IsGrounded()) return false;
@@ -2017,6 +2216,13 @@ public class ControlsScript : MonoBehaviour {
 		return true;
 	}
 
+	/// <summary>
+	/// 被弹反处理：本角色被对手弹反后进入格挡硬直状态，触发弹反事件/特效/音效/震屏、
+	/// 播放对应姿态的弹反受击动画、应用硬直与推挤力并高亮角色。
+	/// </summary>
+	/// <param name="hit">命中判定数据。</param>
+	/// <param name="remainingFrames">攻击方招式剩余帧数。</param>
+	/// <param name="location">碰撞位置数组 [受击盒位置, 攻击盒位置, 中点]。</param>
 	public void GetHitParry(Hit hit, int remainingFrames, FPVector[] location){
 		UFE.FireAlert(UFE.config.selectedLanguage.parry, myInfo);
 
@@ -2149,6 +2355,14 @@ public class ControlsScript : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// 被格挡处理：本角色格挡攻击后扣除格挡伤害、进入格挡硬直，触发格挡事件/特效/音效/震屏、
+	/// 播放对应姿态的格挡受击动画并应用硬直与推挤力。
+	/// </summary>
+	/// <param name="hit">命中判定数据。</param>
+	/// <param name="remainingFrames">攻击方招式剩余帧数。</param>
+	/// <param name="location">碰撞位置数组。</param>
+	/// <param name="ignoreDirection">是否忽略推挤方向（强制朝自身朝向推）。</param>
 	public void GetHitBlocking(Hit hit, int remainingFrames, FPVector[] location, bool ignoreDirection = false){
 		// Lose life
 		if (hit._damageOnBlock >= myInfo.currentLifePoints){
@@ -2284,6 +2498,14 @@ public class ControlsScript : MonoBehaviour {
             }
 	}
 	
+	/// <summary>
+	/// 被命中处理（核心受击逻辑）：根据命中类型/强度/状态选择受击动画（站立/下蹲/空中/击倒/破防/击退等）、
+	/// 计算伤害与连击数据、应用推挤力/拉近/弹跳/霸体/反击取消、触发命中事件与特效、设置硬直并判定死亡。
+	/// </summary>
+	/// <param name="hit">命中判定数据。</param>
+	/// <param name="remainingFrames">攻击方招式剩余帧数。</param>
+	/// <param name="location">碰撞位置数组。</param>
+	/// <param name="ignoreDirection">是否忽略推挤方向。</param>
 	public void GetHit(Hit hit, int remainingFrames, FPVector[] location, bool ignoreDirection = false){
 		// Get what animation should be played depending on the character's state
 		bool airHit = false;
@@ -2761,6 +2983,12 @@ public class ControlsScript : MonoBehaviour {
 		UFE.DelaySynchronizedAction(this.HitUnpause, hitEffects._freezingTime);
     }
 
+	/// <summary>
+	/// 计算命中特效生成点（受击盒位置/攻击盒位置/两者中点）。
+	/// </summary>
+	/// <param name="spawnPoint">生成点类型。</param>
+	/// <param name="locations">碰撞位置数组 [受击盒, 攻击盒, 中点]。</param>
+	/// <returns>特效生成的世界坐标。</returns>
     private Vector3 GetParticleSpawnPoint(HitEffectSpawnPoint spawnPoint, FPVector[] locations) {
         if (spawnPoint == HitEffectSpawnPoint.StrikingHurtBox) {
             return locations[0].ToVector();
@@ -2771,11 +2999,21 @@ public class ControlsScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 应用击倒预设推挤力（清空当前力并按击倒配置朝对手反方向施加）。
+	/// </summary>
+	/// <param name="knockdownOptions">击倒选项配置。</param>
 	private void applyKnockdownForces(SubKnockdownOptions knockdownOptions){
 		myPhysicsScript.ResetForces(true, true);
 		myPhysicsScript.AddForce(knockdownOptions._predefinedPushForce, -opControlsScript.mirror);
 	}
 
+	/// <summary>
+	/// 根据命中强度选择受击动画片段（轻/中/重/自定义1~3对应片段1~6）。
+	/// </summary>
+	/// <param name="hitMove">受击基础动作。</param>
+	/// <param name="hit">命中判定数据。</param>
+	/// <returns>动画片段名。</returns>
 	private string GetHitAnimation(BasicMoveInfo hitMove, Hit hit){
 		if (hit.hitStrength == HitStrengh.Weak) return hitMove.name;
 		if (hitMove.animMap[1].clip != null && hit.hitStrength == HitStrengh.Medium) return myMoveSetScript.GetAnimationString(hitMove, 2);
@@ -2786,15 +3024,26 @@ public class ControlsScript : MonoBehaviour {
 		return hitMove.name;
 	}
 
+	/// <summary>
+	/// 切换头部注视脚本的启用状态。
+	/// </summary>
+	/// <param name="flag">是否启用。</param>
 	public void ToggleHeadLook(bool flag){
 		if (headLookScript != null && myInfo.headLook.enabled) headLookScript.enabled = flag;
 	}
 
 	// Pause animations and physics to create a sense of impact
+	/// <summary>
+	/// 打击停顿（无动画速度参数版本）。
+	/// </summary>
 	public void HitPause(){
 		HitPause(0);
 	}
 
+	/// <summary>
+	/// 打击停顿：冻结物理并将动画速度设为指定值（营造打击冲击感）。
+	/// </summary>
+	/// <param name="animSpeed">停顿期间动画速度。</param>
 	public void HitPause(Fix64 animSpeed){
 		if (shakeCamera) Camera.main.transform.position += Vector3.forward/2;
 		myPhysicsScript.freeze = true;
@@ -2803,6 +3052,9 @@ public class ControlsScript : MonoBehaviour {
 	}
 	
 	// Unpauses the pause
+	/// <summary>
+	/// 解除打击停顿：恢复物理与动画速度。
+	/// </summary>
 	public void HitUnpause(){
         if (cameraScript.cinematicFreeze) return;
         myPhysicsScript.freeze = false;
@@ -2811,11 +3063,19 @@ public class ControlsScript : MonoBehaviour {
 	}
 
 	// Method to pause animations and return them to their prior speed accordly
-	
+	/// <summary>
+	/// 暂停动画（不指定速度）。
+	/// </summary>
+	/// <param name="pause">是否暂停。</param>
 	private void PausePlayAnimation(bool pause){
 		PausePlayAnimation(pause, 0);
 	}
 
+	/// <summary>
+	/// 暂停/恢复动画播放速度（暂停时设为 animSpeed，恢复时还原为原速度）。
+	/// </summary>
+	/// <param name="pause">是否暂停。</param>
+	/// <param name="animSpeed">暂停期间动画速度。</param>
 	private void PausePlayAnimation(bool pause, Fix64 animSpeed){
 		if (animSpeed < 0) animSpeed = 0;
 		if (pause){
@@ -2825,6 +3085,10 @@ public class ControlsScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 增加能量槽（按最大能量的百分比，受死亡/无能量槽/能量消耗抑制限制）。
+	/// </summary>
+	/// <param name="gaugeGain">能量回复百分比。</param>
     public void AddGauge(Fix64 gaugeGain) {
         if ((isDead || opControlsScript.isDead) && UFE.config.roundOptions.inhibitGaugeGain) return;
 		if (!UFE.config.gameGUI.hasGauge) return;
@@ -2833,6 +3097,10 @@ public class ControlsScript : MonoBehaviour {
 		if (myInfo.currentGaugePoints > myInfo.maxGaugePoints) myInfo.currentGaugePoints = myInfo.maxGaugePoints;
 	}
 
+	/// <summary>
+	/// 扣除能量槽（按最大能量的百分比，训练/挑战模式下无限能量不消耗，回满模式则安排自动回满）。
+	/// </summary>
+	/// <param name="gaugeLoss">能量消耗百分比。</param>
     private void RemoveGauge(Fix64 gaugeLoss) {
         if ((isDead || opControlsScript.isDead) && UFE.config.roundOptions.inhibitGaugeGain) return;
 		if (!UFE.config.gameGUI.hasGauge) return;
@@ -2851,20 +3119,38 @@ public class ControlsScript : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 造成伤害（带"不会致死"保护版本）。
+	/// </summary>
+	/// <param name="damage">伤害值。</param>
+	/// <param name="doesntKill">若为 true 则至少保留 1 点生命。</param>
+	/// <returns>角色是否死亡。</returns>
 	public bool DamageMe(Fix64 damage, bool doesntKill){
 		if (doesntKill && damage >= myInfo.currentLifePoints) damage = myInfo.currentLifePoints - 1;
 		return DamageMe(damage);
 	}
 	
+	/// <summary>
+	/// 回满生命值（训练模式回满动作）。
+	/// </summary>
 	private void RefillLife(){
 		myInfo.currentLifePoints = myInfo.lifePoints;
 		UFE.SetLifePoints(myInfo.lifePoints, myInfo);
 	}
 	
+	/// <summary>
+	/// 回满能量槽（训练模式回满动作）。
+	/// </summary>
 	private void RefillGauge(){
 		AddGauge(myInfo.maxGaugePoints);
 	}
 
+	/// <summary>
+	/// 造成伤害：扣除生命值并触发生命值变化事件；处理训练/挑战模式的生命模式
+	/// （无限不扣血、回满自动回复、正常模式正常扣血），返回是否死亡。
+	/// </summary>
+	/// <param name="damage">伤害值。</param>
+	/// <returns>角色是否死亡。</returns>
 	private bool DamageMe(Fix64 damage){
         if ((UFE.gameMode == GameMode.TrainingRoom || UFE.gameMode == GameMode.ChallengeMode)
             && playerNum == 1 && UFE.config.trainingModeOptions.p1Life == LifeBarTrainingMode.Infinite) return false;
@@ -2895,6 +3181,9 @@ public class ControlsScript : MonoBehaviour {
 		return false;
 	}
 
+	/// <summary>
+	/// 启动下一挑战：锁定输入/移动、可选重置回合数据并重新运行挑战。
+	/// </summary>
     private void StartNextChallenge() {
         UFE.config.lockInputs = true;
         UFE.config.lockMovements = true;
@@ -2910,6 +3199,9 @@ public class ControlsScript : MonoBehaviour {
         challengeMode.Run();
     }
 
+	/// <summary>
+	/// 切换到退场演出招式并标记 outroPlayed。
+	/// </summary>
 	public void SetMoveToOutro(){
 		this.SetMove(myMoveSetScript.GetOutro());
 		if (currentMove != null) {
@@ -2919,6 +3211,10 @@ public class ControlsScript : MonoBehaviour {
 		outroPlayed = true;
 	}
 
+	/// <summary>
+	/// 重置角色数据（新回合/新挑战用）：重置位置/生命/状态/连击/物理并回到站立待机。
+	/// </summary>
+	/// <param name="resetLife">是否重置生命值。</param>
 	public void ResetData(bool resetLife){
 		if (UFE.config.roundOptions.resetPositions){
 			if (playerNum == 1){
@@ -2962,6 +3258,11 @@ public class ControlsScript : MonoBehaviour {
 	}
 
 	// Get amount of freezing time depending on the Strengtht of the move
+	/// <summary>
+	/// 根据命中强度获取受击动画速度（对应 HitOptions 的动画速度配置）。
+	/// </summary>
+	/// <param name="hitStrength">命中强度。</param>
+	/// <returns>动画速度；未配置返回 0。</returns>
 	public Fix64 GetHitAnimationSpeed(HitStrengh hitStrength){
 		if (hitStrength == HitStrengh.Weak){
 			return UFE.config.hitOptions.weakHit._animationSpeed;
@@ -2976,6 +3277,11 @@ public class ControlsScript : MonoBehaviour {
 	}
 
 	// Get amount of freezing time depending on the Strengtht of the move
+	/// <summary>
+	/// 根据命中强度获取冻结时间（打击停顿时长，对应 HitOptions 的冻结时间配置）。
+	/// </summary>
+	/// <param name="hitStrength">命中强度。</param>
+	/// <returns>冻结时间；未配置返回 0。</returns>
 	public Fix64 GetHitFreezingTime(HitStrengh hitStrength){
 		if (hitStrength == HitStrengh.Weak){
 			return UFE.config.hitOptions.weakHit._freezingTime;
@@ -2996,7 +3302,9 @@ public class ControlsScript : MonoBehaviour {
 	}
 	
 	// Shake character while being hit and in freezing mode
-	
+	/// <summary>
+	/// 摄像机震动（随机偏移主摄像机位置）。
+	/// </summary>
 	void shakeCam(){
         //System.Random random = new System.Random(Random.seed);
         //float rnd = (float)(random.NextDouble() * (shakeDensity * .34d));
@@ -3006,6 +3314,9 @@ public class ControlsScript : MonoBehaviour {
         Camera.main.transform.position += new Vector3(rnd, rnd, 0);
 	}
 
+	/// <summary>
+	/// 角色震动（随机偏移本地 X 位置）。
+	/// </summary>
     void shake() {
         //float rnd = Random.Range(-.1f * (float)shakeDensity, .2f * (float)shakeDensity);
         //character.transform.localPosition = new Vector3(rnd, 0, 0);

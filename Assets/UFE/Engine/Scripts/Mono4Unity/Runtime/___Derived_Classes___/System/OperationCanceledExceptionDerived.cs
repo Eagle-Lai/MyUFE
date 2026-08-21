@@ -31,15 +31,27 @@ using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+/// <summary>
+/// 操作取消异常派生类（OperationCanceledExceptionDerived）。
+/// <para>用途：从 Mono 移植的带取消令牌（CancellationToken）的操作取消异常——</para>
+/// <para>在标准 OperationCanceledException 基础上增加可空取消令牌支持，供 Task 取消机制使用。</para>
+/// </summary>
 namespace System{
+	/// <summary>
+	/// 操作取消异常派生类（含取消令牌）。
+	/// </summary>
 	[Serializable]
 	[ComVisible (true)]
 	public class OperationCanceledExceptionDerived : OperationCanceledException{
 		#region protected instance field
+		/// <summary>关联的取消令牌（可空）。</summary>
 		CancellationToken? token;
 		#endregion
 		
 		#region public instance properties
+		/// <summary>
+		/// 关联的取消令牌（未设置时返回 None）。
+		/// </summary>
 		public CancellationToken CancellationToken{
 			get {
 				if (token == null){
@@ -51,16 +63,25 @@ namespace System{
 		#endregion
 		
 		#region Base Constructors
+		/// <summary>默认构造函数。</summary>
 		public OperationCanceledExceptionDerived() : base(){}
 
+		/// <summary>构造函数（指定消息）。</summary>
+		/// <param name="message">错误消息。</param>
 		public OperationCanceledExceptionDerived(string message) : 
 		base(message){}
 		
+		/// <summary>构造函数（指定消息与内部异常）。</summary>
+		/// <param name="message">错误消息。</param>
+		/// <param name="innerException">内部异常。</param>
 		public OperationCanceledExceptionDerived(
 			string message, 
 			Exception innerException
 		) : base (message, innerException){}
 
+		/// <summary>反序列化构造函数。</summary>
+		/// <param name="info">序列化信息。</param>
+		/// <param name="context">流上下文。</param>
 		protected OperationCanceledExceptionDerived(
 			SerializationInfo info, 
 			StreamingContext context
@@ -68,11 +89,16 @@ namespace System{
 		#endregion
 		
 		#region New Constructors
+		/// <summary>构造函数（指定取消令牌）。</summary>
+		/// <param name="token">取消令牌。</param>
 		public OperationCanceledExceptionDerived(CancellationToken token) :
 		this(){
 			this.token = token;
 		}
 
+		/// <summary>构造函数（指定消息与取消令牌）。</summary>
+		/// <param name="message">错误消息。</param>
+		/// <param name="token">取消令牌。</param>
 		public OperationCanceledExceptionDerived(
 			string message, 
 			CancellationToken token
@@ -80,6 +106,10 @@ namespace System{
 			this.token = token;
 		}
 
+		/// <summary>构造函数（指定消息、内部异常与取消令牌）。</summary>
+		/// <param name="message">错误消息。</param>
+		/// <param name="innerException">内部异常。</param>
+		/// <param name="token">取消令牌。</param>
 		public OperationCanceledExceptionDerived(
 			string message, 
 			Exception innerException, 

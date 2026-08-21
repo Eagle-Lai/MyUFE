@@ -98,13 +98,27 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+/// <summary>
+/// 转换扩展（ConvertExtensions）。
+/// <para>用途：从 Mono 移植的 System.Convert 类型转换实现——将对象/值按 TypeCode 转换为目标类型（ChangeType/ToType），</para>
+/// <para>包含完整的类型转换表与 IConvertible 分发逻辑。</para>
+/// </summary>
 namespace System {
   
 //	[CLSCompliant(false)]
+	/// <summary>
+	/// 转换扩展静态类。
+	/// </summary>
 	public static class ConvertExtensions {
 
 		// ========== Conversion / Helper Functions ========== //
 
+		/// <summary>
+		/// 将对象转换为指定类型（使用当前文化信息）。
+		/// </summary>
+		/// <param name="value">待转换对象。</param>
+		/// <param name="conversionType">目标类型。</param>
+		/// <returns>转换结果对象。</returns>
 		public static object ChangeType (object value, Type conversionType)
 		{
 			if ((value != null) && (conversionType == null))
@@ -120,6 +134,12 @@ namespace System {
 			return ToType (value, conversionType, provider, true);
 		}
 		
+		/// <summary>
+		/// 将对象转换为指定 TypeCode 对应的类型（使用当前文化信息）。
+		/// </summary>
+		/// <param name="value">待转换对象。</param>
+		/// <param name="typeCode">目标 TypeCode。</param>
+		/// <returns>转换结果对象。</returns>
 		public static object ChangeType (object value, TypeCode typeCode)
 		{
 			CultureInfo ci = CultureInfo.CurrentCulture;
@@ -191,6 +211,14 @@ namespace System {
 		//
 		// This was added to keep the fix for #481687 working and to avoid
 		// the regression that the simple fix introduced (485377)
+		/// <summary>
+		/// 核心转换方法：将对象按目标类型/TypeCode 分发到对应 IConvertible 转换函数。
+		/// </summary>
+		/// <param name="value">待转换对象。</param>
+		/// <param name="conversionType">目标类型。</param>
+		/// <param name="provider">格式提供者。</param>
+		/// <param name="try_target_to_type">是否在无匹配时尝试调用 IConvertible.ToType。</param>
+		/// <returns>转换结果对象。</returns>
 		internal static object ToType (object value, Type conversionType, IFormatProvider provider, bool try_target_to_type) 
 		{
 			if (value == null) {

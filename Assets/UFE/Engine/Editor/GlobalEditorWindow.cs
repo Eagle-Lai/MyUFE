@@ -9,11 +9,20 @@ using System.Linq;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 全局配置编辑器窗口（GlobalEditorWindow，编辑器专用）。
+/// <para>用途：UFE 的全局配置编辑界面——编辑全局选项（摄像机/旋转/回合/弹跳/反击/连击/格挡/击倒/命中/</para>
+/// <para>输入/语言/网络/AI/场地/故事/训练/挑战/角色/调试/GUI 屏幕等全部配置项）。</para>
+/// </summary>
 public class GlobalEditorWindow : EditorWindow {
+	/// <summary>当前窗口单例。</summary>
 	public static GlobalEditorWindow globalEditorWindow;
+	/// <summary>当前编辑的全局配置资产。</summary>
 	private GlobalInfo globalInfo;
+	/// <summary>滚动位置。</summary>
 	private Vector2 scrollPos;
 
+	/// <summary>高级选项折叠开关。</summary>
 	private bool advancedOptions;
 	private bool preloadOptions;
 	private bool cameraOptions;
@@ -63,6 +72,9 @@ public class GlobalEditorWindow : EditorWindow {
 
 
 	[MenuItem("Window/U.F.E./Global Editor")]
+	/// <summary>
+	/// 打开全局配置编辑器窗口（菜单入口）。
+	/// </summary>
 	public static void Init(){
 		globalEditorWindow = EditorWindow.GetWindow<GlobalEditorWindow>(false, "Global", true);
 		globalEditorWindow.Show();
@@ -167,6 +179,9 @@ public class GlobalEditorWindow : EditorWindow {
 
     }
 
+        /// <summary>
+        /// 窗口 GUI：绘制全局配置编辑器的全部选项面板。
+        /// </summary>
         public void OnGUI(){
 		if (globalInfo == null){
 			GUILayout.BeginHorizontal("GroupBox");

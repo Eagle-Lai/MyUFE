@@ -26,10 +26,18 @@
 using System;
 using System.Runtime.Serialization;
 
+/// <summary>
+/// 任务调度器异常（TaskSchedulerException）。
+/// <para>用途：从 Mono 移植——表示任务调度器（TaskScheduler）执行时抛出的异常。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务调度器异常类。
+	/// </summary>
 	public class TaskSchedulerException : Exception
 	{
+		/// <summary>默认错误消息。</summary>
 		const string exceptionDefaultMessage = "An exception was thrown by a TaskScheduler";
 
 		public TaskSchedulerException () : base (exceptionDefaultMessage)

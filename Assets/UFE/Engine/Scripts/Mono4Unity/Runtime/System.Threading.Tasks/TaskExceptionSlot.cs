@@ -33,14 +33,26 @@
 using System;
 using System.Collections.Concurrent;
 
+/// <summary>
+/// 任务异常槽（TaskExceptionSlot）。
+/// <para>用途：从 Mono 移植的内部类——保存任务的聚合异常及是否已被观察，</para>
+/// <para>在终结器中触发未观察异常事件（未观察异常在 .NET 4.5 后默认不再使进程崩溃）。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务异常槽内部类。
+	/// </summary>
 	internal class TaskExceptionSlot
 	{
+		/// <summary>任务聚合异常。</summary>
 		public volatile AggregateException  Exception;
+		/// <summary>异常是否已被观察。</summary>
 		public volatile bool                Observed;
+		/// <summary>子任务异常队列。</summary>
 		public ConcurrentQueue<AggregateException> ChildExceptions;
 
+		/// <summary>父任务引用。</summary>
 		Task parent;
 
 		public TaskExceptionSlot (Task parent)

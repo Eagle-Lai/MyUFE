@@ -30,10 +30,19 @@
 
 //#if NET_4_0 || MOBILE
 
+/// <summary>
+/// 任务扩展实现（TaskExtensionsImpl）。
+/// <para>用途：从 Mono 移植的内部实现——为嵌套任务（Task&lt;Task&lt;T&gt;&gt;）提供 Unwrap 展开，</para>
+/// <para>将嵌套任务的结果/异常/取消透传到外层 TaskCompletionSource。</para>
+/// </summary>
 namespace System.Threading.Tasks 
 {
+	/// <summary>
+	/// 任务扩展实现静态类。
+	/// </summary>
 	static class TaskExtensionsImpl
 	{
+		/// <summary>延续选项（同步执行）。</summary>
 		const TaskContinuationOptions options = TaskContinuationOptions.ExecuteSynchronously;
 
 		public static Task<TResult> Unwrap<TResult> (Task<Task<TResult>> task)

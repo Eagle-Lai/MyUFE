@@ -30,12 +30,22 @@
 
 using System;
 
+/// <summary>
+/// 惰性初始化线程安全模式（LazyThreadSafetyMode）。
+/// <para>用途：从 Mono 移植——指定 Lazy&lt;T&gt; 初始化时的线程安全行为。</para>
+/// </summary>
 namespace System.Threading
 {
+	/// <summary>
+	/// 惰性初始化线程安全模式枚举。
+	/// </summary>
 	public enum LazyThreadSafetyMode
 	{
+		/// <summary>不保证线程安全（多线程并发访问时行为未定义）。</summary>
 		None,
+		/// <summary>仅发布（PublicationOnly）：多个线程可同时执行工厂，以先完成的结果为准，异常被忽略。</summary>
 		PublicationOnly,
+		/// <summary>执行并发布（ExecutionAndPublication）：使用锁保证工厂只执行一次，异常会传播。</summary>
 		ExecutionAndPublication
 	}
 }

@@ -2,18 +2,32 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 帧同步玩家管理器（FluxPlayerManager）。
+/// <para>用途：管理对战双方（玩家1/玩家2）的帧同步输入——负责逐帧读取输入（预测/确认）、</para>
+/// <para>获取/设置输入缓冲、检测回滚需求帧、判断输入确认/预测/就绪状态，是帧同步核心的玩家层封装。</para>
+/// </summary>
 
 public class FluxPlayerManager{
 	#region constant definitions
+	/// <summary>玩家总数。</summary>
 	public const int NumberOfPlayers = 2;
 	#endregion
 
 	#region public instance fields
+	/// <summary>玩家1。</summary>
 	public FluxPlayer player1 = new FluxPlayer(1);
+	/// <summary>玩家2。</summary>
 	public FluxPlayer player2 = new FluxPlayer(2);
 	#endregion
 
 	#region public instance methods
+	/// <summary>
+	/// 判断指定玩家指定帧的预测输入与确认输入是否相等。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
+	/// <param name="frame">帧号。</param>
+	/// <returns>相等返回 true。</returns>
 	public bool ArePredictedAndConfirmedInputsEqual(int player, long frame){
 		return this.GetPlayer(player).inputBuffer.ArePredictedAndConfirmedInputsEqual(frame);
 	}
@@ -135,6 +149,10 @@ public class FluxPlayerManager{
 		return lastFrameWithReadyInput;
 	}
 
+	/// <summary>
+	/// 获取双方下一期望帧号（取双方较小值；单方无效时取较大值）。
+	/// </summary>
+	/// <returns>下一期望帧号。</returns>
 	public long GetNextExpectedFrame(){
 		long p1 = this.GetNextExpectedFrame(1);
 		long p2 = this.GetNextExpectedFrame(2);
@@ -146,6 +164,11 @@ public class FluxPlayerManager{
 		}
 	}
 		
+	/// <summary>
+	/// 获取指定玩家下一期望帧号（最后一个已确认输入的下一帧）。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
+	/// <returns>下一期望帧号。</returns>
 	public long GetNextExpectedFrame(int player){
 		FluxPlayer p = this.GetPlayer(player);
 
@@ -273,6 +296,10 @@ public class FluxPlayerManager{
 		return false;
 	}
 
+	/// <summary>
+	/// 移除双方输入缓冲中的下一个输入。
+	/// </summary>
+	/// <returns>任一移除成功返回 true。</returns>
 	public bool RemoveNextInput(){
 		return this.player1.RemoveNextInput() || this.player2.RemoveNextInput();
 	}

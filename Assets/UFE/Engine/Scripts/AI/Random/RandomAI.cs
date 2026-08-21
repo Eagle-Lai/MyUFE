@@ -1,17 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// 随机 AI（RandomAI）。
+/// <para>用途：基于概率决策的简单 AI——按输入频率周期性地根据与对手的距离行为配置（AIDistanceBehaviour），</para>
+/// <para>随机生成移动/跳跃/下蹲/攻击输入。距离行为配置定义在各距离范围内的动作概率。</para>
+/// </summary>
 public class RandomAI : AbstractInputController {
 	#region protected instance fields
+	/// <summary>上次决策时间（用于控制输入频率）。</summary>
 	protected float timeLastDecision = float.NegativeInfinity;
 	#endregion
 
 	#region public override methods
+	/// <summary>
+	/// 初始化：重置决策计时并调用基类初始化。
+	/// </summary>
+	/// <param name="inputs">输入引用列表。</param>
 	public override void Initialize (IEnumerable<InputReferences> inputs){
 		this.timeLastDecision = float.NegativeInfinity;
 		base.Initialize (inputs);
 	}
 
+	/// <summary>
+	/// 每帧更新：按输入频率周期性地生成随机输入；未到决策间隔时不输入。
+	/// </summary>
 	public override void DoUpdate (){
 		if (this.inputReferences != null){
 			//---------------------------------------------------------------------------------------------------------
@@ -42,6 +55,11 @@ public class RandomAI : AbstractInputController {
 		}
 	}
 
+	/// <summary>
+	/// 读取输入：根据与对手的距离查找对应的距离行为配置，按概率生成方向/跳跃/下蹲/攻击输入。
+	/// </summary>
+	/// <param name="inputReference">输入引用。</param>
+	/// <returns>生成的输入事件。</returns>
 	public override InputEvents ReadInput (InputReferences inputReference){
 		ControlsScript self = UFE.GetControlsScript(this.player);
 		if (self != null){

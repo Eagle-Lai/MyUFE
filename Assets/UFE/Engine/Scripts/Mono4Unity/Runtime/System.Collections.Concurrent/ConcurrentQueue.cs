@@ -30,22 +30,38 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+/// <summary>
+/// 并发队列（ConcurrentQueue&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的线程安全 FIFO 队列——基于无锁链表（Interlocked 操作）实现，</para>
+/// <para>支持 Enqueue/TryDequeue/TryPeek，适合生产者-消费者模式。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
 
+	/// <summary>
+	/// 并发队列：线程安全的先进先出队列。
+	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("Count={Count}")]
 	[System.Diagnostics.DebuggerTypeProxy (typeof (CollectionDebuggerView<>))]
 	public class ConcurrentQueue<T> : IProducerConsumerCollection<T>, IEnumerable<T>, ICollection,
 	                                  IEnumerable
 	{
+		/// <summary>
+		/// 链表节点。
+		/// </summary>
 		class Node
 		{
+			/// <summary>节点值。</summary>
 			public T Value;
+			/// <summary>下一节点。</summary>
 			public Node Next;
 		}
 
+		/// <summary>队头节点（哨兵）。</summary>
 		Node head = new Node ();
+		/// <summary>队尾节点。</summary>
 		Node tail;
+		/// <summary>元素数量。</summary>
 		int count;
 
 		public ConcurrentQueue ()

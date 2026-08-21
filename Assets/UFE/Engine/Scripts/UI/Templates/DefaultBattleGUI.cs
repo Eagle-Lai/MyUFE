@@ -4,33 +4,65 @@ using System;
 using System.Collections.Generic;
 using UFE3D;
 
+/// <summary>
+/// 默认战斗 HUD（DefaultBattleGUI）。
+/// <para>用途：战斗中血条/能量条/计时/回合标记/文字提示/播报员/暂停菜单/训练输入显示等全部 HUD 的默认实现，</para>
+/// <para>覆写 BattleGUI 的各个事件回调以更新 UI，并驱动生命值动画（缓慢减少/增加）与屏幕提示动画。</para>
+/// </summary>
 public class DefaultBattleGUI : BattleGUI{
 	#region public class definitions
+	/// <summary>
+	/// 玩家 GUI 数据：一名玩家在 HUD 上的全部显示元素（名称/头像/血条/能量条/回合标记/提示）。
+	/// </summary>
 	[Serializable]
 	public class PlayerGUI{
+		/// <summary>角色名称文本。</summary>
 		public Text name;
+		/// <summary>角色头像。</summary>
 		public Image portrait;
+		/// <summary>生命条。</summary>
 		public Image lifeBar;
+		/// <summary>能量条。</summary>
 		public Image gaugeMeter;
+		/// <summary>已获胜回合标记图片数组。</summary>
 		public Image[] wonRoundsImages;
+		/// <summary>玩家专属文字提示。</summary>
 		public AlertGUI alert = new AlertGUI();
 	}
 
+	/// <summary>
+	/// 提示 GUI 数据：一条屏幕文字提示的显示/动画配置。
+	/// </summary>
 	[Serializable]
 	public class AlertGUI{
+		/// <summary>提示文本。</summary>
 		public Text text;
+		/// <summary>提示初始位置（出现位置）。</summary>
 		public Vector3 initialPosition;
+		/// <summary>提示最终位置（移向位置）。</summary>
 		public Vector3 finalPosition;
+		/// <summary>提示移动速度。</summary>
 		public float movementSpeed = 15f;
 	}
 
+	/// <summary>
+	/// 回合标记 GUI 配置：胜/负/未决回合的贴图与显示模式。
+	/// </summary>
 	[Serializable]
 	public class WonRoundsGUI{
+		/// <summary>未决回合贴图。</summary>
 		public Sprite NotFinishedRounds;
+		/// <summary>获胜回合贴图。</summary>
 		public Sprite WonRounds;
+		/// <summary>失败回合贴图。</summary>
 		public Sprite LostRounds;
+		/// <summary>显示模式（只显示胜场/显示全部回合）。</summary>
 		public DefaultBattleGUI.VisibleImages VisibleImages = DefaultBattleGUI.VisibleImages.WonRounds;
 
+		/// <summary>
+		/// 计算需要显示的回合标记图片数量。
+		/// </summary>
+		/// <returns>图片数量。</returns>
 		public int GetNumberOfRoundsImages(){
 			// To calculate the target number of images, check if the "Lost Rounds" Sprite is defined or not
 			if (this.VisibleImages == VisibleImages.AllRounds){
@@ -40,50 +72,85 @@ public class DefaultBattleGUI : BattleGUI{
 		}
 	}
 
+	/// <summary>回合标记显示模式。</summary>
 	public enum VisibleImages{
+		/// <summary>只显示胜场。</summary>
 		WonRounds,
+		/// <summary>显示全部回合（胜+负）。</summary>
 		AllRounds,
 	}
 	#endregion
 
 	#region public instance properties
+	/// <summary>是否静音播报员语音。</summary>
 	public bool muteAnnouncer = false;
+	/// <summary>播报员选项（回合/命中/连击等语音）。</summary>
     public AnnouncerOptions announcer;
+	/// <summary>回合标记配置。</summary>
 	public WonRoundsGUI wonRounds = new WonRoundsGUI();
+	/// <summary>玩家1 HUD 数据。</summary>
 	public PlayerGUI player1GUI = new PlayerGUI();
+	/// <summary>玩家2 HUD 数据。</summary>
 	public PlayerGUI player2GUI = new PlayerGUI();
+	/// <summary>中央主提示（回合/开战/K.O. 等）。</summary>
 	public AlertGUI mainAlert = new AlertGUI();
+	/// <summary>信息文本（回合开始等）。</summary>
 	public Text info;
+	/// <summary>回合计时器文本。</summary>
 	public Text timer;
+	/// <summary>生命值减少时的动画速度。</summary>
 	public float lifeDownSpeed = 500f;
+	/// <summary>生命值增加时的动画速度。</summary>
 	public float lifeUpSpeed = 900f;
+	/// <summary>暂停菜单预制体。</summary>
     public UFEScreen pauseScreen;
+	/// <summary>网络对战中本地玩家指示箭头贴图。</summary>
     public Sprite networkPlayerPointer;
+	/// <summary>本地玩家指示箭头的显示时长。</summary>
     public float pointerTimer = 4f;
 	#endregion
 
 	#region protected instance properties
+	/// <summary>玩家1 训练模式按键图标列表（按帧）。</summary>
 	public List<List<Image>> player1ButtonPresses = new List<List<Image>>(12);
+	/// <summary>玩家1 训练模式输入引用历史。</summary>
 	public List<InputReferences[]> player1InputReferences = new List<InputReferences[]>(12);
+	/// <summary>玩家2 训练模式按键图标列表（按帧）。</summary>
 	public List<List<Image>> player2ButtonPresses = new List<List<Image>>(12);
+	/// <summary>玩家2 训练模式输入引用历史。</summary>
 	public List<InputReferences[]> player2InputReferences = new List<InputReferences[]>(12);
 
+	/// <summary>是否显示训练模式输入信息。</summary>
 	protected bool showInputs = true;
+	/// <summary>HUD 是否正在隐藏（暂停恢复时避免恢复音乐）。</summary>
 	protected bool hiding = false;
 
+	/// <summary>玩家1 提示显示剩余时间。</summary>
 	protected float player1AlertTimer = 0f;
+	/// <summary>玩家2 提示显示剩余时间。</summary>
 	protected float player2AlertTimer = 0f;
+	/// <summary>中央提示显示剩余时间。</summary>
 	protected float mainAlertTimer = 0f;
+	/// <summary>当前暂停菜单实例。</summary>
 	protected UFEScreen pause = null;
 	#endregion
 
 	#region public instance methods
+	/// <summary>
+	/// 添加输入信息（转发到 OnInput，供训练模式显示按键）。
+	/// </summary>
+	/// <param name="inputReferences">输入引用列表。</param>
+	/// <param name="player">玩家编号。</param>
 	public void AddInput (InputReferences[] inputReferences, int player){
 		this.OnInput(inputReferences, player);
 	}
 	#endregion
 
 	#region public override methods
+	/// <summary>
+	/// 固定帧更新：驱动提示文字动画与生命值动画、检测 Start 键暂停、更新血条/能量条、
+	/// 显示网络本地玩家指示箭头并转发输入到暂停菜单。
+	/// </summary>
 	public override void DoFixedUpdate(
 		IDictionary<InputReferences, InputEvents> player1PreviousInputs,
 		IDictionary<InputReferences, InputEvents> player1CurrentInputs,
@@ -252,6 +319,9 @@ public class DefaultBattleGUI : BattleGUI{
 		}
 	}
 
+	/// <summary>
+	/// 界面隐藏时：销毁训练模式按键图标、关闭调试器、暂停状态复位。
+	/// </summary>
 	public override void OnHide (){
 		if (this.player1ButtonPresses != null){
 			foreach (List<Image> images in this.player1ButtonPresses){
@@ -287,6 +357,9 @@ public class DefaultBattleGUI : BattleGUI{
 		base.OnHide ();
 	}
 
+	/// <summary>
+	/// 界面显示时：复位隐藏标志并按连击数降序排序播报员连击音效。
+	/// </summary>
 	public override void OnShow (){
 		base.OnShow();
 		this.hiding = false;
@@ -306,6 +379,11 @@ public class DefaultBattleGUI : BattleGUI{
 		}
 	}
 
+	/// <summary>
+	/// 处理菜单选项：转发给暂停菜单。
+	/// </summary>
+	/// <param name="option">选项索引。</param>
+	/// <param name="player">操作玩家。</param>
 	public override void SelectOption(int option, int player){
 		if (this.pause != null){
 			this.pause.SelectOption(option, player);
@@ -314,6 +392,13 @@ public class DefaultBattleGUI : BattleGUI{
 	#endregion
 
 	#region protected instance methods
+	/// <summary>
+	/// 处理提示消息：按消息类型播放对应的播报员/音效（连击/弹反/反击/先手/开战/K.O.），
+	/// 其余消息直接替换占位符返回。
+	/// </summary>
+	/// <param name="msg">提示消息文本。</param>
+	/// <param name="controlsScript">相关角色控制脚本（可为 null）。</param>
+	/// <returns>替换占位符后的显示文本。</returns>
 	protected virtual string ProcessMessage(string msg, ControlsScript controlsScript){
 		if (msg == UFE.config.selectedLanguage.combo){
 			if (this.announcer != null && !this.muteAnnouncer){
@@ -353,6 +438,12 @@ public class DefaultBattleGUI : BattleGUI{
 		return this.SetStringValues(msg, controlsScript);
 	}
 
+	/// <summary>
+	/// 替换消息中的占位符：%combo%（连击数）、%character%（角色名）、%round%（回合数）。
+	/// </summary>
+	/// <param name="msg">消息文本。</param>
+	/// <param name="controlsScript">相关角色控制脚本（可为 null）。</param>
+	/// <returns>替换后的文本。</returns>
 	protected virtual string SetStringValues(string msg, ControlsScript controlsScript){
 		UFE3D.CharacterInfo character = controlsScript != null ? controlsScript.myInfo : null;
 		if (controlsScript != null) msg = msg.Replace("%combo%", controlsScript.opControlsScript.comboHits.ToString());
@@ -364,6 +455,12 @@ public class DefaultBattleGUI : BattleGUI{
 	#endregion
 
 	#region protected override methods
+	/// <summary>
+	/// 游戏开始回调：初始化回合标记图片、设置角色名称/头像、计时器与血条/能量条初始值。
+	/// </summary>
+	/// <param name="player1">玩家1角色。</param>
+	/// <param name="player2">玩家2角色。</param>
+	/// <param name="stage">场地。</param>
 	protected override void OnGameBegin (UFE3D.CharacterInfo player1, UFE3D.CharacterInfo player2, StageOptions stage){
 		base.OnGameBegin (player1, player2, stage);
 
@@ -496,6 +593,11 @@ public class DefaultBattleGUI : BattleGUI{
 		}
 	}
 
+	/// <summary>
+	/// 游戏结束回调：清空名称/信息/计时器文本。
+	/// </summary>
+	/// <param name="winner">获胜角色。</param>
+	/// <param name="loser">失败角色。</param>
 	protected override void OnGameEnd (UFE3D.CharacterInfo winner, UFE3D.CharacterInfo loser){
 		base.OnGameEnd (winner, loser);
 
@@ -506,6 +608,10 @@ public class DefaultBattleGUI : BattleGUI{
 	}
 
 
+	/// <summary>
+	/// 游戏暂停回调：暂停时实例化并显示暂停菜单，恢复时销毁并恢复音乐。
+	/// </summary>
+	/// <param name="isPaused">是否暂停。</param>
 	protected override void OnGamePaused (bool isPaused){
 		base.OnGamePaused(isPaused);
 
@@ -525,6 +631,12 @@ public class DefaultBattleGUI : BattleGUI{
 		}
 	}
 
+	/// <summary>
+	/// 新提示回调：将提示文本显示到对应玩家的提示框（或中央提示框），并播放对应的播报员/音效。
+	/// <para>中央提示根据消息类型（回合/最终回合/挑战开始/开战/K.O.）设置不同的显示时长。</para>
+	/// </summary>
+	/// <param name="msg">提示消息文本。</param>
+	/// <param name="player">所属角色（可为 null 表示中央提示）。</param>
 	protected override void OnNewAlert (string msg, UFE3D.CharacterInfo player){
 		base.OnNewAlert (msg, player);
 
@@ -586,6 +698,11 @@ public class DefaultBattleGUI : BattleGUI{
 		}
 	}
 
+	/// <summary>
+	/// 回合开始回调：清空双方提示、显示"第X回合/最终回合/挑战开始"文字并播放对应播报员音效，
+	/// 网络对战下显示本地玩家指示箭头。
+	/// </summary>
+	/// <param name="roundNumber">回合编号。</param>
 	protected override void OnRoundBegin(int roundNumber){
 		base.OnRoundBegin(roundNumber);
 
@@ -647,6 +764,12 @@ public class DefaultBattleGUI : BattleGUI{
         }
 	}
 
+	/// <summary>
+	/// 回合结束回调：更新双方回合标记贴图（胜/负/未决），播放"玩家获胜/完美胜利"播报员音效，
+	/// 显示"完美/胜利/挑战成功"文字提示并切换胜利音乐。
+	/// </summary>
+	/// <param name="winner">获胜角色。</param>
+	/// <param name="loser">失败角色。</param>
 	protected override void OnRoundEnd (UFE3D.CharacterInfo winner, UFE3D.CharacterInfo loser){
 		base.OnRoundEnd (winner, loser);
 
@@ -745,11 +868,18 @@ public class DefaultBattleGUI : BattleGUI{
         }
 	}
 
+	/// <summary>
+	/// 计时器更新回调：更新计时器文本（"Infinity" 显示为 ∞）。
+	/// </summary>
+	/// <param name="time">剩余时间。</param>
 	protected override void OnTimer (FPLibrary.Fix64 time){
 		base.OnTimer (time);
 		if (this.timer != null) this.timer.text = Mathf.Round((float)time).ToString().Replace("Infinity", "∞");
 	}
 
+	/// <summary>
+	/// 时间到回调：显示"时间到"提示并播放播报员音效。
+	/// </summary>
 	protected override void OnTimeOver(){
 		base.OnTimeOver();
 		this.OnNewAlert(this.SetStringValues(UFE.config.selectedLanguage.timeOver, null), null);
@@ -759,6 +889,11 @@ public class DefaultBattleGUI : BattleGUI{
 		}
 	}
 
+	/// <summary>
+	/// 输入更新回调：训练模式下显示玩家按键图标（每帧图标行按时间轴排列，最多保留 11 行）。
+	/// </summary>
+	/// <param name="inputReferences">输入引用列表。</param>
+	/// <param name="player">玩家编号。</param>
 	protected override void OnInput (InputReferences[] inputReferences, int player){
 		base.OnInput (inputReferences, player);
 

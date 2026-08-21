@@ -36,8 +36,16 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
+/// <summary>
+/// 任务（Task）。
+/// <para>用途：从 Mono 移植的异步任务模型核心——表示一个可调度的异步操作，</para>
+/// <para>支持状态机（TaskStatus）、任务调度器（TaskScheduler）、延续（ContinueWith）、等待（Wait）、取消与异常聚合。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务：一个可等待/延续/取消的异步操作。
+	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("Id = {Id}, Status = {Status}")]
 	[System.Diagnostics.DebuggerTypeProxy (typeof (TaskDebuggerView))]
 	public class Task : IDisposable, IAsyncResult

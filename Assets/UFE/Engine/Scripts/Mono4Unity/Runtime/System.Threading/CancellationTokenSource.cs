@@ -30,23 +30,39 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 
+/// <summary>
+/// 取消令牌源（CancellationTokenSource）。
+/// <para>用途：从 Mono 移植的取消机制核心——负责发起取消请求、管理取消回调注册、</para>
+/// <para>支持延迟取消（CancelAfter）与关联令牌（CreateLinkedTokenSource），并暴露 WaitHandle 供等待。</para>
+/// </summary>
 namespace System.Threading
 {
 #if !NET_4_5
 	sealed
 #endif
+	/// <summary>
+	/// 取消令牌源：可取消操作并触发已注册的取消回调。
+	/// </summary>
 	public class CancellationTokenSource : IDisposable
 	{
+		/// <summary>是否已请求取消。</summary>
 		bool canceled;
+		/// <summary>是否已释放。</summary>
 		bool disposed;
 
+		/// <summary>当前回调 ID（自增）。</summary>
 		int currId = int.MinValue;
+		/// <summary>已注册的取消回调字典（线程安全）。</summary>
 		ConcurrentDictionary<CancellationTokenRegistration, Action> callbacks;
+		/// <summary>关联令牌的注册列表。</summary>
 		CancellationTokenRegistration[] linkedTokens;
 
+		/// <summary>取消事件句柄。</summary>
 		ManualResetEvent handle;
 
+		/// <summary>空取消源（内部单例）。</summary>
 		internal static readonly CancellationTokenSource NoneSource = new CancellationTokenSource ();
+		/// <summary>已取消的取消源（内部单例）。</summary>
 		internal static readonly CancellationTokenSource CanceledSource = new CancellationTokenSource ();
 
 #if NET_4_5

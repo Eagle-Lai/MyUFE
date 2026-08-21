@@ -41,12 +41,26 @@ namespace System.Collections.Concurrent
 #if INSIDE_MONO_PARALLEL
 	public
 #endif
+	/// <summary>
+	/// 并发有序列表（ConcurrentOrderedList&lt;T&gt;）。
+	/// <para>用途：从 Mono 移植的无锁有序单链表——基于哈希分段（SplitOrderedList）实现，</para>
+	/// <para>支持线程安全的 Contains/Add/Remove 操作，是 ConcurrentDictionary 的底层桶结构。</para>
+	/// </summary>
+	/// <summary>
+	/// 并发有序列表类。
+	/// </summary>
 	class ConcurrentOrderedList<T>: ICollection<T>, IEnumerable<T>
 	{
+		/// <summary>
+		/// 链表节点。
+		/// </summary>
 		class Node
 		{
+			/// <summary>节点数据。</summary>
 			public T Data;
+			/// <summary>节点键。</summary>
 			public int Key;
+			/// <summary>下一节点。</summary>
 			public Node Next;
 			public bool Marked;		   
 

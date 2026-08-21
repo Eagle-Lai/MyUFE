@@ -34,21 +34,33 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+/// <summary>
+/// 并发包（ConcurrentBag&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的线程安全无序集合——按线程 ID 划分环形双端队列（CyclicDeque）槽位，</para>
+/// <para>支持线程本地快速添加/取出与跨线程偷取（work-stealing），适合无序的生产者-消费者。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
+	/// <summary>
+	/// 并发包：线程安全的无序元素集合。
+	/// </summary>
 	[ComVisible (false)]
 	[DebuggerDisplay ("Count={Count}")]
 	[DebuggerTypeProxy (typeof (CollectionDebuggerView<>))]
 	public class ConcurrentBag<T> : IProducerConsumerCollection<T>, IEnumerable<T>, IEnumerable
 	{
+		/// <summary>启用"添加提示"缓存优化的槽位数量阈值。</summary>
 		const int hintThreshold = 20;
 		
+		/// <summary>元素数量。</summary>
 		int count;
 		
 		// We only use the add hints when number of slot is above hintThreshold
 		// so to not waste memory space and the CAS overhead
+		/// <summary>添加提示队列（跨线程偷取用，仅槽位数超阈值时启用）。</summary>
 		ConcurrentQueue<int> addHints = new ConcurrentQueue<int> ();
 		
+		/// <summary>按线程 ID 映射到各线程的双端队列槽位。</summary>
 		ConcurrentDictionary<int, CyclicDeque<T>> container = new ConcurrentDictionary<int, CyclicDeque<T>> ();
 		
 		public ConcurrentBag ()

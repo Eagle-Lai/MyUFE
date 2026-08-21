@@ -35,6 +35,11 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/// <summary>
+/// 正弦查找表（SinLut）。
+/// <para>用途：为 Fix64.Sin/FastSin 提供预计算的正弦值查找表（long 数组），以查表代替计算提升性能。</para>
+/// <para>表中存储 [0, π/2] 区间正弦函数在 LUT_SIZE 个采样点的定点值。</para>
+/// </summary>
 namespace FPLibrary {
     partial struct Fix64 {
         public static readonly long[] SinLut = new[] {

@@ -7,109 +7,212 @@ using FPLibrary;
 using UFENetcode;
 using UFE3D;
 
+/// <summary>
+/// 招式集合脚本（MoveSetScript）。
+/// <para>用途：管理角色的全部动画与招式数据——加载基础动作/攻击招式、切换战斗姿态（ChangeMoveStances）、</para>
+/// <para>驱动动画播放（Legacy/Mecanim 双系统）、执行输入指令匹配（必杀技判定）、招式条件校验与实例化。</para>
+/// </summary>
+
+/// <summary>
+/// 基础动作集合（BasicMoves）：角色全部基础状态动作（待机/移动/跳跃/受击/倒地/格挡/弹反等）的容器。
+/// </summary>
 [System.Serializable]
 public class BasicMoves:ICloneable {
+	/// <summary>待机动作。</summary>
 	public BasicMoveInfo idle = new BasicMoveInfo();
+	/// <summary>前进动作。</summary>
 	public BasicMoveInfo moveForward = new BasicMoveInfo();
+	/// <summary>后退动作。</summary>
 	public BasicMoveInfo moveBack = new BasicMoveInfo();
+	/// <summary>下蹲动作。</summary>
     public BasicMoveInfo crouching = new BasicMoveInfo();
+	/// <summary>起跳动作。</summary>
     public BasicMoveInfo takeOff = new BasicMoveInfo();
+	/// <summary>垂直跳跃动作。</summary>
 	public BasicMoveInfo jumpStraight = new BasicMoveInfo();
+	/// <summary>向后跳跃动作。</summary>
 	public BasicMoveInfo jumpBack = new BasicMoveInfo();
+	/// <summary>向前跳跃动作。</summary>
 	public BasicMoveInfo jumpForward = new BasicMoveInfo();
+	/// <summary>垂直下落动作。</summary>
 	public BasicMoveInfo fallStraight = new BasicMoveInfo();
+	/// <summary>向后下落动作。</summary>
 	public BasicMoveInfo fallBack = new BasicMoveInfo();
+	/// <summary>向前下落动作。</summary>
 	public BasicMoveInfo fallForward = new BasicMoveInfo();
+	/// <summary>落地动作。</summary>
 	public BasicMoveInfo landing = new BasicMoveInfo();
+	/// <summary>下蹲格挡姿态动作。</summary>
 	public BasicMoveInfo blockingCrouchingPose = new BasicMoveInfo();
+	/// <summary>下蹲格挡受击动作。</summary>
 	public BasicMoveInfo blockingCrouchingHit = new BasicMoveInfo();
+	/// <summary>站立格挡姿态动作。</summary>
 	public BasicMoveInfo blockingHighPose = new BasicMoveInfo();
+	/// <summary>站立格挡受击动作。</summary>
 	public BasicMoveInfo blockingHighHit = new BasicMoveInfo();
+	/// <summary>低位格挡受击动作。</summary>
 	public BasicMoveInfo blockingLowHit = new BasicMoveInfo();
+	/// <summary>空中格挡姿态动作。</summary>
 	public BasicMoveInfo blockingAirPose = new BasicMoveInfo();
+	/// <summary>空中格挡受击动作。</summary>
 	public BasicMoveInfo blockingAirHit = new BasicMoveInfo();
+	/// <summary>下蹲弹反动作。</summary>
 	public BasicMoveInfo parryCrouching = new BasicMoveInfo();
+	/// <summary>站立弹反动作。</summary>
 	public BasicMoveInfo parryHigh = new BasicMoveInfo();
+	/// <summary>低位弹反动作。</summary>
 	public BasicMoveInfo parryLow = new BasicMoveInfo();
+	/// <summary>空中弹反动作。</summary>
 	public BasicMoveInfo parryAir = new BasicMoveInfo();
+	/// <summary>地面弹跳动作。</summary>
 	public BasicMoveInfo groundBounce = new BasicMoveInfo();
+	/// <summary>站立墙壁弹跳动作。</summary>
 	public BasicMoveInfo standingWallBounce = new BasicMoveInfo();
+	/// <summary>站立墙壁弹跳击倒动作。</summary>
 	public BasicMoveInfo standingWallBounceKnockdown = new BasicMoveInfo();
+	/// <summary>空中墙壁弹跳动作。</summary>
 	public BasicMoveInfo airWallBounce = new BasicMoveInfo();
+	/// <summary>地面弹跳后下落动作。</summary>
 	public BasicMoveInfo fallingFromGroundBounce = new BasicMoveInfo();
+	/// <summary>空中受击后下落动作。</summary>
 	public BasicMoveInfo fallingFromAirHit = new BasicMoveInfo();
+	/// <summary>默认倒地动作。</summary>
     public BasicMoveInfo fallDown = new BasicMoveInfo();
+	/// <summary>空中受身恢复动作。</summary>
     public BasicMoveInfo airRecovery = new BasicMoveInfo();
+	/// <summary>下蹲受击动作。</summary>
 	public BasicMoveInfo getHitCrouching = new BasicMoveInfo();
+	/// <summary>站立高位受击动作。</summary>
 	public BasicMoveInfo getHitHigh = new BasicMoveInfo();
+	/// <summary>站立低位受击动作。</summary>
 	public BasicMoveInfo getHitLow = new BasicMoveInfo();
+	/// <summary>高位击倒受击动作。</summary>
 	public BasicMoveInfo getHitHighKnockdown = new BasicMoveInfo();
+	/// <summary>中位击倒受击动作。</summary>
 	public BasicMoveInfo getHitMidKnockdown = new BasicMoveInfo();
+	/// <summary>空中连击受击动作。</summary>
 	public BasicMoveInfo getHitAir = new BasicMoveInfo();
+	/// <summary>破防受击动作。</summary>
 	public BasicMoveInfo getHitCrumple = new BasicMoveInfo();
+	/// <summary>击退受击动作。</summary>
 	public BasicMoveInfo getHitKnockBack = new BasicMoveInfo();
+	/// <summary>扫腿击倒受击动作。</summary>
 	public BasicMoveInfo getHitSweep = new BasicMoveInfo();
+	/// <summary>默认起身动作。</summary>
 	public BasicMoveInfo standUp = new BasicMoveInfo();
+	/// <summary>空中连击后起身动作。</summary>
 	public BasicMoveInfo standUpFromAirHit = new BasicMoveInfo();
+	/// <summary>击退后起身动作。</summary>
     public BasicMoveInfo standUpFromKnockBack = new BasicMoveInfo();
+	/// <summary>站立高位受击后起身动作。</summary>
     public BasicMoveInfo standUpFromStandingHighHit = new BasicMoveInfo();
+	/// <summary>站立中位受击后起身动作。</summary>
     public BasicMoveInfo standUpFromStandingMidHit = new BasicMoveInfo();
+	/// <summary>破防后起身动作。</summary>
     public BasicMoveInfo standUpFromCrumple = new BasicMoveInfo();
+	/// <summary>扫腿后起身动作。</summary>
     public BasicMoveInfo standUpFromSweep = new BasicMoveInfo();
+	/// <summary>站立墙壁弹跳后起身动作。</summary>
     public BasicMoveInfo standUpFromStandingWallBounce = new BasicMoveInfo();
+	/// <summary>空中墙壁弹跳后起身动作。</summary>
     public BasicMoveInfo standUpFromAirWallBounce = new BasicMoveInfo();
+	/// <summary>地面弹跳后起身动作。</summary>
     public BasicMoveInfo standUpFromGroundBounce = new BasicMoveInfo();
 
+	/// <summary>是否启用移动。</summary>
     public bool moveEnabled = true;
+	/// <summary>是否启用跳跃。</summary>
     public bool jumpEnabled = true;
+	/// <summary>是否启用下蹲。</summary>
     public bool crouchEnabled = true;
+	/// <summary>是否启用格挡。</summary>
     public bool blockEnabled = true;
+	/// <summary>是否启用弹反。</summary>
     public bool parryEnabled = true;
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this);
 	}
 }
 
+/// <summary>
+/// 按钮序列记录：记录一次按键事件及其蓄力时间（用于必杀技指令匹配）。
+/// </summary>
 public class ButtonSequenceRecord {
     #region trackable definitions
+	/// <summary>按下的按钮。</summary>
     public ButtonPress buttonPress;
+	/// <summary>该按钮的蓄力时间。</summary>
     public Fix64 chargeTime;
     #endregion
 
+	/// <summary>
+	/// 构造函数。
+	/// </summary>
+	/// <param name="buttonPress">按下的按钮。</param>
+	/// <param name="chargeTime">蓄力时间。</param>
     public ButtonSequenceRecord(ButtonPress buttonPress, Fix64 chargeTime) {
         this.buttonPress = buttonPress;
         this.chargeTime = chargeTime;
     }
 }
 
+/// <summary>
+/// 招式集合脚本（MoveSetScript）：角色的动画与招式管理器（挂在角色预制体上）。
+/// <para>加载并切换姿态的招式数据、注册动画、播放基础动作、执行输入指令匹配与招式实例化。</para>
+/// </summary>
 public class MoveSetScript : MonoBehaviour {
+	/// <summary>基础动作集合（当前姿态）。</summary>
 	public BasicMoves basicMoves;
+	/// <summary>攻击招式列表（当前姿态）。</summary>
 	public MoveInfo[] attackMoves;
+	/// <summary>招式列表（= attackMoves，已按条件排序）。</summary>
 	public MoveInfo[] moves;
+	/// <summary>姿态进入演出招式。</summary>
 	public MoveInfo intro;
+	/// <summary>姿态退出演出招式。</summary>
 	public MoveInfo outro;
 
     #region trackable definitions
+	/// <summary>Mecanim 动画控制器属性。</summary>
     public MecanimControl MecanimControl { get { return this.mecanimControl; } set { mecanimControl = value; } }
+	/// <summary>Legacy 动画控制器属性。</summary>
     public LegacyControl LegacyControl { get { return this.legacyControl; } set { legacyControl = value; } }
+	/// <summary>当前空中已用招式次数（限制空中连段数）。</summary>
     public int totalAirMoves;
+	/// <summary>动画是否暂停（速度 < 1 时）。</summary>
     public bool animationPaused;
+	/// <summary>覆盖下一次融合值（-1 表示不使用）。</summary>
     public Fix64 overrideNextBlendingValue = -1;
+	/// <summary>上次按键时间（秒，用于指令序列计时）。</summary>
     public Fix64 lastTimePress;
+	/// <summary>最近按键序列记录列表。</summary>
     public List<ButtonSequenceRecord> lastButtonPresses = new List<ButtonSequenceRecord>();
     #endregion
 
 
+	/// <summary>角色控制脚本引用。</summary>
     public ControlsScript controlsScript;
+	/// <summary>判定盒脚本引用。</summary>
     public HitBoxesScript hitBoxesScript;
+	/// <summary>Mecanim 动画控制器（内部引用）。</summary>
     private MecanimControl mecanimControl;
+	/// <summary>Legacy 动画控制器（内部引用）。</summary>
     private LegacyControl legacyControl;
+	/// <summary>已注册的基础动作列表。</summary>
     private List<BasicMoveInfo> basicMoveList = new List<BasicMoveInfo>();
 
     // Deprecated
+	/// <summary>蓄力值字典（已弃用）。</summary>
     public Dictionary<ButtonPress, Fix64> chargeValues = new Dictionary<ButtonPress, Fix64>();
 
+	/// <summary>
+	/// 唤醒：获取控件/判定盒脚本、加载全部姿态招式数据并切换到姿态1。
+	/// </summary>
     void Awake(){
 		controlsScript = transform.parent.gameObject.GetComponent<ControlsScript>();
 		hitBoxesScript = GetComponent<HitBoxesScript>();
@@ -135,6 +238,9 @@ public class MoveSetScript : MonoBehaviour {
 	}
 
 
+	/// <summary>
+	/// 启动：Mecanim 动画系统下根据朝向设置镜像。
+	/// </summary>
     void Start() {
 		if (controlsScript.myInfo.animationType == AnimationType.Mecanim){
 			mecanimControl.SetMirror(controlsScript.mirror > 0);
@@ -142,6 +248,11 @@ public class MoveSetScript : MonoBehaviour {
 	}
 
 
+    /// <summary>
+    /// 切换战斗姿态：加载新姿态的基础动作与攻击招式，重置动画组件，恢复当前动画播放状态。
+    /// <para>同时校验蓄力技计时与重名招式并发出警告，对招式列表按多种条件排序以优化输入匹配。</para>
+    /// </summary>
+    /// <param name="newStance">要切换到的姿态。</param>
     public void ChangeMoveStances(CombatStances newStance) {
         if (controlsScript.myInfo.currentCombatStance == newStance) return;
         foreach (MoveSetData moveSetData in controlsScript.myInfo.loadedMoves) {
@@ -264,6 +375,10 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 重建动画系统：销毁旧的动画组件，按动画类型（Legacy/Mecanim）创建新的动画控制器，
+    /// 并注册全部攻击招式与基础动作动画片段。
+    /// </summary>
     private void fillMoves() {
         DestroyImmediate(gameObject.GetComponent(typeof(MecanimControl)));
         DestroyImmediate(gameObject.GetComponent(typeof(LegacyControl)));
@@ -367,6 +482,12 @@ public class MoveSetScript : MonoBehaviour {
         setBasicMoveAnimation(basicMoves.standUpFromGroundBounce, "standUpFromGroundBounce", BasicMoveReference.StandUpFromGroundBounce);
 	}
 	
+	/// <summary>
+	/// 注册单个基础动作：设置名称/引用、加入基础动作列表，并注册其全部动画片段（含多片段 _2~_6）。
+	/// </summary>
+	/// <param name="basicMove">基础动作数据。</param>
+	/// <param name="animName">动画注册名。</param>
+	/// <param name="basicMoveReference">基础动作引用（枚举标识）。</param>
 	private void setBasicMoveAnimation(BasicMoveInfo basicMove, string animName, BasicMoveReference basicMoveReference){
 		if (basicMove.animMap[0].clip == null) {
 			return;
@@ -391,6 +512,14 @@ public class MoveSetScript : MonoBehaviour {
         if (basicMove.animMap[5].clip != null) attachAnimation(basicMove.animMap[5].clip, animName + "_6", basicMove._animationSpeed, newWrapMode, basicMove.animMap[5].length);
 	}
 
+    /// <summary>
+    /// 注册一个动画片段到当前动画系统（Legacy/Mecanim）。
+    /// </summary>
+    /// <param name="clip">动画片段。</param>
+    /// <param name="animName">注册名。</param>
+    /// <param name="speed">播放速度。</param>
+    /// <param name="wrapMode">播放模式。</param>
+    /// <param name="length">片段时长（使用动画映射时用映射时长）。</param>
     private void attachAnimation(AnimationClip clip, string animName, Fix64 speed, WrapMode wrapMode, Fix64 length) {
         if (!controlsScript.myInfo.useAnimationMaps) length = clip.length;
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
@@ -400,6 +529,11 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 按基础动作引用（枚举）查找基础动作数据。
+	/// </summary>
+	/// <param name="reference">基础动作引用。</param>
+	/// <returns>匹配的 BasicMoveInfo；未找到返回 null。</returns>
     public BasicMoveInfo GetBasicAnimationInfo(BasicMoveReference reference) {
         foreach(BasicMoveInfo basicMove in basicMoveList){
             if (basicMove.reference == reference) return basicMove;
@@ -407,6 +541,12 @@ public class MoveSetScript : MonoBehaviour {
         return null;
     }
 
+	/// <summary>
+	/// 获取基础动作指定片段编号（1~6）对应的动画注册名（含 _2~_6 后缀）。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <param name="clipNum">片段编号。</param>
+	/// <returns>动画注册名。</returns>
 	public string GetAnimationString(BasicMoveInfo basicMove, int clipNum){
 		if (clipNum == 1) return basicMove.name;
 		if (clipNum == 2 && basicMove.animMap[1].clip != null) return basicMove.name + "_2";
@@ -418,6 +558,11 @@ public class MoveSetScript : MonoBehaviour {
 	}
 
 
+	/// <summary>
+	/// 判断指定基础动作的任一动画片段是否正在播放。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <returns>任一片段在播放返回 true。</returns>
     public bool IsBasicMovePlaying(BasicMoveInfo basicMove) {
         if (basicMove.animMap[0].clip != null && IsAnimationPlaying(basicMove.name)) return true;
         if (basicMove.animMap[1].clip != null && IsAnimationPlaying(basicMove.name + "_2")) return true;
@@ -428,6 +573,11 @@ public class MoveSetScript : MonoBehaviour {
         return false;
     }
 	
+	/// <summary>
+	/// 判断指定动画名是否正在播放。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <returns>播放中返回 true。</returns>
 	public bool IsAnimationPlaying(string animationName){
 		if (controlsScript.myInfo.animationType == AnimationType.Legacy){
             return legacyControl.IsPlaying(animationName);
@@ -436,6 +586,11 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 获取指定动画的时长。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <returns>动画时长（定点数）。</returns>
     public Fix64 GetAnimationLength(string animationName) {
 		if (controlsScript.myInfo.animationType == AnimationType.Legacy){
             return legacyControl.GetAnimationData(animationName).length;
@@ -444,6 +599,11 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 判断指定动画是否已注册。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <returns>已注册返回 true。</returns>
 	public bool AnimationExists(string animationName){
 		if (controlsScript.myInfo.animationType == AnimationType.Legacy){
             return (legacyControl.GetAnimationData(animationName) != null);
@@ -452,10 +612,21 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 播放指定动画（从时间0开始）。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <param name="blendingTime">融合时间。</param>
     public void PlayAnimation(string animationName, Fix64 blendingTime) {
 		PlayAnimation(animationName, blendingTime, 0);
 	}
 
+	/// <summary>
+	/// 播放指定动画（从指定归一化时间开始，网络模式下可禁用融合）。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <param name="blendingTime">融合时间。</param>
+	/// <param name="normalizedTime">起始归一化时间。</param>
     public void PlayAnimation(string animationName, Fix64 blendingTime, Fix64 normalizedTime) {
         if ((UFE.isConnected || UFE.config.debugOptions.emulateNetwork) &&
             UFE.config.networkOptions.disableBlending) blendingTime = 0;
@@ -467,6 +638,10 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 停止指定动画。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
 	public void StopAnimation(string animationName){
 		if (controlsScript.myInfo.animationType == AnimationType.Legacy){
             legacyControl.Stop(animationName);
@@ -475,6 +650,10 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 设置当前动画播放速度（速度 <1 时标记动画暂停）。
+	/// </summary>
+	/// <param name="speed">播放速度。</param>
     public void SetAnimationSpeed(Fix64 speed) {
         if (speed < 1) animationPaused = true;
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
@@ -484,6 +663,11 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 设置指定动画的播放速度。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <param name="speed">播放速度。</param>
     public void SetAnimationSpeed(string animationName, Fix64 speed) {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             legacyControl.SetSpeed(animationName, speed);
@@ -492,6 +676,11 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 设置指定动画的归一化速度。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <param name="normalizedSpeed">归一化速度。</param>
     public void SetAnimationNormalizedSpeed(string animationName, Fix64 normalizedSpeed) {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             legacyControl.SetNormalizedSpeed(animationName, normalizedSpeed);
@@ -500,6 +689,10 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 获取当前动画播放速度。
+	/// </summary>
+	/// <returns>播放速度。</returns>
     public Fix64 GetAnimationSpeed() {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             return legacyControl.GetSpeed();
@@ -508,6 +701,11 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 获取指定动画的当前播放速度。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <returns>播放速度。</returns>
     public Fix64 GetAnimationSpeed(string animationName) {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             return legacyControl.GetSpeed(animationName);
@@ -516,10 +714,18 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 获取指定动画的原始播放速度。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <returns>原始播放速度。</returns>
     public Fix64 GetOriginalAnimationSpeed(string animationName) {
         return mecanimControl.GetOriginalSpeed(animationName);
     }
 
+	/// <summary>
+	/// 恢复动画原始播放速度并复位暂停标志。
+	/// </summary>
 	public void RestoreAnimationSpeed(){
 		if (controlsScript.myInfo.animationType == AnimationType.Legacy){
             legacyControl.RestoreSpeed();
@@ -529,18 +735,38 @@ public class MoveSetScript : MonoBehaviour {
 		animationPaused = false;
 	}
 	
+	/// <summary>
+	/// 播放基础动作（使用动作默认片段名）。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
 	public void PlayBasicMove(BasicMoveInfo basicMove){
 		PlayBasicMove(basicMove, basicMove.name);
 	}
 	
+	/// <summary>
+	/// 播放基础动作（可指定是否允许重播）。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <param name="replay">是否允许重播。</param>
 	public void PlayBasicMove(BasicMoveInfo basicMove, bool replay){
 		PlayBasicMove(basicMove, basicMove.name, replay);
 	}
 
+	/// <summary>
+	/// 播放基础动作（指定片段名，允许重播）。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <param name="clipName">动画片段名。</param>
 	public void PlayBasicMove(BasicMoveInfo basicMove, string clipName){
 		PlayBasicMove(basicMove, clipName, true);
 	}
 
+	/// <summary>
+	/// 播放基础动作（指定片段名与重播标志，使用覆盖或默认融合时间）。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <param name="clipName">动画片段名。</param>
+	/// <param name="replay">是否允许重播。</param>
 	public void PlayBasicMove(BasicMoveInfo basicMove, string clipName, bool replay){
 		if (overrideNextBlendingValue > -1){
 			PlayBasicMove(basicMove, clipName, overrideNextBlendingValue);
@@ -554,14 +780,35 @@ public class MoveSetScript : MonoBehaviour {
 		if (basicMove.overrideBlendingOut) overrideNextBlendingValue = basicMove._blendingOut;
 	}
 
+	/// <summary>
+	/// 播放基础动作（指定片段名与融合时间）。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <param name="clipName">动画片段名。</param>
+	/// <param name="blendingTime">融合时间。</param>
     public void PlayBasicMove(BasicMoveInfo basicMove, string clipName, Fix64 blendingTime) {
         PlayBasicMove(basicMove, clipName, blendingTime, true, basicMove.invincible);
 	}
 
+	/// <summary>
+	/// 播放基础动作（指定片段名、融合时间与重播标志）。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <param name="clipName">动画片段名。</param>
+	/// <param name="blendingTime">融合时间。</param>
+	/// <param name="replay">是否允许重播。</param>
     public void PlayBasicMove(BasicMoveInfo basicMove, string clipName, Fix64 blendingTime, bool replay) {
         PlayBasicMove(basicMove, clipName, blendingTime, replay, basicMove.invincible);
     }
 
+	/// <summary>
+	/// 播放基础动作（完整参数）：播放动画、切换头部注视/根骨骼运动、设置判定盒可见性并更新动画映射。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
+	/// <param name="clipName">动画片段名。</param>
+	/// <param name="blendingTime">融合时间。</param>
+	/// <param name="replay">是否允许重播。</param>
+	/// <param name="hideHitBoxes">是否隐藏判定盒（无敌基础动作）。</param>
     public void PlayBasicMove(BasicMoveInfo basicMove, string clipName, Fix64 blendingTime, bool replay, bool hideHitBoxes) {
 		if (IsAnimationPlaying(clipName) && !replay) return;
 		PlayAnimation(clipName, blendingTime);
@@ -582,6 +829,10 @@ public class MoveSetScript : MonoBehaviour {
         }
 	}
 	
+	/// <summary>
+	/// 执行基础动作的附加逻辑：播放音效、记录当前基础动作、恢复判定盒默认可见性、生成粒子特效、触发基础动作事件。
+	/// </summary>
+	/// <param name="basicMove">基础动作。</param>
 	private void _playBasicMove(BasicMoveInfo basicMove){
 		UFE.PlaySound(basicMove.soundEffects);
 		controlsScript.currentBasicMove = basicMove.reference;
@@ -611,6 +862,11 @@ public class MoveSetScript : MonoBehaviour {
         UFE.FireBasicMove(basicMove.reference, controlsScript.myInfo);
 	}
 
+	/// <summary>
+	/// 设置当前动画的播放位置（归一化时间）。
+	/// </summary>
+	/// <param name="animationName">动画名。</param>
+	/// <param name="normalizedTime">归一化时间。</param>
 	public void SetAnimationPosition(string animationName, Fix64 normalizedTime){
 		if (controlsScript.myInfo.animationType == AnimationType.Legacy){
             legacyControl.SetCurrentClipPosition(normalizedTime);
@@ -619,6 +875,10 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 获取动画帧位移增量（根骨骼运动位移）。
+	/// </summary>
+	/// <returns>位移增量（Unity Vector3）。</returns>
     public Vector3 GetDeltaDisplacement() {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             return legacyControl.GetDeltaDisplacement();
@@ -627,6 +887,10 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 获取动画位移增量（动画位移，与 DeltaDisplacement 不同）。
+	/// </summary>
+	/// <returns>位移增量（Unity Vector3）。</returns>
     public Vector3 GetDeltaPosition() {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             return legacyControl.GetDeltaPosition();
@@ -636,6 +900,10 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 获取当前播放的动画片段名。
+	/// </summary>
+	/// <returns>片段名。</returns>
     public string GetCurrentClipName() {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             return legacyControl.GetCurrentClipName();
@@ -644,6 +912,10 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 获取当前播放位置（秒）。
+	/// </summary>
+	/// <returns>当前播放时间。</returns>
     public Fix64 GetCurrentClipPosition() {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             return legacyControl.GetCurrentClipPosition();
@@ -652,10 +924,19 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 获取当前播放位置（归一化时间）。
+	/// </summary>
+	/// <returns>归一化时间。</returns>
     public Fix64 GetCurrentClipNormalizedTime() {
         return mecanimControl.GetCurrentClipNormalizedTime();
     }
 
+	/// <summary>
+	/// 获取当前播放帧号。
+	/// </summary>
+	/// <param name="realSeconds">true 按真实秒计算，false 按动画时间计算。</param>
+	/// <returns>当前帧号。</returns>
     public int GetCurrentClipFrame(bool realSeconds = false) {
         if (controlsScript.myInfo.animationType == AnimationType.Legacy) {
             return (int)FPMath.Abs(FPMath.Round(legacyControl.GetCurrentClipTime(realSeconds) * UFE.config.fps));
@@ -664,6 +945,12 @@ public class MoveSetScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 将招式帧号转换为动画归一化时间（反向播放时返回 >1 的值）。
+	/// </summary>
+	/// <param name="animFrame">招式帧号。</param>
+	/// <param name="move">招式。</param>
+	/// <returns>归一化时间。</returns>
     public Fix64 GetAnimationNormalizedTime(int animFrame, MoveInfo move){
 		if (move == null) return 0;
 		if (move._animationSpeed < 0){
@@ -673,10 +960,19 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 设置 Mecanim 镜像。
+	/// </summary>
+	/// <param name="toggle">是否镜像。</param>
 	public void SetMecanimMirror(bool toggle){
 		mecanimControl.SetMirror(toggle, UFE.config.characterRotationOptions._mirrorBlending, true);
 	}
 
+	/// <summary>
+	/// 判断指定按钮是否匹配当前格挡类型（HoldButton 类格挡）。
+	/// </summary>
+	/// <param name="button">按钮。</param>
+	/// <returns>匹配返回 true。</returns>
 	public bool CompareBlockButtons(ButtonPress button){
 		if (button == ButtonPress.Button1 && UFE.config.blockOptions.blockType == BlockType.HoldButton1) return true;
 		if (button == ButtonPress.Button2 && UFE.config.blockOptions.blockType == BlockType.HoldButton2) return true;
@@ -693,6 +989,11 @@ public class MoveSetScript : MonoBehaviour {
 		return false;
 	}
 	
+	/// <summary>
+	/// 判断指定按钮是否匹配当前弹反类型（TapButton 类弹反）。
+	/// </summary>
+	/// <param name="button">按钮。</param>
+	/// <returns>匹配返回 true。</returns>
 	public bool CompareParryButtons(ButtonPress button){
 		if (button == ButtonPress.Button1 && UFE.config.blockOptions.parryType == ParryType.TapButton1) return true;
 		if (button == ButtonPress.Button2 && UFE.config.blockOptions.parryType == ParryType.TapButton2) return true;
@@ -709,20 +1010,38 @@ public class MoveSetScript : MonoBehaviour {
 		return false;
 	}
 
+	/// <summary>
+	/// 判断当前能量是否足够（无能量槽时总是满足）。
+	/// </summary>
+	/// <param name="gaugeNeeded">所需能量百分比。</param>
+	/// <returns>足够返回 true。</returns>
 	private bool hasEnoughGauge(Fix64 gaugeNeeded){
 		if (!UFE.config.gameGUI.hasGauge) return true;
         if (controlsScript.myInfo.currentGaugePoints < ((Fix64)controlsScript.myInfo.maxGaugePoints * (gaugeNeeded / 100))) return false;
 		return true;
 	}
 
+	/// <summary>
+	/// 获取姿态进入演出招式的实例。
+	/// </summary>
+	/// <returns>演出招式实例。</returns>
 	public MoveInfo GetIntro(){
 		return InstantiateMove(intro);
 	}
 	
+	/// <summary>
+	/// 获取姿态退出演出招式的实例。
+	/// </summary>
+	/// <returns>演出招式实例。</returns>
 	public MoveInfo GetOutro(){
 		return InstantiateMove(outro);
 	}
 	
+	/// <summary>
+	/// 实例化招式（独立副本，避免修改资产数据）。
+	/// </summary>
+	/// <param name="move">招式资产。</param>
+	/// <returns>招式实例；参数为 null 返回 null。</returns>
 	public MoveInfo InstantiateMove(MoveInfo move){
 		if (move == null) return null;
 		MoveInfo newMove = Instantiate(move) as MoveInfo;
@@ -730,6 +1049,11 @@ public class MoveSetScript : MonoBehaviour {
 		return newMove;
 	}
 
+	/// <summary>
+	/// 根据当前招式的取消链获取下一个应自动执行的招式（无需输入条件的派生技）。
+	/// </summary>
+	/// <param name="currentMove">当前招式。</param>
+	/// <returns>下一招式实例；无可用招式返回 null。</returns>
 	public MoveInfo GetNextMove(MoveInfo currentMove){
 		if (currentMove.frameLinks.Length == 0) return null;
 
@@ -751,6 +1075,9 @@ public class MoveSetScript : MonoBehaviour {
 		return null;
 	}
 
+	/// <summary>
+	/// 清空最近按键序列与蓄力记录。
+	/// </summary>
 	public void ClearLastButtonSequence(){
 		lastButtonPresses.Clear();
         lastTimePress = 0;
@@ -760,6 +1087,12 @@ public class MoveSetScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 校验执行状态（防止松键触发时重复记录同一次按键）。
+	/// </summary>
+	/// <param name="buttonPress">按钮数组。</param>
+	/// <param name="inputUp">是否松键。</param>
+	/// <returns>允许执行返回 true。</returns>
 	private bool checkExecutionState(ButtonPress[] buttonPress, bool inputUp){
 		if (inputUp 
 		    && lastButtonPresses.Count > 0 
@@ -768,10 +1101,28 @@ public class MoveSetScript : MonoBehaviour {
 		return true;
 	}
 
+	/// <summary>
+	/// 根据当前输入匹配可执行的招式（非强制执行）。
+	/// </summary>
+	/// <param name="buttonPress">当前按下的按钮。</param>
+	/// <param name="charge">当前按钮蓄力时间。</param>
+	/// <param name="currentMove">当前招式。</param>
+	/// <param name="inputUp">是否松键。</param>
+	/// <returns>匹配的招式实例；无则返回 null。</returns>
 	public MoveInfo GetMove(ButtonPress[] buttonPress, Fix64 charge, MoveInfo currentMove, bool inputUp){
 		return GetMove(buttonPress, charge, currentMove, inputUp, false);
 	}
 
+	/// <summary>
+	/// 根据当前输入匹配可执行的招式（必杀技指令匹配核心方法）。
+	/// <para>先尝试用按键序列匹配（含执行时间窗口校验），记录按键序列后再用完整输入匹配一次。</para>
+	/// </summary>
+	/// <param name="buttonPress">当前按下的按钮。</param>
+	/// <param name="charge">当前按钮蓄力时间。</param>
+	/// <param name="currentMove">当前招式。</param>
+	/// <param name="inputUp">是否松键。</param>
+	/// <param name="forceExecution">是否强制执行（跳过按键序列匹配）。</param>
+	/// <returns>匹配的招式实例；无则返回 null。</returns>
     public MoveInfo GetMove(ButtonPress[] buttonPress, Fix64 charge, MoveInfo currentMove, bool inputUp, bool forceExecution) {
 		if (buttonPress.Length > 0
             && (UFE.currentFrame / (Fix64) UFE.config.fps) - lastTimePress <= controlsScript.myInfo._executionTiming) {
@@ -824,6 +1175,13 @@ public class MoveSetScript : MonoBehaviour {
 		return null;
 	}
     
+	/// <summary>
+	/// 在招式的取消链（含出招缓冲窗口）中查找指定招式名。
+	/// </summary>
+	/// <param name="moveName">招式名。</param>
+	/// <param name="frameLinks">取消链列表。</param>
+	/// <param name="currentFrame">当前招式帧。</param>
+	/// <returns>存在返回 true。</returns>
     private bool searchMoveBuffer(string moveName, FrameLink[] frameLinks, int currentFrame) {
         foreach (FrameLink frameLink in frameLinks) {
             if ((currentFrame >= frameLink.activeFramesBegins && currentFrame <= frameLink.activeFramesEnds)
@@ -840,6 +1198,13 @@ public class MoveSetScript : MonoBehaviour {
         return false;
     }
 
+	/// <summary>
+	/// 在招式的取消链中查找指定招式名（仅可取消的链接，可忽略玩家条件）。
+	/// </summary>
+	/// <param name="moveName">招式名。</param>
+	/// <param name="frameLinks">取消链列表。</param>
+	/// <param name="ignoreConditions">是否忽略玩家条件过滤。</param>
+	/// <returns>存在返回 true。</returns>
 	public bool SearchMove(string moveName, FrameLink[] frameLinks, bool ignoreConditions = false) {
 		foreach(FrameLink frameLink in frameLinks){
 			if (frameLink.cancelable){
@@ -855,6 +1220,12 @@ public class MoveSetScript : MonoBehaviour {
 		return false;
 	}
 
+	/// <summary>
+	/// 在指定招式数组中查找指定招式名。
+	/// </summary>
+	/// <param name="moveName">招式名。</param>
+	/// <param name="moves">招式数组。</param>
+	/// <returns>存在返回 true。</returns>
 	private bool searchMove(string moveName, MoveInfo[] moves){
         foreach (MoveInfo move in moves) {
             if (move == null) continue;
@@ -864,6 +1235,11 @@ public class MoveSetScript : MonoBehaviour {
 		return false;
 	}
 
+	/// <summary>
+	/// 当前姿态是否包含指定名称的招式。
+	/// </summary>
+	/// <param name="moveName">招式名。</param>
+	/// <returns>存在返回 true。</returns>
 	public bool HasMove(string moveName){
 		foreach(MoveInfo move in this.moves)
 			if (moveName == move.moveName) return true;
@@ -872,6 +1248,11 @@ public class MoveSetScript : MonoBehaviour {
 	}
 
 
+	/// <summary>
+	/// 校验招式是否满足全部执行条件（在招式列表、姿态/基础动作条件、能量、前置招式与取消链）。
+	/// </summary>
+	/// <param name="move">要校验的招式。</param>
+	/// <returns>满足全部条件返回 true。</returns>
     public bool ValidateMoveExecution(MoveInfo move) {
         if (!searchMove(move.moveName, attackMoves)) return false;
 		if (!ValidateMoveStances(move.selfConditions, controlsScript, true)) return false;
@@ -888,10 +1269,23 @@ public class MoveSetScript : MonoBehaviour {
 	}
 
 	
+	/// <summary>
+	/// 校验招式的状态条件（默认不跳过下蹲姿态）。
+	/// </summary>
+	/// <param name="conditions">玩家条件。</param>
+	/// <param name="cScript">目标控制脚本。</param>
+	/// <returns>满足返回 true。</returns>
 	public bool ValidateMoveStances(PlayerConditions conditions, ControlsScript cScript){
 		return ValidateMoveStances(conditions, cScript, false);
 	}
 
+	/// <summary>
+	/// 校验招式的状态条件：状态匹配、距离范围、跳跃弧线、移动/格挡/眩晕限制。
+	/// </summary>
+	/// <param name="conditions">玩家条件。</param>
+	/// <param name="cScript">目标控制脚本。</param>
+	/// <param name="bypassCrouchStance">是否跳过下蹲姿态检查（自身招式使用）。</param>
+	/// <returns>满足返回 true。</returns>
 	public bool ValidateMoveStances(PlayerConditions conditions, ControlsScript cScript, bool bypassCrouchStance){
 		bool stateCheck = conditions.possibleMoveStates.Length > 0? false : true;
 		foreach(PossibleMoveStates possibleMoveState in conditions.possibleMoveStates){
@@ -927,16 +1321,42 @@ public class MoveSetScript : MonoBehaviour {
 		return stateCheck;
 	}
 
+	/// <summary>
+	/// 校验基础动作限制条件：无限制或当前基础动作在允许列表中即为通过。
+	/// </summary>
+	/// <param name="conditions">玩家条件。</param>
+	/// <param name="cScript">目标控制脚本。</param>
+	/// <returns>通过返回 true。</returns>
 	public bool ValidadeBasicMove(PlayerConditions conditions, ControlsScript cScript){
 		if (conditions.basicMoveLimitation.Length == 0) return true;
 		if (System.Array.IndexOf(conditions.basicMoveLimitation, cScript.currentBasicMove) != -1) return true;
 		return false;
 	}
 	
+	/// <summary>
+	/// 测试招式执行（非强制执行版本）。
+	/// </summary>
+	/// <param name="move">待测招式。</param>
+	/// <param name="currentMove">当前招式。</param>
+	/// <param name="buttonPress">当前输入按钮。</param>
+	/// <param name="inputUp">是否松键。</param>
+	/// <param name="fromSequence">是否从按键序列匹配。</param>
+	/// <returns>可执行时返回招式实例；否则返回 null。</returns>
 	private MoveInfo TestMoveExecution(MoveInfo move, MoveInfo currentMove, ButtonPress[] buttonPress, bool inputUp, bool fromSequence) {
 		return TestMoveExecution(move, currentMove, buttonPress, inputUp, fromSequence, false);
 	}
 
+	/// <summary>
+	/// 测试招式执行：校验能量/前置招式/状态条件/基础动作条件/输入指令匹配，通过则实例化招式。
+	/// <para>同时校验空中招式次数限制与取消链/出招缓冲/存储招式。</para>
+	/// </summary>
+	/// <param name="move">待测招式。</param>
+	/// <param name="currentMove">当前招式。</param>
+	/// <param name="buttonPress">当前输入按钮。</param>
+	/// <param name="inputUp">是否松键。</param>
+	/// <param name="fromSequence">是否从按键序列匹配。</param>
+	/// <param name="forceExecution">是否强制跳过缓冲检查。</param>
+	/// <returns>可执行时返回招式实例；否则返回 null。</returns>
 	private MoveInfo TestMoveExecution(MoveInfo move, MoveInfo currentMove, ButtonPress[] buttonPress, bool inputUp, bool fromSequence, bool forceExecution) {
         if (!hasEnoughGauge(move._gaugeRequired)) return null;
 		if (move.previousMoves.Length > 0 && currentMove == null) return null;
@@ -1061,6 +1481,15 @@ public class MoveSetScript : MonoBehaviour {
 	}
 	
 
+	/// <summary>
+	/// 比较输入序列与招式的指令/执行按钮是否匹配（含蓄力技、输入宽容、松键触发与负边沿判断）。
+	/// </summary>
+	/// <param name="moveInputs">招式输入配置。</param>
+	/// <param name="buttonPress">当前输入按钮。</param>
+	/// <param name="inputUp">是否松键。</param>
+	/// <param name="fromSequence">是否从按键序列匹配。</param>
+	/// <param name="allowEmptyExecution">是否允许空执行按钮。</param>
+	/// <returns>匹配返回 true。</returns>
     private bool CompareSequence(MoveInputs moveInputs, ButtonPress[] buttonPress, bool inputUp, bool fromSequence, bool allowEmptyExecution)
     {
         if (!allowEmptyExecution && moveInputs.buttonExecution.Length == 0) return false;
@@ -1152,6 +1581,13 @@ public class MoveSetScript : MonoBehaviour {
         return true;
     }
 
+	/// <summary>
+	/// 计算两个数组的按序交集（按 a1 顺序在 a2 中依次查找，允许输入宽容匹配）。
+	/// </summary>
+	/// <typeparam name="T">元素类型。</typeparam>
+	/// <param name="a1">基准序列（招式指令序列）。</param>
+	/// <param name="a2">待比较序列（玩家按键序列）。</param>
+	/// <returns>交集数组；任一为空返回 null。</returns>
 	private T[] ArrayIntersect<T>(T[] a1, T[] a2) {
 		if (a1 == null || a2 == null) return null;
 		
@@ -1174,6 +1610,13 @@ public class MoveSetScript : MonoBehaviour {
 		return intersection.ToArray();
 	}
 
+	/// <summary>
+	/// 判断两个数组是否按序完全相等。
+	/// </summary>
+	/// <typeparam name="T">元素类型。</typeparam>
+	/// <param name="a1">数组1。</param>
+	/// <param name="a2">数组2。</param>
+	/// <returns>相等返回 true。</returns>
 	private bool ArraysEqual<T>(T[] a1, T[] a2) {
     	if (ReferenceEquals(a1,a2)) return true;
   		if (a1 == null || a2 == null) return false;

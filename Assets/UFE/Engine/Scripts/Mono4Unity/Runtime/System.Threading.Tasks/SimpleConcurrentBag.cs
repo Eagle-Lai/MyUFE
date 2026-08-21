@@ -31,12 +31,24 @@ using System.Threading;
 namespace System.Threading.Tasks
 {
 
+/// <summary>
+/// 简单并发包（SimpleConcurrentBag&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的内部类——按线程索引划分环形双端队列槽位，</para>
+/// <para>支持线程本地取出（TryTake）与跨线程偷取（TrySteal）的并发集合。</para>
+/// </summary>
+	/// <summary>
+	/// 简单并发包内部类。
+	/// </summary>
 	internal class SimpleConcurrentBag<T>
 	{
+		/// <summary>各线程的双端队列槽位。</summary>
 		readonly IConcurrentDeque<T>[] deques;
+		/// <summary>是否单槽（无需偷取）。</summary>
 		readonly bool unique;
+		/// <summary>当前分配索引。</summary>
 		int index = -1;
 		
+		/// <summary>偷取起始索引（线程局部）。</summary>
 		[ThreadStatic]
 		int stealIndex;
 

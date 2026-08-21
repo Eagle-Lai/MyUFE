@@ -26,11 +26,19 @@
 using System;
 using System.Runtime.Serialization;
 
+/// <summary>
+/// 任务取消异常（TaskCanceledException）。
+/// <para>用途：从 Mono 移植——表示关联的任务（Task）被取消的异常。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务取消异常：携带被取消的任务引用。
+	/// </summary>
 	[Serializable]
 	public class TaskCanceledException : OperationCanceledException
 	{
+		/// <summary>被取消的任务。</summary>
 		Task task;
 
 		public TaskCanceledException (): base ()

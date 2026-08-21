@@ -39,11 +39,24 @@ namespace System.Threading.Tasks
 #if INSIDE_MONO_PARALLEL
 	public
 #endif
+	/// <summary>
+	/// 并发双端队列接口（IConcurrentDeque&lt;T&gt;）。
+	/// </summary>
 	interface IConcurrentDeque<T>
 	{
+		/// <summary>底部压入元素（线程独占）。</summary>
+		/// <param name="obj">元素。</param>
 		void PushBottom (T obj);
+		/// <summary>底部弹出元素（线程独占）。</summary>
+		/// <param name="obj">输出弹出的元素。</param>
+		/// <returns>弹出结果。</returns>
 		PopResult PopBottom (out T obj);
+		/// <summary>顶部弹出元素（跨线程偷取）。</summary>
+		/// <param name="obj">输出弹出的元素。</param>
+		/// <returns>弹出结果。</returns>
 		PopResult PopTop (out T obj);
+		/// <summary>获取可枚举序列。</summary>
+		/// <returns>元素枚举器。</returns>
 		IEnumerable<T> GetEnumerable ();
 	}
 }

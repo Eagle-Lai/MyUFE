@@ -31,16 +31,30 @@
 
 using System.Collections.Generic;
 
+/// <summary>
+/// 任务延续（TaskContinuation）。
+/// <para>用途：从 Mono 移植的内部实现——把任务延续（ContinueWith 回调）包装为 IContinuation，</para>
+/// <para>按延续选项调度执行延续动作。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 延续接口：统一延续动作的执行入口。
+	/// </summary>
 	interface IContinuation
 	{
+		/// <summary>执行延续动作。</summary>
 		void Execute ();
 	}
 
+	/// <summary>
+	/// 任务延续类：包装任务与延续选项。
+	/// </summary>
 	class TaskContinuation : IContinuation
 	{
+		/// <summary>前置任务。</summary>
 		readonly Task task;
+		/// <summary>延续选项。</summary>
 		readonly TaskContinuationOptions continuationOptions;
 
 		public TaskContinuation (Task task, TaskContinuationOptions continuationOptions)

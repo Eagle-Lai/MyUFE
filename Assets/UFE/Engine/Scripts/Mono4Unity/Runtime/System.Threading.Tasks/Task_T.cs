@@ -31,12 +31,21 @@
 
 using System.Runtime.CompilerServices;
 
+/// <summary>
+/// 泛型任务（Task&lt;TResult&gt;）。
+/// <para>用途：从 Mono 移植——带返回结果的 Task，首次访问 Result 时阻塞等待任务完成，</para>
+/// <para>支持 ContinueWith、Wait、取消与异常传播。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 泛型任务类：携带 TResult 类型的结果。
+	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("Id = {Id}, Status = {Status}, Result = {ResultAsString}")]
 	[System.Diagnostics.DebuggerTypeProxy (typeof (TaskDebuggerView))]
 	public class Task<TResult> : Task
 	{
+		/// <summary>静态默认泛型任务工厂。</summary>
 		static readonly TaskFactory<TResult> factory = new TaskFactory<TResult> ();
 
 		TResult value;

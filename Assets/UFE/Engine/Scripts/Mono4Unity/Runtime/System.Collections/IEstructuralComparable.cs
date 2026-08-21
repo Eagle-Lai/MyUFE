@@ -30,9 +30,20 @@
 
 using System;
 
+/// <summary>
+/// 结构性比较接口（IStructuralComparable）。
+/// <para>用途：从 Mono 移植——支持按指定比较器对对象进行结构性比较（如元组/数组按元素比较）。</para>
+/// </summary>
 namespace System.Collections
 {
+	/// <summary>
+	/// 结构性比较接口：使用指定比较器比较两个对象的结构。
+	/// </summary>
 	public interface IStructuralComparable {
+		/// <summary>按指定比较器比较当前对象与另一个对象。</summary>
+		/// <param name="other">待比较对象。</param>
+		/// <param name="comparer">比较器。</param>
+		/// <returns>比较结果（负/零/正）。</returns>
 		int CompareTo (object other, IComparer comparer);
 	}
 }

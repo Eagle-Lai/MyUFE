@@ -10,34 +10,64 @@ using UnityEditor;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 动画映射录制器（AnimationRecorder，编辑器专用）。
+/// <para>用途：逐帧录制角色动画期间各判定盒（HitBox）的位置与位移，生成 AnimationMap 数据（动画映射），</para>
+/// <para>供运行时以逐帧判定盒映射方式驱动命中检测（useAnimationMaps 模式）。</para>
+/// <para>支持基础动作与必杀技/演出招式的录制，并可将结果保存回资源（StanceInfo 或 CharacterInfo）。</para>
+/// </summary>
 [System.Serializable]
 public class AnimationRecorder : MonoBehaviour {
     
+	/// <summary>要录制的角色信息。</summary>
     [SerializeField]
     public UFE3D.CharacterInfo characterInfo;
+	/// <summary>是否从 Resources 加载姿态（true 用 stanceResourcePath，false 用角色内嵌 moves）。</summary>
     public bool searchResource = false;
+	/// <summary>是否烘焙动画速度值到映射数据。</summary>
     public bool bakeSpeedValues = false;
+	/// <summary>是否烘焙游戏速度到固定帧率。</summary>
     public bool bakeGameSpeed = false;
 
+	/// <summary>判定盒脚本引用。</summary>
     private HitBoxesScript hitBoxesScript;
+	/// <summary>Mecanim 动画控制器引用。</summary>
     private MecanimControl mecanimControl;
+	/// <summary>Legacy 动画控制器引用。</summary>
     private LegacyControl legacyControl;
+	/// <summary>已加载的招式集合列表。</summary>
     private List<MoveSetData> loadedMoveSets = new List<MoveSetData>();
 
+	/// <summary>Mecanim Animator 组件。</summary>
     private Animator mAnimator;
+	/// <summary>Legacy Animation 组件。</summary>
     private Animation lAnimator;
+	/// <summary>默认动画片段。</summary>
     private AnimationClip defaultClip;
+	/// <summary>实例化的角色模型。</summary>
     private GameObject character;
+	/// <summary>当前录制中的基础动作。</summary>
     private BasicMoveInfo currentBasicMove;
+	/// <summary>当前录制中的招式。</summary>
     private MoveInfo currentMove;
+	/// <summary>当前姿态序号。</summary>
     private int currentStanceNum;
+	/// <summary>当前片段序号（基础动作第几个片段）。</summary>
     private int currentClipNum;
+	/// <summary>当前招式序号。</summary>
     private int currentMoveNum;
+	/// <summary>当前录制帧。</summary>
     private int currentFrame;
+	/// <summary>总录制帧数。</summary>
     private int totalFrames;
+	/// <summary>起始位置。</summary>
     private Vector3 startingPosition;
+	/// <summary>是否正在录制。</summary>
     private bool recording = false;
 
+	/// <summary>
+	/// 唤醒：实例化角色模型、初始化动画控制器（Legacy/Mecanim）与判定盒脚本、设置帧率。
+	/// </summary>
     void Awake()
     {
         if (characterInfo.characterPrefabStorage == StorageMode.Legacy) {
@@ -83,6 +113,9 @@ public class AnimationRecorder : MonoBehaviour {
         UFE.timeScale = bakeGameSpeed? UFE.config._gameSpeed : 1;
     }
 
+	/// <summary>
+	/// 固定帧更新：录制中推进动画并映射本帧判定盒位置。
+	/// </summary>
     void FixedUpdate() {
         if (recording)
         {
@@ -96,6 +129,9 @@ public class AnimationRecorder : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 编辑器 GUI：提供姿态选择与"录制基础动作/录制必杀技"按钮。
+	/// </summary>
     private void OnGUI() {
 
         GUI.Box(new Rect(10, 10, 220, 180), "Animation Map Recorder");
@@ -141,6 +177,10 @@ public class AnimationRecorder : MonoBehaviour {
         GUI.EndGroup();
     }
 
+	/// <summary>
+	/// 映射判定盒（录制主循环）：按当前录制目标（招式/基础动作）逐帧记录，完成后自动切换到下一目标
+	/// （招式按列表顺序、基础动作按固定顺序链），全部完成后保存映射数据到资源。
+	/// </summary>
     public void MapHitBoxes() {
         MoveSetData moveSetData = loadedMoveSets[currentStanceNum];
 
@@ -434,6 +474,12 @@ public class AnimationRecorder : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 动画映射初始化：清除旧映射、在动画控制器中注册片段并计算总帧数。
+	/// </summary>
+	/// <param name="animMap">动画映射数据。</param>
+	/// <param name="speed">动画速度。</param>
+	/// <returns>初始化后的动画映射。</returns>
     private SerializedAnimationMap AnimationSetup(SerializedAnimationMap animMap, Fix64 speed)
     {
         animMap.animationMaps = new AnimationMap[0];
@@ -459,6 +505,12 @@ public class AnimationRecorder : MonoBehaviour {
         return animMap;
     }
 
+	/// <summary>
+	/// 录制单个必杀技/演出招式的逐帧判定盒映射，完成后标记结束。
+	/// </summary>
+	/// <param name="moveInfo">招式数据。</param>
+	/// <param name="over">输出：是否录制完成。</param>
+	/// <returns>更新后的招式数据。</returns>
     private MoveInfo MapSpecialMove(MoveInfo moveInfo, ref bool over)
     {
         bool finished = false;
@@ -493,6 +545,12 @@ public class AnimationRecorder : MonoBehaviour {
         return moveInfo;
     }
 
+	/// <summary>
+	/// 录制单个基础动作的逐帧判定盒映射（含最多 6 个片段），完成后标记结束。
+	/// </summary>
+	/// <param name="basicMove">基础动作数据。</param>
+	/// <param name="over">输出：是否录制完成。</param>
+	/// <returns>更新后的基础动作数据。</returns>
     private BasicMoveInfo MapBasicMove(BasicMoveInfo basicMove, ref bool over)
     {
         if (currentClipNum > 5)
@@ -531,6 +589,14 @@ public class AnimationRecorder : MonoBehaviour {
         return basicMove;
     }
 
+	/// <summary>
+	/// 映射当前帧：记录判定盒位置与位移增量到 AnimationMap，推进帧号并更新预览映射。
+	/// </summary>
+	/// <param name="animationMaps">已有映射列表。</param>
+	/// <param name="animationClip">当前动画片段。</param>
+	/// <param name="finished">输出：是否完成全部帧。</param>
+	/// <param name="applyRootMotion">是否记录根骨骼位移。</param>
+	/// <returns>更新后的映射数组。</returns>
     private AnimationMap[] MapFrame(AnimationMap[] animationMaps, AnimationClip animationClip, ref bool finished, bool applyRootMotion = false)
     {
         List<AnimationMap> _animationMaps = new List<AnimationMap>(animationMaps);

@@ -33,11 +33,21 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 
+/// <summary>
+/// 任务完成队列（TaskCompletionQueue&lt;TCompletion&gt;）。
+/// <para>用途：从 Mono 移植的内部结构——用于存储任务的延续/完成回调集合，</para>
+/// <para>采用"单元素快速路径 + 并发有序列表"的组合，支持并发添加/移除/取出。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 任务完成回调队列结构。
+	/// </summary>
 	internal struct TaskCompletionQueue<TCompletion> where TCompletion : class
 	{
+		/// <summary>单元素快速槽位。</summary>
 		TCompletion single;
+		/// <summary>多元素并发有序列表。</summary>
 		ConcurrentOrderedList<TCompletion> completed;
 
 		public void Add (TCompletion continuation)

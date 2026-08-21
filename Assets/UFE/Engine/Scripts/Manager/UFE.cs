@@ -33,79 +33,134 @@ using FPLibrary;
 using UFENetcode;
 using UFE3D;
 
+/// <summary>
+/// UFE 引擎核心管理类（UFE）。
+/// <para>用途：作为整个格斗游戏的中枢——持有全局配置（config）、管理输入控制器/摄像机/帧同步（FluxCapacitor）、</para>
+/// <para>驱动全部 UI 屏幕切换、触发游戏事件（OnHit/OnMove/OnRoundEnds 等）、提供音频/AI/网络/角色解锁等静态 API。</para>
+/// <para>该单例（MonoBehaviour）在游戏启动时被实例化，所有静态 API 均可从任何脚本调用。</para>
+/// </summary>
 [RequireComponent(typeof(EventSystem))]
 public class UFE : MonoBehaviour, UFEInterface
 {
 	#region public instance enum
+	/// <summary>
+	/// 多人游戏模式：联网对战的方式。
+	/// </summary>
 	public enum MultiplayerMode
 	{
+		/// <summary>局域网对战。</summary>
 		Lan,
+		/// <summary>在线对战。</summary>
 		Online,
+		/// <summary>蓝牙对战。</summary>
 		Bluetooth,
 	}
 	#endregion
 
 	#region public instance properties
+	/// <summary>
+	/// UFE 全局配置资产引用（在 Inspector 中指定，Awake 时赋给静态 config）。
+	/// </summary>
 	public GlobalInfo UFE_Config;
 	#endregion
 
 	#region public event definitions
+	/// <summary>生命值变化事件委托。</summary>
 	public delegate void MeterHandler(float newFloat, UFE3D.CharacterInfo player);
+	/// <summary>生命值变化事件（参数：新生命值，角色）。</summary>
 	public static event MeterHandler OnLifePointsChange;
 
+	/// <summary>回合开始事件委托。</summary>
 	public delegate void IntHandler(int newInt);
+	/// <summary>回合开始事件（参数：回合编号）。</summary>
 	public static event IntHandler OnRoundBegins;
 
+	/// <summary>文字提示事件委托。</summary>
 	public delegate void StringHandler(string newString, UFE3D.CharacterInfo player);
+	/// <summary>新提示文字事件（参数：提示内容，角色）。</summary>
 	public static event StringHandler OnNewAlert;
 
+	/// <summary>命中事件委托（打击判定盒/招式/角色）。</summary>
 	public delegate void HitHandler(HitBox strokeHitBox, MoveInfo move, UFE3D.CharacterInfo player);
+	/// <summary>命中事件。</summary>
 	public static event HitHandler OnHit;
+	/// <summary>格挡事件。</summary>
 	public static event HitHandler OnBlock;
+	/// <summary>弹反事件。</summary>
 	public static event HitHandler OnParry;
 
+	/// <summary>出招事件委托。</summary>
 	public delegate void MoveHandler(MoveInfo move, UFE3D.CharacterInfo player);
+	/// <summary>角色成功使出招式事件。</summary>
 	public static event MoveHandler OnMove;
 
+	/// <summary>按键事件委托。</summary>
 	public delegate void ButtonHandler(ButtonPress button, UFE3D.CharacterInfo player);
+	/// <summary>角色按下按钮事件。</summary>
 	public static event ButtonHandler OnButton;
 
+	/// <summary>基础动作事件委托。</summary>
 	public delegate void BasicMoveHandler(BasicMoveReference basicMove, UFE3D.CharacterInfo player);
+	/// <summary>角色执行基础动作事件。</summary>
 	public static event BasicMoveHandler OnBasicMove;
 
+	/// <summary>身体部位可见性变化事件委托。</summary>
 	public delegate void BodyVisibilityHandler(MoveInfo move, UFE3D.CharacterInfo player, BodyPartVisibilityChange bodyPartVisibilityChange, HitBox hitBox);
+	/// <summary>身体部位可见性变化事件。</summary>
 	public static event BodyVisibilityHandler OnBodyVisibilityChange;
 
+	/// <summary>粒子特效事件委托。</summary>
 	public delegate void ParticleEffectsHandler(MoveInfo move, UFE3D.CharacterInfo player, MoveParticleEffect particleEffects);
+	/// <summary>粒子特效触发事件。</summary>
 	public static event ParticleEffectsHandler OnParticleEffects;
 
+	/// <summary>换边（Side Switch）事件委托。</summary>
 	public delegate void SideSwitchHandler(int side, UFE3D.CharacterInfo player);
+	/// <summary>角色交换朝向事件。</summary>
 	public static event SideSwitchHandler OnSideSwitch;
 
+	/// <summary>游戏开始事件委托。</summary>
 	public delegate void GameBeginHandler(UFE3D.CharacterInfo player1, UFE3D.CharacterInfo player2, StageOptions stage);
+	/// <summary>整场游戏开始事件。</summary>
 	public static event GameBeginHandler OnGameBegin;
 
+	/// <summary>游戏/回合结束事件委托。</summary>
 	public delegate void GameEndsHandler(UFE3D.CharacterInfo winner, UFE3D.CharacterInfo loser);
+	/// <summary>整场游戏结束事件。</summary>
 	public static event GameEndsHandler OnGameEnds;
+	/// <summary>单回合结束事件。</summary>
 	public static event GameEndsHandler OnRoundEnds;
 
+	/// <summary>游戏暂停事件委托。</summary>
 	public delegate void GamePausedHandler(bool isPaused);
+	/// <summary>游戏暂停/恢复事件。</summary>
 	public static event GamePausedHandler OnGamePaused;
 
+	/// <summary>界面切换事件委托。</summary>
 	public delegate void ScreenChangedHandler(UFEScreen previousScreen, UFEScreen newScreen);
+	/// <summary>界面切换事件。</summary>
 	public static event ScreenChangedHandler OnScreenChanged;
 
+	/// <summary>故事模式事件委托。</summary>
 	public delegate void StoryModeHandler(UFE3D.CharacterInfo character);
+	/// <summary>故事模式开始事件。</summary>
 	public static event StoryModeHandler OnStoryModeStarted;
+	/// <summary>故事模式完成事件。</summary>
 	public static event StoryModeHandler OnStoryModeCompleted;
 
+	/// <summary>计时器事件委托。</summary>
 	public delegate void TimerHandler(Fix64 time);
+	/// <summary>计时器更新事件。</summary>
 	public static event TimerHandler OnTimer;
 
+	/// <summary>时间到事件委托。</summary>
 	public delegate void TimeOverHandler();
+	/// <summary>回合时间结束事件。</summary>
 	public static event TimeOverHandler OnTimeOver;
 
+	/// <summary>输入事件委托。</summary>
 	public delegate void InputHandler(InputReferences[] inputReferences, int player);
+	/// <summary>输入更新事件。</summary>
 	public static event InputHandler OnInput;
 	#endregion
 
@@ -113,6 +168,9 @@ public class UFE : MonoBehaviour, UFEInterface
 	//-----------------------------------------------------------------------------------------------------------------
 	// Network
 	//-----------------------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 当前可用的多人 API（根据多人模式返回蓝牙/局域网/在线 API）。
+	/// </summary>
 	public static MultiplayerAPI multiplayerAPI
 	{
 		get
@@ -132,6 +190,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 多人模式：设置时自动启用/禁用对应的 MultiplayerAPI 组件。
+	/// </summary>
 	public static MultiplayerMode multiplayerMode
 	{
 		get
@@ -163,10 +224,14 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>蓝牙多人 API 实例。</summary>
 	private static MultiplayerAPI bluetoothMultiplayerAPI;
+	/// <summary>局域网多人 API 实例。</summary>
 	private static MultiplayerAPI lanMultiplayerAPI;
+	/// <summary>在线多人 API 实例。</summary>
 	private static MultiplayerAPI onlineMultiplayerAPI;
 
+	/// <summary>当前多人模式的内部存储值（默认局域网）。</summary>
 	private static MultiplayerMode _multiplayerMode = MultiplayerMode.Lan;
 	#endregion
 
@@ -174,62 +239,107 @@ public class UFE : MonoBehaviour, UFEInterface
 	//-----------------------------------------------------------------------------------------------------------------
 	// GUI
 	//-----------------------------------------------------------------------------------------------------------------
+	/// <summary>全局 UI Canvas（ScreenSpaceOverlay）。</summary>
 	public static Canvas canvas { get; protected set; }
+	/// <summary>全局 CanvasGroup（用于整屏淡入淡出）。</summary>
 	public static CanvasGroup canvasGroup { get; protected set; }
+	/// <summary>全局 EventSystem（UI 事件系统）。</summary>
 	public static EventSystem eventSystem { get; protected set; }
+	/// <summary>全局 GraphicRaycaster（UI 射线检测）。</summary>
 	public static GraphicRaycaster graphicRaycaster { get; protected set; }
+	/// <summary>全局 StandaloneInputModule（UI 输入模块）。</summary>
 	public static StandaloneInputModule standaloneInputModule { get; protected set; }
 	//-----------------------------------------------------------------------------------------------------------------
+	/// <summary>PlayerPrefs 键：音乐是否启用。</summary>
 	protected static readonly string MusicEnabledKey = "MusicEnabled";
+	/// <summary>PlayerPrefs 键：音乐音量。</summary>
 	protected static readonly string MusicVolumeKey = "MusicVolume";
+	/// <summary>PlayerPrefs 键：音效是否启用。</summary>
 	protected static readonly string SoundsEnabledKey = "SoundsEnabled";
+	/// <summary>PlayerPrefs 键：音效音量。</summary>
 	protected static readonly string SoundsVolumeKey = "SoundsVolume";
+	/// <summary>PlayerPrefs 键：AI 难度级别。</summary>
 	protected static readonly string DifficultyLevelKey = "DifficultyLevel";
+	/// <summary>PlayerPrefs 键：调试模式。</summary>
 	protected static readonly string DebugModeKey = "DebugMode";
 	//-----------------------------------------------------------------------------------------------------------------
 
+	/// <summary>当前战斗摄像机脚本。</summary>
 	public static CameraScript cameraScript { get; set; }
+	/// <summary>帧同步（Rollback Netcode）管理器。</summary>
 	public static FluxCapacitor fluxCapacitor;
+	/// <summary>当前游戏模式。</summary>
 	public static GameMode gameMode = GameMode.None;
+	/// <summary>全局配置（GlobalInfo 资产）。</summary>
 	public static GlobalInfo config;
+	/// <summary>UFE 单例实例。</summary>
 	public static UFE UFEInstance;
+	/// <summary>是否输出调试信息。</summary>
 	public static bool debug = true;
+	/// <summary>调试文本1（屏幕左上）。</summary>
 	public static Text debugger1;
+	/// <summary>调试文本2（屏幕右上）。</summary>
 	public static Text debugger2;
 	#endregion
 
 	#region addons definitions
+	/// <summary>是否安装 AI 插件（Fuzzy AI）。</summary>
 	public static bool isAiAddonInstalled { get; set; }
+	/// <summary>是否安装 cInput 插件。</summary>
 	public static bool isCInputInstalled { get; set; }
+	/// <summary>是否安装 Control Freak 插件。</summary>
 	public static bool isControlFreakInstalled { get; set; }
+	/// <summary>是否安装 Control Freak 1.x。</summary>
 	public static bool isControlFreak1Installed { get; set; }
+	/// <summary>是否安装 Control Freak 2。</summary>
 	public static bool isControlFreak2Installed { get; set; }
+	/// <summary>是否安装 Rewired 插件。</summary>
 	public static bool isRewiredInstalled { get; set; }
+	/// <summary>是否安装网络插件。</summary>
 	public static bool isNetworkAddonInstalled { get; set; }
+	/// <summary>是否安装 Photon 插件。</summary>
 	public static bool isPhotonInstalled { get; set; }
+	/// <summary>是否安装蓝牙插件。</summary>
 	public static bool isBluetoothAddonInstalled { get; set; }
+	/// <summary>Control Freak 虚拟摇杆预制体实例。</summary>
 	public static GameObject controlFreakPrefab;
+	/// <summary>Control Freak 2 桥接器实例。</summary>
 	public static InputTouchControllerBridge touchControllerBridge;
 	#endregion
 
 	#region screen definitions
+	/// <summary>当前显示的 UI 屏幕。</summary>
 	public static UFEScreen currentScreen { get; protected set; }
+	/// <summary>战斗 HUD 屏幕。</summary>
 	public static UFEScreen battleGUI { get; protected set; }
+	/// <summary>游戏引擎根对象（战斗场景容器）。</summary>
 	public static GameObject gameEngine { get; protected set; }
 	#endregion
 
 	#region trackable definitions
+	/// <summary>是否自由摄像机（调试/演出用）。</summary>
 	public static bool freeCamera;
+	/// <summary>是否冻结物理模拟。</summary>
 	public static bool freezePhysics;
+	/// <summary>是否已广播新回合开始。</summary>
 	public static bool newRoundCasted;
+	/// <summary>是否使用标准化摄像机。</summary>
 	public static bool normalizedCam = true;
+	/// <summary>是否暂停回合计时器。</summary>
 	public static bool pauseTimer;
+	/// <summary>当前回合剩余时间。</summary>
 	public static Fix64 timer;
+	/// <summary>游戏全局时间倍率（暂停时为 0）。</summary>
 	public static Fix64 timeScale;
+	/// <summary>玩家1的角色控制脚本。</summary>
 	public static ControlsScript p1ControlsScript;
+	/// <summary>玩家2的角色控制脚本。</summary>
 	public static ControlsScript p2ControlsScript;
+	/// <summary>本地延迟动作列表（仅本地执行）。</summary>
 	public static List<DelayedAction> delayedLocalActions = new List<DelayedAction>();
+	/// <summary>同步延迟动作列表（所有客户端同步执行）。</summary>
 	public static List<DelayedAction> delayedSynchronizedActions = new List<DelayedAction>();
+	/// <summary>帧同步实例化对象列表（用于回滚重建）。</summary>
 	public static List<InstantiatedGameObject> instantiatedObjects = new List<InstantiatedGameObject>();
 	#endregion
 
@@ -238,46 +348,77 @@ public class UFE : MonoBehaviour, UFEInterface
 	// Required for the Story Mode: if the player lost its previous battle, 
 	// he needs to fight the same opponent again, not the next opponent.
 	//-----------------------------------------------------------------------------------------------------------------
+	/// <summary>故事模式运行时进度信息。</summary>
 	private static StoryModeInfo storyMode = new StoryModeInfo();
+	/// <summary>故事模式中已解锁的角色名称列表。</summary>
 	private static List<string> unlockedCharactersInStoryMode = new List<string>();
+	/// <summary>对战模式中已解锁的角色名称列表。</summary>
 	private static List<string> unlockedCharactersInVersusMode = new List<string>();
+	/// <summary>玩家1是否赢得上一场战斗（决定故事进度）。</summary>
 	private static bool player1WonLastBattle;
+	/// <summary>上一个使用的场地索引。</summary>
 	private static int lastStageIndex;
 	#endregion
 
 	#region public definitions
+	/// <summary>每帧时长（固定步长 × 时间倍率）。</summary>
 	public static Fix64 fixedDeltaTime { get { return _fixedDeltaTime * timeScale; } set { _fixedDeltaTime = value; } }
+	/// <summary>回合计时器整数秒。</summary>
 	public static int intTimer;
+	/// <summary>目标帧率。</summary>
 	public static int fps = 60;
+	/// <summary>当前帧号（帧同步时间轴）。</summary>
 	public static long currentFrame { get; set; }
+	/// <summary>游戏是否正在运行（战斗中）。</summary>
 	public static bool gameRunning { get; protected set; }
 
+	/// <summary>本地玩家控制器（网络对战用）。</summary>
 	public static UFEController localPlayerController;
+	/// <summary>远端玩家控制器（网络对战用）。</summary>
 	public static UFEController remotePlayerController;
 	#endregion
 
 	#region private definitions
+	/// <summary>固定步长的内部存储值。</summary>
 	private static Fix64 _fixedDeltaTime;
+	/// <summary>背景音乐音频源。</summary>
 	private static AudioSource musicAudioSource;
+	/// <summary>音效音频源。</summary>
 	private static AudioSource soundsAudioSource;
 
+	/// <summary>玩家1控制器（人类+AI）。</summary>
 	private static UFEController p1Controller;
+	/// <summary>玩家2控制器（人类+AI）。</summary>
 	private static UFEController p2Controller;
 
+	/// <summary>玩家1随机 AI。</summary>
 	private static RandomAI p1RandomAI;
+	/// <summary>玩家2随机 AI。</summary>
 	private static RandomAI p2RandomAI;
+	/// <summary>玩家1模糊 AI。</summary>
 	private static AbstractInputController p1FuzzyAI;
+	/// <summary>玩家2模糊 AI。</summary>
 	private static AbstractInputController p2FuzzyAI;
+	/// <summary>玩家1简单 AI。</summary>
 	private static SimpleAI p1SimpleAI;
+	/// <summary>玩家2简单 AI。</summary>
 	private static SimpleAI p2SimpleAI;
 
+	/// <summary>是否正在关闭游戏（退出阶段标志）。</summary>
 	private static bool closing = false;
+	/// <summary>是否正在断开网络连接。</summary>
 	private static bool disconnecting = false;
+	/// <summary>预加载内存缓存（避免重复实例化同一对象）。</summary>
 	private static List<object> memoryDump = new List<object>();
 	#endregion
 
 
 	#region public class methods: Delay the execution of a method maintaining synchronization between clients
+	/// <summary>
+	/// 延迟指定秒数后执行本地动作（仅本地客户端执行）。
+	/// </summary>
+	/// <param name="action">要延迟执行的动作。</param>
+	/// <param name="seconds">延迟秒数。</param>
 	public static void DelayLocalAction(Action action, Fix64 seconds)
 	{
 		if (UFE.fixedDeltaTime > 0)
@@ -290,16 +431,30 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 延迟指定帧数后执行本地动作。
+	/// </summary>
+	/// <param name="action">要延迟执行的动作。</param>
+	/// <param name="steps">延迟执行的帧数。</param>
 	public static void DelayLocalAction(Action action, int steps)
 	{
 		UFE.DelayLocalAction(new DelayedAction(action, steps));
 	}
 
+	/// <summary>
+	/// 将已打包的延迟动作加入本地延迟队列。
+	/// </summary>
+	/// <param name="delayedAction">延迟动作对象。</param>
 	public static void DelayLocalAction(DelayedAction delayedAction)
 	{
 		UFE.delayedLocalActions.Add(delayedAction);
 	}
 
+	/// <summary>
+	/// 延迟指定秒数后执行同步动作（所有客户端同步执行）。
+	/// </summary>
+	/// <param name="action">要延迟执行的动作。</param>
+	/// <param name="seconds">延迟秒数。</param>
 	public static void DelaySynchronizedAction(Action action, Fix64 seconds)
 	{
 		if (UFE.fixedDeltaTime > 0)
@@ -312,17 +467,31 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 延迟指定帧数后执行同步动作（所有客户端同步执行）。
+	/// </summary>
+	/// <param name="action">要延迟执行的动作。</param>
+	/// <param name="steps">延迟执行的帧数。</param>
 	public static void DelaySynchronizedAction(Action action, int steps)
 	{
 		UFE.DelaySynchronizedAction(new DelayedAction(action, steps));
 	}
 
+	/// <summary>
+	/// 将已打包的延迟动作加入同步延迟队列。
+	/// </summary>
+	/// <param name="delayedAction">延迟动作对象。</param>
 	public static void DelaySynchronizedAction(DelayedAction delayedAction)
 	{
 		UFE.delayedSynchronizedActions.Add(delayedAction);
 	}
 
 
+	/// <summary>
+	/// 在同步延迟队列中查找指定动作。
+	/// </summary>
+	/// <param name="action">要查找的动作。</param>
+	/// <returns>存在返回 true，否则返回 false。</returns>
 	public static bool FindDelaySynchronizedAction(Action action)
 	{
 		foreach (DelayedAction delayedAction in UFE.delayedSynchronizedActions)
@@ -332,6 +501,12 @@ public class UFE : MonoBehaviour, UFEInterface
 		return false;
 	}
 
+	/// <summary>
+	/// 查找并更新同步延迟动作的剩余帧数。
+	/// </summary>
+	/// <param name="action">要更新的动作。</param>
+	/// <param name="seconds">新的延迟秒数。</param>
+	/// <returns>找到并更新返回 true，否则返回 false。</returns>
 	public static bool FindAndUpdateDelaySynchronizedAction(Action action, Fix64 seconds)
 	{
 		foreach (DelayedAction delayedAction in UFE.delayedSynchronizedActions)
@@ -345,6 +520,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		return false;
 	}
 
+	/// <summary>
+	/// 查找并从同步延迟队列中移除指定动作。
+	/// </summary>
+	/// <param name="action">要移除的动作。</param>
 	public static void FindAndRemoveDelaySynchronizedAction(Action action)
 	{
 		foreach (DelayedAction delayedAction in UFE.delayedSynchronizedActions)
@@ -357,6 +536,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 查找并从本地延迟队列中移除指定动作。
+	/// </summary>
+	/// <param name="action">要移除的动作。</param>
 	public static void FindAndRemoveDelayLocalAction(Action action)
 	{
 		foreach (DelayedAction delayedAction in UFE.delayedLocalActions)
@@ -369,6 +552,14 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 在帧同步系统中实例化游戏对象并注册到实例列表（保证回滚可重建）。
+	/// </summary>
+	/// <param name="gameObject">要实例化的预制体。</param>
+	/// <param name="position">世界位置。</param>
+	/// <param name="rotation">世界旋转。</param>
+	/// <param name="destroyTimer">可选的销毁帧号（当前帧 + 延迟帧）。</param>
+	/// <returns>实例化出的游戏对象；预制体为 null 时返回 null。</returns>
 	public static GameObject SpawnGameObject(GameObject gameObject, Vector3 position, Quaternion rotation, long? destroyTimer = null)
 	{
 		if (gameObject == null) return null;
@@ -383,6 +574,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		return goInstance;
 	}
 
+	/// <summary>
+	/// 销毁帧同步实例化对象（设置其销毁帧号，由帧同步系统统一执行销毁）。
+	/// </summary>
+	/// <param name="gameObject">要销毁的游戏对象。</param>
+	/// <param name="destroyTimer">可选的销毁帧号；为 null 时立即在当前帧销毁。</param>
 	public static void DestroyGameObject(GameObject gameObject, long? destroyTimer = null)
 	{
 		for (int i = 0; i < UFE.instantiatedObjects.Count; ++i)
@@ -398,33 +594,56 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: Audio related methods
+	/// <summary>
+	/// 获取是否启用音乐。
+	/// </summary>
+	/// <returns>true 表示音乐启用。</returns>
 	public static bool GetMusic()
 	{
 		return config.music;
 	}
 
+	/// <summary>
+	/// 获取当前播放的音乐片段。
+	/// </summary>
+	/// <returns>当前音乐 AudioClip。</returns>
 	public static AudioClip GetMusicClip()
 	{
 		return UFE.musicAudioSource.clip;
 	}
 
+	/// <summary>
+	/// 获取是否启用音效。
+	/// </summary>
+	/// <returns>true 表示音效启用。</returns>
 	public static bool GetSoundFX()
 	{
 		return config.soundfx;
 	}
 
+	/// <summary>
+	/// 获取音乐音量（配置不存在时返回 1）。
+	/// </summary>
+	/// <returns>音乐音量值。</returns>
 	public static float GetMusicVolume()
 	{
 		if (UFE.config != null) return config.musicVolume;
 		return 1f;
 	}
 
+	/// <summary>
+	/// 获取音效音量（配置不存在时返回 1）。
+	/// </summary>
+	/// <returns>音效音量值。</returns>
 	public static float GetSoundFXVolume()
 	{
 		if (UFE.config != null) return UFE.config.soundfxVolume;
 		return 1f;
 	}
 
+	/// <summary>
+	/// 初始化音频系统：在主摄像机上创建音乐与音效两个 AudioSource。
+	/// </summary>
 	public static void InitializeAudioSystem()
 	{
 		Camera cam = Camera.main;
@@ -447,27 +666,46 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.soundsAudioSource.volume = 1f;
 	}
 
+	/// <summary>
+	/// 音乐当前是否正在播放。
+	/// </summary>
+	/// <returns>正在播放返回 true，否则返回 false。</returns>
 	public static bool IsPlayingMusic()
 	{
 		if (UFE.musicAudioSource.clip != null) return UFE.musicAudioSource.isPlaying;
 		return false;
 	}
 
+	/// <summary>
+	/// 音乐是否循环播放。
+	/// </summary>
+	/// <returns>循环返回 true，否则返回 false。</returns>
 	public static bool IsMusicLooped()
 	{
 		return UFE.musicAudioSource.loop;
 	}
 
+	/// <summary>
+	/// 音效是否正在播放（当前固定返回 false，未实现）。
+	/// </summary>
+	/// <returns>始终返回 false。</returns>
 	public static bool IsPlayingSoundFX()
 	{
 		return false;
 	}
 
+	/// <summary>
+	/// 设置音乐是否循环播放。
+	/// </summary>
+	/// <param name="loop">是否循环。</param>
 	public static void LoopMusic(bool loop)
 	{
 		UFE.musicAudioSource.loop = loop;
 	}
 
+	/// <summary>
+	/// 播放当前设置的音乐（若已启用且未在播放且有片段）。
+	/// </summary>
 	public static void PlayMusic()
 	{
 		if (config.music && !UFE.IsPlayingMusic() && UFE.musicAudioSource.clip != null)
@@ -476,6 +714,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 切换并播放指定音乐。
+	/// </summary>
+	/// <param name="music">要播放的音乐片段。</param>
 	public static void PlayMusic(AudioClip music)
 	{
 		if (music != null)
@@ -494,6 +736,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 从音效列表中随机播放一个音效。
+	/// </summary>
+	/// <param name="sounds">音效列表。</param>
 	public static void PlaySound(IList<AudioClip> sounds)
 	{
 		if (sounds.Count > 0)
@@ -502,11 +748,20 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 按默认音量播放音效。
+	/// </summary>
+	/// <param name="soundFX">要播放的音效。</param>
 	public static void PlaySound(AudioClip soundFX)
 	{
 		UFE.PlaySound(soundFX, UFE.GetSoundFXVolume());
 	}
 
+	/// <summary>
+	/// 按指定音量播放音效（一次性播放）。
+	/// </summary>
+	/// <param name="soundFX">要播放的音效。</param>
+	/// <param name="volume">播放音量。</param>
 	public static void PlaySound(AudioClip soundFX, float volume)
 	{
 		if (config.soundfx && soundFX != null && UFE.soundsAudioSource != null)
@@ -515,6 +770,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 启用/禁用音乐并持久化到 PlayerPrefs。
+	/// </summary>
+	/// <param name="on">是否启用。</param>
 	public static void SetMusic(bool on)
 	{
 		bool isPlayingMusic = UFE.IsPlayingMusic();
@@ -527,6 +786,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		PlayerPrefs.Save();
 	}
 
+	/// <summary>
+	/// 启用/禁用音效并持久化到 PlayerPrefs。
+	/// </summary>
+	/// <param name="on">是否启用。</param>
 	public static void SetSoundFX(bool on)
 	{
 		UFE.config.soundfx = on;
@@ -534,6 +797,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		PlayerPrefs.Save();
 	}
 
+	/// <summary>
+	/// 设置音乐音量并持久化到 PlayerPrefs。
+	/// </summary>
+	/// <param name="volume">音量值（0~1）。</param>
 	public static void SetMusicVolume(float volume)
 	{
 		if (UFE.config != null) UFE.config.musicVolume = volume;
@@ -543,6 +810,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		PlayerPrefs.Save();
 	}
 
+	/// <summary>
+	/// 设置音效音量并持久化到 PlayerPrefs。
+	/// </summary>
+	/// <param name="volume">音量值（0~1）。</param>
 	public static void SetSoundFXVolume(float volume)
 	{
 		if (UFE.config != null) UFE.config.soundfxVolume = volume;
@@ -550,11 +821,17 @@ public class UFE : MonoBehaviour, UFEInterface
 		PlayerPrefs.Save();
 	}
 
+	/// <summary>
+	/// 停止播放音乐。
+	/// </summary>
 	public static void StopMusic()
 	{
 		if (UFE.musicAudioSource.clip != null) UFE.musicAudioSource.Stop();
 	}
 
+	/// <summary>
+	/// 停止播放全部音效。
+	/// </summary>
 	public static void StopSounds()
 	{
 		UFE.soundsAudioSource.Stop();
@@ -562,21 +839,38 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: AI related methods
+	/// <summary>
+	/// 设置 AI 引擎类型（随机 AI / 模糊 AI）。
+	/// </summary>
+	/// <param name="engine">AI 引擎类型。</param>
 	public static void SetAIEngine(AIEngine engine)
 	{
 		UFE.config.aiOptions.engine = engine;
 	}
 
+	/// <summary>
+	/// 获取当前 AI 引擎类型。
+	/// </summary>
+	/// <returns>AI 引擎类型。</returns>
 	public static AIEngine GetAIEngine()
 	{
 		return UFE.config.aiOptions.engine;
 	}
 
+	/// <summary>
+	/// 获取指定序号的挑战配置。
+	/// </summary>
+	/// <param name="challengeNum">挑战索引。</param>
+	/// <returns>挑战模式配置对象。</returns>
 	public static ChallengeModeOptions GetChallenge(int challengeNum)
 	{
 		return UFE.config.challengeModeOptions[challengeNum];
 	}
 
+	/// <summary>
+	/// 设置调试模式开关（同时控制两个调试文本的显示）。
+	/// </summary>
+	/// <param name="flag">是否启用调试模式。</param>
 	public static void SetDebugMode(bool flag)
 	{
 		UFE.config.debugOptions.debugMode = flag;
@@ -584,6 +878,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		if (debugger2 != null) debugger2.enabled = flag;
 	}
 
+	/// <summary>
+	/// 按难度级别枚举设置 AI 难度。
+	/// </summary>
+	/// <param name="difficulty">难度级别。</param>
 	public static void SetAIDifficulty(AIDifficultyLevel difficulty)
 	{
 		foreach (AIDifficultySettings difficultySettings in UFE.config.aiOptions.difficultySettings)
@@ -596,6 +894,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 设置 AI 难度参数对象并持久化到 PlayerPrefs。
+	/// </summary>
+	/// <param name="difficulty">难度参数对象。</param>
 	public static void SetAIDifficulty(AIDifficultySettings difficulty)
 	{
 		UFE.config.aiOptions.selectedDifficulty = difficulty;
@@ -612,6 +914,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 为指定玩家设置简单 AI（SimpleAI）行为。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <param name="behaviour">简单 AI 行为资产。</param>
 	public static void SetSimpleAI(int player, SimpleAIBehaviour behaviour)
 	{
 		if (player == 1)
@@ -626,6 +933,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 为指定玩家设置随机 AI。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
 	public static void SetRandomAI(int player)
 	{
 		if (player == 1)
@@ -638,11 +949,22 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 为指定玩家设置模糊 AI（使用当前选中的难度）。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <param name="character">角色信息（从中读取 AI 指令集）。</param>
 	public static void SetFuzzyAI(int player, UFE3D.CharacterInfo character)
 	{
 		UFE.SetFuzzyAI(player, character, UFE.config.aiOptions.selectedDifficulty);
 	}
 
+	/// <summary>
+	/// 为指定玩家设置模糊 AI，并按难度起始行为选择 AI 指令集。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <param name="character">角色信息（从中读取 AI 指令集）。</param>
+	/// <param name="difficulty">AI 难度设置（startupBehavior 决定选哪个指令集）。</param>
 	public static void SetFuzzyAI(int player, UFE3D.CharacterInfo character, AIDifficultySettings difficulty)
 	{
 		if (UFE.isAiAddonInstalled)
@@ -705,6 +1027,11 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: Story Mode related methods
+	/// <summary>
+	/// 获取指定角色的故事配置；若未启用"所有角色共用故事"，则查找该角色的专属故事，否则返回默认故事。
+	/// </summary>
+	/// <param name="character">目标角色。</param>
+	/// <returns>角色对应的 CharacterStory 配置。</returns>
 	public static CharacterStory GetCharacterStory(UFE3D.CharacterInfo character)
 	{
 		if (!UFE.config.storyMode.useSameStoryForAllCharacters)
@@ -729,6 +1056,10 @@ public class UFE : MonoBehaviour, UFEInterface
 	}
 
 
+	/// <summary>
+	/// 获取当前 AI 难度设置。
+	/// </summary>
+	/// <returns>当前选中的 AIDifficultySettings。</returns>
 	public static AIDifficultySettings GetAIDifficulty()
 	{
 		return UFE.config.aiOptions.selectedDifficulty;
@@ -736,96 +1067,172 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: GUI Related methods
+	/// <summary>
+	/// 获取战斗 HUD 预制体。
+	/// </summary>
+	/// <returns>BattleGUI 预制体引用。</returns>
 	public static BattleGUI GetBattleGUI()
 	{
 		return UFE.config.gameGUI.battleGUI;
 	}
 
+	/// <summary>
+	/// 获取蓝牙对战界面预制体。
+	/// </summary>
+	/// <returns>BluetoothGameScreen 预制体引用。</returns>
 	public static BluetoothGameScreen GetBluetoothGameScreen()
 	{
 		return UFE.config.gameGUI.bluetoothGameScreen;
 	}
 
+	/// <summary>
+	/// 获取角色选择界面预制体。
+	/// </summary>
+	/// <returns>CharacterSelectionScreen 预制体引用。</returns>
 	public static CharacterSelectionScreen GetCharacterSelectionScreen()
 	{
 		return UFE.config.gameGUI.characterSelectionScreen;
 	}
 
+	/// <summary>
+	/// 获取连接丢失界面预制体。
+	/// </summary>
+	/// <returns>ConnectionLostScreen 预制体引用。</returns>
 	public static ConnectionLostScreen GetConnectionLostScreen()
 	{
 		return UFE.config.gameGUI.connectionLostScreen;
 	}
 
+	/// <summary>
+	/// 获取制作人员界面预制体。
+	/// </summary>
+	/// <returns>CreditsScreen 预制体引用。</returns>
 	public static CreditsScreen GetCreditsScreen()
 	{
 		return UFE.config.gameGUI.creditsScreen;
 	}
 
+	/// <summary>
+	/// 获取建房界面预制体。
+	/// </summary>
+	/// <returns>HostGameScreen 预制体引用。</returns>
 	public static HostGameScreen GetHostGameScreen()
 	{
 		return UFE.config.gameGUI.hostGameScreen;
 	}
 
+	/// <summary>
+	/// 获取片头界面预制体。
+	/// </summary>
+	/// <returns>IntroScreen 预制体引用。</returns>
 	public static IntroScreen GetIntroScreen()
 	{
 		return UFE.config.gameGUI.introScreen;
 	}
 
+	/// <summary>
+	/// 获取加入游戏界面预制体。
+	/// </summary>
+	/// <returns>JoinGameScreen 预制体引用。</returns>
 	public static JoinGameScreen GetJoinGameScreen()
 	{
 		return UFE.config.gameGUI.joinGameScreen;
 	}
 
+	/// <summary>
+	/// 获取战斗加载界面预制体。
+	/// </summary>
+	/// <returns>LoadingBattleScreen 预制体引用。</returns>
 	public static LoadingBattleScreen GetLoadingBattleScreen()
 	{
 		return UFE.config.gameGUI.loadingBattleScreen;
 	}
 
+	/// <summary>
+	/// 获取主菜单界面预制体。
+	/// </summary>
+	/// <returns>MainMenuScreen 预制体引用。</returns>
 	public static MainMenuScreen GetMainMenuScreen()
 	{
 		return UFE.config.gameGUI.mainMenuScreen;
 	}
 
+	/// <summary>
+	/// 获取网络游戏界面预制体。
+	/// </summary>
+	/// <returns>NetworkGameScreen 预制体引用。</returns>
 	public static NetworkGameScreen GetNetworkGameScreen()
 	{
 		return UFE.config.gameGUI.networkGameScreen;
 	}
 
+	/// <summary>
+	/// 获取选项界面预制体。
+	/// </summary>
+	/// <returns>OptionsScreen 预制体引用。</returns>
 	public static OptionsScreen GetOptionsScreen()
 	{
 		return UFE.config.gameGUI.optionsScreen;
 	}
 
+	/// <summary>
+	/// 获取场地选择界面预制体。
+	/// </summary>
+	/// <returns>StageSelectionScreen 预制体引用。</returns>
 	public static StageSelectionScreen GetStageSelectionScreen()
 	{
 		return UFE.config.gameGUI.stageSelectionScreen;
 	}
 
+	/// <summary>
+	/// 获取故事模式通关祝贺界面预制体。
+	/// </summary>
+	/// <returns>StoryModeScreen 预制体引用。</returns>
 	public static StoryModeScreen GetStoryModeCongratulationsScreen()
 	{
 		return UFE.config.gameGUI.storyModeCongratulationsScreen;
 	}
 
+	/// <summary>
+	/// 获取故事模式继续界面预制体。
+	/// </summary>
+	/// <returns>StoryModeContinueScreen 预制体引用。</returns>
 	public static StoryModeContinueScreen GetStoryModeContinueScreen()
 	{
 		return UFE.config.gameGUI.storyModeContinueScreen;
 	}
 
+	/// <summary>
+	/// 获取故事模式游戏结束界面预制体。
+	/// </summary>
+	/// <returns>StoryModeScreen 预制体引用。</returns>
 	public static StoryModeScreen GetStoryModeGameOverScreen()
 	{
 		return UFE.config.gameGUI.storyModeGameOverScreen;
 	}
 
+	/// <summary>
+	/// 获取对战结算界面预制体。
+	/// </summary>
+	/// <returns>VersusModeAfterBattleScreen 预制体引用。</returns>
 	public static VersusModeAfterBattleScreen GetVersusModeAfterBattleScreen()
 	{
 		return UFE.config.gameGUI.versusModeAfterBattleScreen;
 	}
 
+	/// <summary>
+	/// 获取对战模式界面预制体。
+	/// </summary>
+	/// <returns>VersusModeScreen 预制体引用。</returns>
 	public static VersusModeScreen GetVersusModeScreen()
 	{
 		return UFE.config.gameGUI.versusModeScreen;
 	}
 
+	/// <summary>
+	/// 隐藏并销毁指定 UI 屏幕；若非战斗状态下且存在游戏引擎，同时结束游戏。
+	/// </summary>
+	/// <param name="screen">要隐藏的屏幕。</param>
 	public static void HideScreen(UFEScreen screen)
 	{
 		if (screen != null)
@@ -836,6 +1243,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实例化并显示指定 UI 屏幕，触发屏幕切换事件；支持为故事模式屏幕设置下一步动作回调。
+	/// </summary>
+	/// <param name="screen">要显示的屏幕预制体。</param>
+	/// <param name="nextScreenAction">下一步动作回调（故事模式屏幕使用）。</param>
 	public static void ShowScreen(UFEScreen screen, Action nextScreenAction = null)
 	{
 		if (screen != null)
@@ -858,6 +1270,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 退出游戏（编辑器下停止播放模式，发布版本退出应用）。
+	/// </summary>
 	public static void Quit()
 	{
 #if UNITY_EDITOR
@@ -867,11 +1282,18 @@ public class UFE : MonoBehaviour, UFEInterface
 #endif
 	}
 
+	/// <summary>
+	/// 进入蓝牙对战界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartBluetoothGameScreen()
 	{
 		UFE.StartBluetoothGameScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入蓝牙对战界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartBluetoothGameScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -891,11 +1313,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入角色选择界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartCharacterSelectionScreen()
 	{
 		UFE.StartCharacterSelectionScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入角色选择界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartCharacterSelectionScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -915,11 +1344,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 开始 CPU vs CPU 对战（使用默认淡出时长）。
+	/// </summary>
 	public static void StartCpuVersusCpu()
 	{
 		UFE.StartCpuVersusCpu((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 开始 CPU vs CPU 对战：设置为对战模式，双方均 CPU 控制，进入角色选择。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartCpuVersusCpu(float fadeTime)
 	{
 		UFE.gameMode = GameMode.VersusMode;
@@ -928,11 +1364,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartCharacterSelectionScreen(fadeTime);
 	}
 
+	/// <summary>
+	/// 若当前不在主菜单则进入连接丢失界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartConnectionLostScreenIfMainMenuNotLoaded()
 	{
 		UFE.StartConnectionLostScreenIfMainMenuNotLoaded((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 若当前不在主菜单则进入连接丢失界面。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartConnectionLostScreenIfMainMenuNotLoaded(float fadeTime)
 	{
 		if ((UFE.currentScreen as MainMenuScreen) == null)
@@ -941,11 +1384,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入连接丢失界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartConnectionLostScreen()
 	{
 		UFE.StartConnectionLostScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入连接丢失界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartConnectionLostScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -965,11 +1415,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入制作人员界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartCreditsScreen()
 	{
 		UFE.StartCreditsScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入制作人员界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartCreditsScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -989,11 +1446,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 开始游戏战斗（使用默认淡出时长）。
+	/// </summary>
 	public static void StartGame()
 	{
 		UFE.StartGame((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 开始游戏战斗（带淡出动画后初始化战斗）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartGame(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1013,11 +1477,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入建房界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartHostGameScreen()
 	{
 		UFE.StartHostGameScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入建房界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartHostGameScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1037,11 +1508,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入片头界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartIntroScreen()
 	{
 		UFE.StartIntroScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入片头界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartIntroScreen(float fadeTime)
 	{
 		if (UFE.currentScreen != null && UFE.currentScreen.hasFadeOut)
@@ -1061,11 +1539,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入加入游戏界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartJoinGameScreen()
 	{
 		UFE.StartJoinGameScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入加入游戏界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartJoinGameScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1085,11 +1570,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入战斗加载界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartLoadingBattleScreen()
 	{
 		UFE.StartLoadingBattleScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入战斗加载界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartLoadingBattleScreen(float fadeTime)
 	{
 		if (UFE.currentScreen != null && UFE.currentScreen.hasFadeOut)
@@ -1109,11 +1601,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入主菜单界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartMainMenuScreen()
 	{
 		UFE.StartMainMenuScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入主菜单界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartMainMenuScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1133,11 +1632,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入搜索匹配界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartSearchMatchScreen()
 	{
 		UFE.StartSearchMatchScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入搜索匹配界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartSearchMatchScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1157,11 +1663,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入网络游戏界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartNetworkGameScreen()
 	{
 		UFE.StartNetworkGameScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入网络游戏界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartNetworkGameScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1181,11 +1694,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入选项界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartOptionsScreen()
 	{
 		UFE.StartOptionsScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入选项界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartOptionsScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1205,11 +1725,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 开始玩家 vs 玩家对战（使用默认淡出时长）。
+	/// </summary>
 	public static void StartPlayerVersusPlayer()
 	{
 		UFE.StartPlayerVersusPlayer((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 开始玩家 vs 玩家对战：设置为对战模式，双方均人类控制，进入角色选择。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartPlayerVersusPlayer(float fadeTime)
 	{
 		UFE.gameMode = GameMode.VersusMode;
@@ -1218,11 +1745,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartCharacterSelectionScreen(fadeTime);
 	}
 
+	/// <summary>
+	/// 开始玩家 vs CPU 对战（使用默认淡出时长）。
+	/// </summary>
 	public static void StartPlayerVersusCpu()
 	{
 		UFE.StartPlayerVersusCpu((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 开始玩家 vs CPU 对战：玩家1人类控制、玩家2 CPU 控制，进入角色选择。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartPlayerVersusCpu(float fadeTime)
 	{
 		UFE.gameMode = GameMode.VersusMode;
@@ -1231,6 +1765,12 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartCharacterSelectionScreen(fadeTime);
 	}
 
+	/// <summary>
+	/// 初始化网络对战：设置本地/远端控制器、初始化帧同步，然后进入加载界面或角色选择。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
+	/// <param name="localPlayer">本地玩家编号（1 或 2）。</param>
+	/// <param name="startImmediately">true 直接进入战斗加载界面，false 先进入角色选择。</param>
 	public static void StartNetworkGame(float fadeTime, int localPlayer, bool startImmediately)
 	{
 		UFE.disconnecting = false;
@@ -1268,11 +1808,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入场地选择界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStageSelectionScreen()
 	{
 		UFE.StartStageSelectionScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入场地选择界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStageSelectionScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1292,11 +1839,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 开始故事模式（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStoryMode()
 	{
 		UFE.StartStoryMode((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 开始故事模式：重置故事进度、玩家1为人类/玩家2为 CPU，进入角色选择。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryMode(float fadeTime)
 	{
 		//-------------------------------------------------------------------------------------------------------------
@@ -1315,11 +1869,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartCharacterSelectionScreen(fadeTime);
 	}
 
+	/// <summary>
+	/// 进入故事模式战斗（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStoryModeBattle()
 	{
 		UFE.StartStoryModeBattle((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式战斗（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeBattle(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1339,11 +1900,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入故事模式通关祝贺界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStoryModeCongratulationsScreen()
 	{
 		UFE.StartStoryModeCongratulationsScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式通关祝贺界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeCongratulationsScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1363,11 +1931,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入故事模式继续界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStoryModeContinueScreen()
 	{
 		UFE.StartStoryModeContinueScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式继续界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeContinueScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1387,11 +1962,20 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入故事模式战后对话界面（使用默认淡出时长）。
+	/// </summary>
+	/// <param name="conversationScreen">对话界面预制体。</param>
 	public static void StartStoryModeConversationAfterBattleScreen(UFEScreen conversationScreen)
 	{
 		UFE.StartStoryModeConversationAfterBattleScreen(conversationScreen, (float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式战后对话界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="conversationScreen">对话界面预制体。</param>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeConversationAfterBattleScreen(UFEScreen conversationScreen, float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1411,11 +1995,20 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入故事模式战前对话界面（使用默认淡出时长）。
+	/// </summary>
+	/// <param name="conversationScreen">对话界面预制体。</param>
 	public static void StartStoryModeConversationBeforeBattleScreen(UFEScreen conversationScreen)
 	{
 		UFE.StartStoryModeConversationBeforeBattleScreen(conversationScreen, (float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式战前对话界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="conversationScreen">对话界面预制体。</param>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeConversationBeforeBattleScreen(UFEScreen conversationScreen, float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1435,11 +2028,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入故事模式结尾演出界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStoryModeEndingScreen()
 	{
 		UFE.StartStoryModeEndingScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式结尾演出界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeEndingScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1459,11 +2059,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入故事模式游戏结束界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStoryModeGameOverScreen()
 	{
 		UFE.StartStoryModeGameOverScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式游戏结束界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeGameOverScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1483,11 +2090,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入故事模式开场演出界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartStoryModeOpeningScreen()
 	{
 		UFE.StartStoryModeOpeningScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入故事模式开场演出界面（先获取玩家1的故事配置，带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartStoryModeOpeningScreen(float fadeTime)
 	{
 		// First, retrieve the character story, so we can find the opening associated to this player
@@ -1510,11 +2124,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 开始训练模式（使用默认淡出时长）。
+	/// </summary>
 	public static void StartTrainingMode()
 	{
 		UFE.StartTrainingMode((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 开始训练模式：设置为训练模式、双方人类控制，进入角色选择。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartTrainingMode(float fadeTime)
 	{
 		UFE.gameMode = GameMode.TrainingRoom;
@@ -1523,11 +2144,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartCharacterSelectionScreen(fadeTime);
 	}
 
+	/// <summary>
+	/// 进入对战结算界面（无淡出动画）。
+	/// </summary>
 	public static void StartVersusModeAfterBattleScreen()
 	{
 		UFE.StartVersusModeAfterBattleScreen(0f);
 	}
 
+	/// <summary>
+	/// 进入对战结算界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartVersusModeAfterBattleScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1547,11 +2175,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入对战模式选择界面（使用默认淡出时长）。
+	/// </summary>
 	public static void StartVersusModeScreen()
 	{
 		UFE.StartVersusModeScreen((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 进入对战模式选择界面（带淡出动画后切换）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void StartVersusModeScreen(float fadeTime)
 	{
 		if (UFE.currentScreen.hasFadeOut)
@@ -1571,11 +2206,18 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 标记故事模式战斗胜利（使用默认淡出时长）：记录已击败对手并进入战后对话。
+	/// </summary>
 	public static void WonStoryModeBattle()
 	{
 		UFE.WonStoryModeBattle((float)UFE.config.gameGUI.screenFadeDuration);
 	}
 
+	/// <summary>
+	/// 标记故事模式战斗胜利：记录已击败对手并进入战后对话。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void WonStoryModeBattle(float fadeTime)
 	{
 		UFE.storyMode.defeatedOpponents.Add(UFE.storyMode.currentBattleInformation.opponentCharacterIndex);
@@ -1584,6 +2226,9 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: Language
+	/// <summary>
+	/// 设置默认语言：选中语言列表中标记为 defaultSelection 的语言。
+	/// </summary>
 	public static void SetLanguage()
 	{
 		foreach (LanguageOptions languageOption in config.languages)
@@ -1596,6 +2241,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 按语言名称设置当前语言。
+	/// </summary>
+	/// <param name="language">目标语言名称。</param>
 	public static void SetLanguage(string language)
 	{
 		foreach (LanguageOptions languageOption in config.languages)
@@ -1610,6 +2259,11 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: Input Related methods
+	/// <summary>
+	/// 获取指定玩家是否由 CPU 控制。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <returns>true 表示 CPU 控制。</returns>
 	public static bool GetCPU(int player)
 	{
 		UFEController controller = UFE.GetController(player);
@@ -1620,6 +2274,12 @@ public class UFE : MonoBehaviour, UFEInterface
 		return false;
 	}
 
+	/// <summary>
+	/// 在指定输入引用列表中查找映射到指定引擎按键的输入名。
+	/// </summary>
+	/// <param name="button">引擎按键（ButtonPress）。</param>
+	/// <param name="inputReferences">输入引用列表。</param>
+	/// <returns>匹配的输入名（inputButtonName）；未找到返回 null。</returns>
 	public static string GetInputReference(ButtonPress button, InputReferences[] inputReferences)
 	{
 		foreach (InputReferences inputReference in inputReferences)
@@ -1629,6 +2289,12 @@ public class UFE : MonoBehaviour, UFEInterface
 		return null;
 	}
 
+	/// <summary>
+	/// 在指定输入引用列表中查找指定输入类型的输入名。
+	/// </summary>
+	/// <param name="inputType">输入类型（水平轴/垂直轴/按钮）。</param>
+	/// <param name="inputReferences">输入引用列表。</param>
+	/// <returns>匹配的输入名（inputButtonName）；未找到返回 null。</returns>
 	public static string GetInputReference(InputType inputType, InputReferences[] inputReferences)
 	{
 		foreach (InputReferences inputReference in inputReferences)
@@ -1638,6 +2304,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		return null;
 	}
 
+	/// <summary>
+	/// 获取玩家1的控制器（网络对战时按服务器身份映射到本地/远端控制器）。
+	/// </summary>
+	/// <returns>玩家1的 UFEController。</returns>
 	public static UFEController GetPlayer1Controller()
 	{
 		if (UFE.isNetworkAddonInstalled && UFE.isConnected)
@@ -1654,6 +2324,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		return UFE.p1Controller;
 	}
 
+	/// <summary>
+	/// 获取玩家2的控制器（网络对战时按服务器身份映射到远端/本地控制器）。
+	/// </summary>
+	/// <returns>玩家2的 UFEController。</returns>
 	public static UFEController GetPlayer2Controller()
 	{
 		if (UFE.isNetworkAddonInstalled && UFE.isConnected)
@@ -1670,6 +2344,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		return UFE.p2Controller;
 	}
 
+	/// <summary>
+	/// 获取指定玩家的控制器。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <returns>对应的 UFEController；无效编号返回 null。</returns>
 	public static UFEController GetController(int player)
 	{
 		if (player == 1) return UFE.GetPlayer1Controller();
@@ -1677,6 +2356,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		else return null;
 	}
 
+	/// <summary>
+	/// 获取本地玩家编号。
+	/// </summary>
+	/// <returns>1 或 2；无法确定返回 -1。</returns>
 	public static int GetLocalPlayer()
 	{
 		if (UFE.localPlayerController == UFE.GetPlayer1Controller()) return 1;
@@ -1684,6 +2367,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		else return -1;
 	}
 
+	/// <summary>
+	/// 获取远端玩家编号。
+	/// </summary>
+	/// <returns>1 或 2；无法确定返回 -1。</returns>
 	public static int GetRemotePlayer()
 	{
 		if (UFE.remotePlayerController == UFE.GetPlayer1Controller()) return 1;
@@ -1691,6 +2378,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		else return -1;
 	}
 
+	/// <summary>
+	/// 为指定玩家的 AI 控制器设置 AI 信息（通过反射调用 SetAIInformation）。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <param name="character">角色信息（读取 AI 指令集）。</param>
 	public static void SetAI(int player, UFE3D.CharacterInfo character)
 	{
 		if (UFE.isAiAddonInstalled)
@@ -1727,6 +2419,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 设置指定玩家是否由 CPU 控制。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <param name="cpuToggle">是否 CPU 控制。</param>
 	public static void SetCPU(int player, bool cpuToggle)
 	{
 		UFEController controller = UFE.GetController(player);
@@ -1738,6 +2435,11 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: methods related to the character selection
+	/// <summary>
+	/// 获取指定玩家的角色信息。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <returns>角色信息；无效编号返回 null。</returns>
 	public static UFE3D.CharacterInfo GetPlayer(int player)
 	{
 		if (player == 1)
@@ -1751,16 +2453,28 @@ public class UFE : MonoBehaviour, UFEInterface
 		return null;
 	}
 
+	/// <summary>
+	/// 获取玩家1当前角色。
+	/// </summary>
+	/// <returns>玩家1角色信息。</returns>
 	public static UFE3D.CharacterInfo GetPlayer1()
 	{
 		return config.player1Character;
 	}
 
+	/// <summary>
+	/// 获取玩家2当前角色。
+	/// </summary>
+	/// <returns>玩家2角色信息。</returns>
 	public static UFE3D.CharacterInfo GetPlayer2()
 	{
 		return config.player2Character;
 	}
 
+	/// <summary>
+	/// 获取故事模式可选角色列表（配置可选或已解锁）。
+	/// </summary>
+	/// <returns>可选角色数组。</returns>
 	public static UFE3D.CharacterInfo[] GetStoryModeSelectableCharacters()
 	{
 		List<UFE3D.CharacterInfo> characters = new List<UFE3D.CharacterInfo>();
@@ -1783,6 +2497,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		return characters.ToArray();
 	}
 
+	/// <summary>
+	/// 获取训练模式可选角色列表（故事或对战模式可选/解锁的角色）。
+	/// </summary>
+	/// <returns>可选角色数组。</returns>
 	public static UFE3D.CharacterInfo[] GetTrainingRoomSelectableCharacters()
 	{
 		List<UFE3D.CharacterInfo> characters = new List<UFE3D.CharacterInfo>();
@@ -1809,6 +2527,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		return characters.ToArray();
 	}
 
+	/// <summary>
+	/// 获取对战模式可选角色列表（配置可选或已解锁）。
+	/// </summary>
+	/// <returns>可选角色数组。</returns>
 	public static UFE3D.CharacterInfo[] GetVersusModeSelectableCharacters()
 	{
 		List<UFE3D.CharacterInfo> characters = new List<UFE3D.CharacterInfo>();
@@ -1830,6 +2552,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		return characters.ToArray();
 	}
 
+	/// <summary>
+	/// 按玩家编号设置角色。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <param name="info">要设置的角色信息。</param>
 	public static void SetPlayer(int player, UFE3D.CharacterInfo info)
 	{
 		if (player == 1)
@@ -1842,16 +2569,27 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 设置玩家1角色。
+	/// </summary>
+	/// <param name="player1">角色信息。</param>
 	public static void SetPlayer1(UFE3D.CharacterInfo player1)
 	{
 		config.player1Character = player1;
 	}
 
+	/// <summary>
+	/// 设置玩家2角色。
+	/// </summary>
+	/// <param name="player2">角色信息。</param>
 	public static void SetPlayer2(UFE3D.CharacterInfo player2)
 	{
 		config.player2Character = player2;
 	}
 
+	/// <summary>
+	/// 从 PlayerPrefs 加载已解锁角色列表（故事模式 UCSM / 对战模式 UCVM）。
+	/// </summary>
 	public static void LoadUnlockedCharacters()
 	{
 		UFE.unlockedCharactersInStoryMode.Clear();
@@ -1880,6 +2618,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 将已解锁角色列表保存到 PlayerPrefs。
+	/// </summary>
 	public static void SaveUnlockedCharacters()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -1912,6 +2653,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		PlayerPrefs.Save();
 	}
 
+	/// <summary>
+	/// 从故事模式已解锁列表中移除指定角色。
+	/// </summary>
+	/// <param name="character">角色信息。</param>
 	public static void RemoveUnlockedCharacterInStoryMode(UFE3D.CharacterInfo character)
 	{
 		if (character != null && !string.IsNullOrEmpty(character.characterName))
@@ -1922,6 +2667,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.SaveUnlockedCharacters();
 	}
 
+	/// <summary>
+	/// 从对战模式已解锁列表中移除指定角色。
+	/// </summary>
+	/// <param name="character">角色信息。</param>
 	public static void RemoveUnlockedCharacterInVersusMode(UFE3D.CharacterInfo character)
 	{
 		if (character != null && !string.IsNullOrEmpty(character.characterName))
@@ -1932,18 +2681,28 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.SaveUnlockedCharacters();
 	}
 
+	/// <summary>
+	/// 清空故事模式全部已解锁角色。
+	/// </summary>
 	public static void RemoveUnlockedCharactersInStoryMode()
 	{
 		UFE.unlockedCharactersInStoryMode.Clear();
 		UFE.SaveUnlockedCharacters();
 	}
 
+	/// <summary>
+	/// 清空对战模式全部已解锁角色。
+	/// </summary>
 	public static void RemoveUnlockedCharactersInVersusMode()
 	{
 		UFE.unlockedCharactersInVersusMode.Clear();
 		UFE.SaveUnlockedCharacters();
 	}
 
+	/// <summary>
+	/// 解锁故事模式角色。
+	/// </summary>
+	/// <param name="character">要解锁的角色。</param>
 	public static void UnlockCharacterInStoryMode(UFE3D.CharacterInfo character)
 	{
 		if (
@@ -1958,6 +2717,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.SaveUnlockedCharacters();
 	}
 
+	/// <summary>
+	/// 解锁对战模式角色。
+	/// </summary>
+	/// <param name="character">要解锁的角色。</param>
 	public static void UnlockCharacterInVersusMode(UFE3D.CharacterInfo character)
 	{
 		if (
@@ -1974,11 +2737,19 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: methods related to the stage selection
+	/// <summary>
+	/// 设置当前选中的场地。
+	/// </summary>
+	/// <param name="stage">场地选项。</param>
 	public static void SetStage(StageOptions stage)
 	{
 		config.selectedStage = stage;
 	}
 
+	/// <summary>
+	/// 按场地名称设置当前选中的场地。
+	/// </summary>
+	/// <param name="stageName">场地名称。</param>
 	public static void SetStage(string stageName)
 	{
 		foreach (StageOptions stage in config.stages)
@@ -1991,6 +2762,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 获取当前选中的场地。
+	/// </summary>
+	/// <returns>场地选项。</returns>
 	public static StageOptions GetStage()
 	{
 		return config.selectedStage;
@@ -1999,6 +2774,11 @@ public class UFE : MonoBehaviour, UFEInterface
 
 
 	#region public class methods: methods related to the behaviour of the characters during the battle
+	/// <summary>
+	/// 获取指定玩家的角色控制脚本。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <returns>对应的 ControlsScript；无效编号返回 null。</returns>
 	public static ControlsScript GetControlsScript(int player)
 	{
 		if (player == 1)
@@ -2012,11 +2792,19 @@ public class UFE : MonoBehaviour, UFEInterface
 		return null;
 	}
 
+	/// <summary>
+	/// 获取玩家1的角色控制脚本。
+	/// </summary>
+	/// <returns>玩家1的 ControlsScript。</returns>
 	public static ControlsScript GetPlayer1ControlsScript()
 	{
 		return p1ControlsScript;
 	}
 
+	/// <summary>
+	/// 获取玩家2的角色控制脚本。
+	/// </summary>
+	/// <returns>玩家2的 ControlsScript。</returns>
 	public static ControlsScript GetPlayer2ControlsScript()
 	{
 		return p2ControlsScript;
@@ -2024,61 +2812,125 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: methods that are used for raising events
+	/// <summary>
+	/// 触发生命值变化事件。
+	/// </summary>
+	/// <param name="newValue">新的生命值。</param>
+	/// <param name="player">所属角色。</param>
 	public static void SetLifePoints(Fix64 newValue, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnLifePointsChange != null) UFE.OnLifePointsChange((float)newValue, player);
 	}
 
+	/// <summary>
+	/// 触发游戏内文字提示事件。
+	/// </summary>
+	/// <param name="alertMessage">提示文本。</param>
+	/// <param name="player">所属角色（可为 null）。</param>
 	public static void FireAlert(string alertMessage, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnNewAlert != null) UFE.OnNewAlert(alertMessage, player);
 	}
 
+	/// <summary>
+	/// 触发命中事件。
+	/// </summary>
+	/// <param name="strokeHitBox">打击判定盒。</param>
+	/// <param name="move">使用的招式。</param>
+	/// <param name="player">攻击方角色。</param>
 	public static void FireHit(HitBox strokeHitBox, MoveInfo move, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnHit != null) UFE.OnHit(strokeHitBox, move, player);
 	}
 
+	/// <summary>
+	/// 触发格挡事件。
+	/// </summary>
+	/// <param name="strokeHitBox">打击判定盒。</param>
+	/// <param name="move">使用的招式。</param>
+	/// <param name="player">攻击方角色。</param>
 	public static void FireBlock(HitBox strokeHitBox, MoveInfo move, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnBlock != null) UFE.OnBlock(strokeHitBox, move, player);
 	}
 
+	/// <summary>
+	/// 触发弹反事件。
+	/// </summary>
+	/// <param name="strokeHitBox">打击判定盒。</param>
+	/// <param name="move">使用的招式。</param>
+	/// <param name="player">攻击方角色。</param>
 	public static void FireParry(HitBox strokeHitBox, MoveInfo move, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnParry != null) UFE.OnParry(strokeHitBox, move, player);
 	}
 
+	/// <summary>
+	/// 触发出招事件。
+	/// </summary>
+	/// <param name="move">使出的招式。</param>
+	/// <param name="player">使出角色。</param>
 	public static void FireMove(MoveInfo move, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnMove != null) UFE.OnMove(move, player);
 	}
 
+	/// <summary>
+	/// 触发按键事件。
+	/// </summary>
+	/// <param name="button">按下的按钮。</param>
+	/// <param name="player">按下角色。</param>
 	public static void FireButton(ButtonPress button, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnButton != null) UFE.OnButton(button, player);
 	}
 
+	/// <summary>
+	/// 触发基础动作事件。
+	/// </summary>
+	/// <param name="basicMove">执行的基础动作。</param>
+	/// <param name="player">执行角色。</param>
 	public static void FireBasicMove(BasicMoveReference basicMove, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnBasicMove != null) UFE.OnBasicMove(basicMove, player);
 	}
 
+	/// <summary>
+	/// 触发身体部位可见性变化事件。
+	/// </summary>
+	/// <param name="move">当前招式。</param>
+	/// <param name="player">所属角色。</param>
+	/// <param name="bodyPartVisibilityChange">可见性变化数据。</param>
+	/// <param name="hitBox">关联的判定盒。</param>
 	public static void FireBodyVisibilityChange(MoveInfo move, UFE3D.CharacterInfo player, BodyPartVisibilityChange bodyPartVisibilityChange, HitBox hitBox)
 	{
 		if (UFE.OnBodyVisibilityChange != null) UFE.OnBodyVisibilityChange(move, player, bodyPartVisibilityChange, hitBox);
 	}
 
+	/// <summary>
+	/// 触发粒子特效事件。
+	/// </summary>
+	/// <param name="move">当前招式。</param>
+	/// <param name="player">所属角色。</param>
+	/// <param name="particleEffects">粒子效果数据。</param>
 	public static void FireParticleEffects(MoveInfo move, UFE3D.CharacterInfo player, MoveParticleEffect particleEffects)
 	{
 		if (UFE.OnParticleEffects != null) UFE.OnParticleEffects(move, player, particleEffects);
 	}
 
+	/// <summary>
+	/// 触发换边事件。
+	/// </summary>
+	/// <param name="side">新朝向侧。</param>
+	/// <param name="player">换边角色。</param>
 	public static void FireSideSwitch(int side, UFE3D.CharacterInfo player)
 	{
 		if (UFE.OnSideSwitch != null) UFE.OnSideSwitch(side, player);
 	}
 
+	/// <summary>
+	/// 触发整场游戏开始事件（同时标记游戏运行中）。
+	/// </summary>
 	public static void FireGameBegins()
 	{
 		if (UFE.OnGameBegin != null)
@@ -2088,6 +2940,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 触发整场游戏结束事件（重置时间倍率/运行标志/回合广播/故事进度）。
+	/// </summary>
+	/// <param name="winner">获胜角色。</param>
+	/// <param name="loser">失败角色。</param>
 	public static void FireGameEnds(UFE3D.CharacterInfo winner, UFE3D.CharacterInfo loser)
 	{
 		// I've commented the next line because it worked with the old GUI, but not with the new one.
@@ -2108,21 +2965,37 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 触发回合开始事件。
+	/// </summary>
+	/// <param name="currentRound">回合编号。</param>
 	public static void FireRoundBegins(int currentRound)
 	{
 		if (UFE.OnRoundBegins != null) UFE.OnRoundBegins(currentRound);
 	}
 
+	/// <summary>
+	/// 触发回合结束事件。
+	/// </summary>
+	/// <param name="winner">获胜角色。</param>
+	/// <param name="loser">失败角色。</param>
 	public static void FireRoundEnds(UFE3D.CharacterInfo winner, UFE3D.CharacterInfo loser)
 	{
 		if (UFE.OnRoundEnds != null) UFE.OnRoundEnds(winner, loser);
 	}
 
+	/// <summary>
+	/// 触发计时器更新事件。
+	/// </summary>
+	/// <param name="timer">当前剩余时间。</param>
 	public static void FireTimer(float timer)
 	{
 		if (UFE.OnTimer != null) UFE.OnTimer(timer);
 	}
 
+	/// <summary>
+	/// 触发时间到事件。
+	/// </summary>
 	public static void FireTimeOver()
 	{
 		if (UFE.OnTimeOver != null) UFE.OnTimeOver();
@@ -2131,6 +3004,10 @@ public class UFE : MonoBehaviour, UFEInterface
 
 
 	#region public class methods: UFE CORE methods
+	/// <summary>
+	/// 暂停/恢复游戏（暂停时时间倍率置 0，恢复时还原为配置速度）。
+	/// </summary>
+	/// <param name="pause">true 暂停，false 恢复。</param>
 	public static void PauseGame(bool pause)
 	{
 		if (pause && UFE.timeScale == 0) return;
@@ -2150,21 +3027,37 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 判断指定类名是否在已加载程序集中存在（用于检测插件安装）。
+	/// </summary>
+	/// <param name="theClass">类全名。</param>
+	/// <returns>存在返回 true。</returns>
 	public static bool IsInstalled(string theClass)
 	{
 		return UFE.SearchClass(theClass) != null;
 	}
 
+	/// <summary>
+	/// 游戏当前是否暂停。
+	/// </summary>
+	/// <returns>时间倍率小于等于 0 表示暂停。</returns>
 	public static bool isPaused()
 	{
 		return UFE.timeScale <= 0;
 	}
 
+	/// <summary>
+	/// 获取当前回合剩余时间。
+	/// </summary>
+	/// <returns>剩余时间（定点数）。</returns>
 	public static Fix64 GetTimer()
 	{
 		return timer;
 	}
 
+	/// <summary>
+	/// 重置回合计时器为配置的回合时间。
+	/// </summary>
 	public static void ResetTimer()
 	{
 		timer = config.roundOptions._timer;
@@ -2172,6 +3065,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		if (UFE.OnTimer != null) OnTimer((float)timer);
 	}
 
+	/// <summary>
+	/// 在所有已加载程序集中搜索指定类（通过反射）。
+	/// </summary>
+	/// <param name="theClass">类全名。</param>
+	/// <returns>找到的 Type；未找到返回 null。</returns>
 	public static Type SearchClass(string theClass)
 	{
 		Type type = null;
@@ -2185,6 +3083,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		return type;
 	}
 
+	/// <summary>
+	/// 设置回合计时器为指定时间。
+	/// </summary>
+	/// <param name="time">新剩余时间。</param>
 	public static void SetTimer(Fix64 time)
 	{
 		timer = time;
@@ -2192,21 +3094,34 @@ public class UFE : MonoBehaviour, UFEInterface
 		if (UFE.OnTimer != null) OnTimer(timer);
 	}
 
+	/// <summary>
+	/// 恢复回合计时器运行。
+	/// </summary>
 	public static void PlayTimer()
 	{
 		pauseTimer = false;
 	}
 
+	/// <summary>
+	/// 暂停回合计时器。
+	/// </summary>
 	public static void PauseTimer()
 	{
 		pauseTimer = true;
 	}
 
+	/// <summary>
+	/// 回合计时器是否处于暂停状态。
+	/// </summary>
+	/// <returns>暂停返回 true。</returns>
 	public static bool IsTimerPaused()
 	{
 		return pauseTimer;
 	}
 
+	/// <summary>
+	/// 结束整场游戏：销毁战斗 HUD 与游戏引擎对象。
+	/// </summary>
 	public static void EndGame()
 	{
 		/*UFE.timeScale = UFE.ToDouble(UFE.config.gameSpeed);
@@ -2227,11 +3142,17 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 重置"新回合已广播"标记。
+	/// </summary>
 	public static void ResetRoundCast()
 	{
 		newRoundCasted = false;
 	}
 
+	/// <summary>
+	/// 广播新回合开始：双方开场动画均播放完毕后触发回合开始事件，并延迟 2 帧调用 StartFight。
+	/// </summary>
 	public static void CastNewRound()
 	{
 		if (newRoundCasted) return;
@@ -2243,6 +3164,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 开始战斗：显示"开战"提示、解锁输入与移动、恢复计时器。
+	/// </summary>
 	public static void StartFight()
 	{
 		if (UFE.gameMode != GameMode.ChallengeMode)
@@ -2252,6 +3176,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.PlayTimer();
 	}
 
+	/// <summary>
+	/// 触发输入更新事件。
+	/// </summary>
+	/// <param name="inputReferences">当前输入引用列表。</param>
+	/// <param name="player">玩家编号。</param>
 	public static void CastInput(InputReferences[] inputReferences, int player)
 	{
 		if (UFE.OnInput != null) OnInput(inputReferences, player);
@@ -2259,6 +3188,9 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region public class methods: Network Related methods
+	/// <summary>
+	/// 创建蓝牙对战（主机）：切换蓝牙模式、注册网络事件并创建比赛。
+	/// </summary>
 	public static void HostBluetoothGame()
 	{
 		if (UFE.isNetworkAddonInstalled)
@@ -2269,6 +3201,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 创建局域网对战（主机）：切换局域网模式、注册网络事件并创建比赛。
+	/// </summary>
 	public static void HostGame()
 	{
 		if (UFE.isNetworkAddonInstalled)
@@ -2280,6 +3215,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 搜索蓝牙对战（客户端）：切换蓝牙模式并开始搜索比赛。
+	/// </summary>
 	public static void JoinBluetoothGame()
 	{
 		if (UFE.isNetworkAddonInstalled)
@@ -2292,6 +3230,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 比赛发现回调：自动加入第一个发现的比赛；无比赛则显示连接丢失界面。
+	/// </summary>
+	/// <param name="matches">发现到的比赛列表。</param>
 	protected static void OnMatchesDiscovered(ReadOnlyCollection<MultiplayerAPI.MatchInformation> matches)
 	{
 		UFE.multiplayerAPI.OnMatchesDiscovered -= UFE.OnMatchesDiscovered;
@@ -2309,6 +3251,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 比赛发现错误回调：显示连接丢失界面。
+	/// </summary>
 	protected static void OnMatchDiscoveryError()
 	{
 		UFE.multiplayerAPI.OnMatchesDiscovered -= UFE.OnMatchesDiscovered;
@@ -2316,6 +3261,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartConnectionLostScreen();
 	}
 
+	/// <summary>
+	/// 加入指定局域网比赛（客户端）。
+	/// </summary>
+	/// <param name="match">目标比赛信息。</param>
 	public static void JoinGame(MultiplayerAPI.MatchInformation match)
 	{
 		if (UFE.isNetworkAddonInstalled)
@@ -2327,6 +3276,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 断开网络连接：客户端调用断开比赛，服务器销毁比赛。
+	/// </summary>
 	public static void DisconnectFromGame()
 	{
 		if (UFE.isNetworkAddonInstalled)
@@ -2346,6 +3298,10 @@ public class UFE : MonoBehaviour, UFEInterface
 
 
 	#region protected instance methods: MonoBehaviour methods
+	/// <summary>
+	/// UFE 初始化（Awake）：加载配置、检测插件、创建 UI Canvas、初始化输入/AI/音频、初始化网络与帧同步，
+	/// 并按调试配置进入战斗或片头界面。
+	/// </summary>
 	protected void Awake()
 	{
 		UFE.config = UFE_Config;
@@ -2639,6 +3595,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 每帧更新：驱动双方控制器读取输入；编辑器下支持 F2/F3 保存/加载帧同步状态（状态追踪器测试）。
+	/// </summary>
 	protected void Update()
 	{
 		UFE.GetPlayer1Controller().DoUpdate();
@@ -2672,6 +3631,9 @@ public class UFE : MonoBehaviour, UFEInterface
 	}
 
 #if UNITY_EDITOR
+	/// <summary>
+	/// 编辑器 GUI：状态追踪器测试模式下显示"保存/加载状态"按钮。
+	/// </summary>
 	private void OnGUI()
 	{
 		if (UFE.config.debugOptions.stateTrackerTest && UFE.gameRunning)
@@ -2699,6 +3661,9 @@ public class UFE : MonoBehaviour, UFEInterface
 	//public List<Dictionary<System.Reflection.MemberInfo, System.Object>> dictionaryList = new List<Dictionary<System.Reflection.MemberInfo, System.Object>>();
 	//public bool testRecording = false;
 
+	/// <summary>
+	/// 固定帧率更新：驱动帧同步（FluxCapacitor）推进。
+	/// </summary>
 	protected void FixedUpdate()
 	{
 		if (UFE.fluxCapacitor != null)
@@ -2713,6 +3678,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 应用退出回调：标记关闭状态并确保断开网络连接。
+	/// </summary>
 	protected void OnApplicationQuit()
 	{
 		UFE.closing = true;
@@ -2721,6 +3689,9 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region protected instance methods: Network Events
+	/// <summary>
+	/// 是否已连接网络（API 已连接且连接数大于 0）。
+	/// </summary>
 	public static bool isConnected
 	{
 		get
@@ -2729,6 +3700,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 确保断开网络连接：客户端断开比赛、服务器销毁比赛（已在断开中则跳过）。
+	/// </summary>
 	public static void EnsureNetworkDisconnection()
 	{
 		if (!UFE.disconnecting)
@@ -2748,6 +3722,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 注册全部网络事件监听器（先取消后注册，避免重复）。
+	/// </summary>
 	protected static void AddNetworkEventListeners()
 	{
 		UFE.multiplayerAPI.OnDisconnection -= UFE.OnDisconnectedFromServer;
@@ -2771,6 +3748,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.multiplayerAPI.OnMatchDestroyed += UFE.OnMatchDestroyed;
 	}
 
+	/// <summary>
+	/// 取消全部网络事件监听器。
+	/// </summary>
 	protected static void RemoveNetworkEventListeners()
 	{
 		UFE.multiplayerAPI.OnDisconnection -= UFE.OnDisconnectedFromServer;
@@ -2784,12 +3764,19 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.multiplayerAPI.OnMatchDestroyed -= UFE.OnMatchDestroyed;
 	}
 
+	/// <summary>
+	/// 加入服务器成功回调：启动网络对战（本地玩家为玩家2）。
+	/// </summary>
+	/// <param name="match">加入的比赛信息。</param>
 	protected static void OnJoined(MultiplayerAPI.JoinedMatchInformation match)
 	{
 		if (UFE.config.debugOptions.connectionLog) Debug.Log("Connected to server");
 		UFE.StartNetworkGame(0.5f, 2, false);
 	}
 
+	/// <summary>
+	/// 与服务器断开回调：恢复单机控制并显示连接丢失界面。
+	/// </summary>
 	protected static void OnDisconnectedFromServer()
 	{
 		if (UFE.config.debugOptions.connectionLog) Debug.Log("Disconnected from server");
@@ -2811,6 +3798,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 加入服务器失败回调：显示连接丢失界面。
+	/// </summary>
 	protected static void OnJoinError()
 	{
 		if (UFE.config.debugOptions.connectionLog) Debug.Log("Could not connect to server");
@@ -2818,14 +3808,32 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartConnectionLostScreen();
 	}
 
+	/// <summary>
+	/// 比赛创建成功回调（当前空实现）。
+	/// </summary>
+	/// <param name="match">创建的比赛信息。</param>
 	protected static void OnMatchCreated(MultiplayerAPI.CreatedMatchInformation match) { }
 
+	/// <summary>
+	/// 比赛销毁回调（当前空实现）。
+	/// </summary>
 	protected static void OnMatchDestroyed() { }
 
+	/// <summary>
+	/// 加入比赛响应回调（当前空实现）。
+	/// </summary>
+	/// <param name="response">加入响应。</param>
 	protected static void OnMatchJoined(JoinMatchResponse response) { }
 
+	/// <summary>
+	/// 比赛被丢弃回调（当前空实现）。
+	/// </summary>
 	protected static void OnMatchDropped() { }
 
+	/// <summary>
+	/// 玩家连接比赛回调：启动网络对战（本地玩家为玩家1）。
+	/// </summary>
+	/// <param name="player">连接进来的玩家信息。</param>
 	protected static void OnPlayerConnectedToMatch(MultiplayerAPI.PlayerInformation player)
 	{
 		if (UFE.config.debugOptions.connectionLog)
@@ -2843,6 +3851,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		UFE.StartNetworkGame(0.5f, 1, false);
 	}
 
+	/// <summary>
+	/// 玩家离开比赛回调：恢复单机控制并显示连接丢失界面。
+	/// </summary>
+	/// <param name="player">离开的玩家信息。</param>
 	protected static void OnPlayerDisconnectedFromMatch(MultiplayerAPI.PlayerInformation player)
 	{
 		if (UFE.config.debugOptions.connectionLog) Debug.Log("Clean up after player " + player);
@@ -2864,6 +3876,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 服务器初始化完成回调：允许后台运行并重置断开标志。
+	/// </summary>
 	protected static void OnServerInitialized()
 	{
 		if (UFE.config.debugOptions.connectionLog) Debug.Log("Server initialized and ready");
@@ -2873,6 +3888,14 @@ public class UFE : MonoBehaviour, UFEInterface
 	#endregion
 
 	#region private class methods: GUI Related methods
+	/// <summary>
+	/// 在 Canvas 下创建一个调试文本（黑体加粗、可溢出显示）。
+	/// </summary>
+	/// <param name="dName">调试对象名称。</param>
+	/// <param name="dText">初始文本内容。</param>
+	/// <param name="position">屏幕锚定位置。</param>
+	/// <param name="alignment">文本对齐方式。</param>
+	/// <returns>创建的 UGUI Text 组件。</returns>
 	public static Text DebuggerText(string dName, string dText, Vector2 position, TextAnchor alignment)
 	{
 		GameObject debugger = new GameObject(dName);
@@ -2900,6 +3923,9 @@ public class UFE : MonoBehaviour, UFEInterface
 		return debuggerText;
 	}
 
+	/// <summary>
+	/// 进入网络游戏界面（按多人模式选择蓝牙或网络界面）。
+	/// </summary>
 	public static void GoToNetworkGameScreen()
 	{
 		if (UFE.multiplayerMode == MultiplayerMode.Bluetooth)
@@ -2912,6 +3938,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 进入网络游戏界面（按多人模式选择蓝牙或网络界面，带淡出动画）。
+	/// </summary>
+	/// <param name="fadeTime">淡出时长。</param>
 	public static void GoToNetworkGameScreen(float fadeTime)
 	{
 		if (UFE.multiplayerMode == MultiplayerMode.Bluetooth)
@@ -2924,6 +3954,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到蓝牙对战界面（显示预制体并淡入）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartBluetoothGameScreen(float fadeTime)
 	{
 		UFE.EnsureNetworkDisconnection();
@@ -2945,6 +3979,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到角色选择界面（显示预制体并淡入）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartCharacterSelectionScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -2960,6 +3998,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到片头界面（无片头时直接进入主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartIntroScreen(float fadeTime)
 	{
 		UFE.EnsureNetworkDisconnection();
@@ -2978,6 +4020,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到主菜单界面（显示预制体并淡入）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartMainMenuScreen(float fadeTime)
 	{
 		UFE.EnsureNetworkDisconnection();
@@ -2995,6 +4041,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到场地选择界面（显示预制体并淡入）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStageSelectionScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3010,6 +4060,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到制作人员界面（显示预制体并淡入）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartCreditsScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3025,6 +4079,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到连接丢失界面（未安装网络插件或无界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartConnectionLostScreen(float fadeTime)
 	{
 		UFE.EnsureNetworkDisconnection();
@@ -3048,6 +4106,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际开始游戏：显示战斗 HUD、创建游戏引擎/摄像机/场地、初始化双方角色与 AI、重置回合数据。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartGame(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3195,11 +4257,18 @@ public class UFE : MonoBehaviour, UFEInterface
 	}
 
 	//Preloader
+	/// <summary>
+	/// 预加载战斗资源（使用默认预热时长）。
+	/// </summary>
 	public static void PreloadBattle()
 	{
 		PreloadBattle((float)UFE.config._preloadingTime);
 	}
 
+	/// <summary>
+	/// 预加载战斗资源：按配置预热命中特效、场地、角色预制体并预热全部着色器。
+	/// </summary>
+	/// <param name="warmTimer">预热时长（秒）。</param>
 	public static void PreloadBattle(float warmTimer)
 	{
 		if (UFE.config.preloadHitEffects)
@@ -3229,6 +4298,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		memoryDump.Clear();
 	}
 
+	/// <summary>
+	/// 递归搜索对象中的 GameObject 字段并实例化预热（释放显存/着色器编译），数组字段递归处理。
+	/// </summary>
+	/// <param name="target">要搜索的对象。</param>
+	/// <param name="warmTimer">预热时长（秒）。</param>
 	public static void SearchAndCastGameObject(object target, float warmTimer)
 	{
 		if (target != null)
@@ -3267,6 +4341,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到建房界面（显示预制体并淡入；无网络插件或界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartHostGameScreen(float fadeTime)
 	{
 		UFE.EnsureNetworkDisconnection();
@@ -3290,6 +4368,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到加入游戏界面（显示预制体并淡入；无网络插件或界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartJoinGameScreen(float fadeTime)
 	{
 		UFE.EnsureNetworkDisconnection();
@@ -3313,6 +4395,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到战斗加载界面（锁定输入；无加载界面时直接开始游戏）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartLoadingBattleScreen(float fadeTime)
 	{
 		UFE.config.lockInputs = true;
@@ -3331,6 +4417,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到随机匹配界面（显示预制体并淡入；无网络插件或界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartSearchMatchScreen(float fadeTime)
 	{
 		//UFE.EnsureNetworkDisconnection();
@@ -3355,6 +4445,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到网络游戏界面（显示预制体并淡入；无网络插件或界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartNetworkGameScreen(float fadeTime)
 	{
 		UFE.EnsureNetworkDisconnection();
@@ -3378,6 +4472,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到选项界面（显示预制体并淡入）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartOptionsScreen(float fadeTime)
 	{
 
@@ -3394,6 +4492,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际进入故事模式战斗：根据玩家1上一场胜负推进故事进度（胜利则下一场战斗，失败则重复当前战斗），
+	/// 加载对手与场地；无可用战斗时显示通关祝贺界面。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	public static void _StartStoryModeBattle(float fadeTime)
 	{
 		// If the player 1 won the last battle, load the information of the next battle. 
@@ -3544,6 +4647,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到故事模式通关祝贺界面（无界面时进入结尾演出）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStoryModeCongratulationsScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3560,6 +4667,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到故事模式继续界面（无界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStoryModeContinueScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3576,6 +4687,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到故事模式战后对话界面（无对话界面时直接进入下一场故事战斗）。
+	/// </summary>
+	/// <param name="conversationScreen">对话界面预制体。</param>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStoryModeConversationAfterBattleScreen(UFEScreen conversationScreen, float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3591,6 +4707,11 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到故事模式战前对话界面（无对话界面时直接进入战斗加载）。
+	/// </summary>
+	/// <param name="conversationScreen">对话界面预制体。</param>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStoryModeConversationBeforeBattleScreen(UFEScreen conversationScreen, float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3606,6 +4727,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到故事模式结尾演出界面（无结尾演出时进入制作人员界面）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStoryModeEndingScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3622,6 +4747,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到故事模式游戏结束界面（无界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStoryModeGameOverScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3638,6 +4767,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到故事模式开场演出界面（无开场演出时直接进入第一场战斗）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartStoryModeOpeningScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3654,6 +4787,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到对战模式选择界面（无界面时直接开始玩家对战）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartVersusModeScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);
@@ -3670,6 +4807,10 @@ public class UFE : MonoBehaviour, UFEInterface
 		}
 	}
 
+	/// <summary>
+	/// 实际切换到对战结算界面（无界面时回退主菜单）。
+	/// </summary>
+	/// <param name="fadeTime">淡入时长。</param>
 	private static void _StartVersusModeAfterBattleScreen(float fadeTime)
 	{
 		UFE.HideScreen(UFE.currentScreen);

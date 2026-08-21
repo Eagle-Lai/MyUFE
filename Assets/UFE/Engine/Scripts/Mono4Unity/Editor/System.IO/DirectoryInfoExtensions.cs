@@ -41,12 +41,28 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 
+/// <summary>
+/// 目录信息编辑器扩展（DirectoryInfoEditorExtensions，仅编辑器使用）。
+/// <para>用途：为 DirectoryInfo 提供 Enumerate* 系列惰性枚举扩展方法（目录/文件/文件系统信息），</para>
+/// <para>因为部分 API 在 Webplayer 构建的运行时不可用，故作为编辑器脚本实现。</para>
+/// </summary>
 public static class DirectoryInfoEditorExtensions{
 	#region Extension Methods
+	/// <summary>
+	/// 枚举顶层子目录（默认通配符）。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <returns>子目录可枚举序列。</returns>
 	public static IEnumerable<DirectoryInfo> EnumerateDirectories(this DirectoryInfo directoryInfo){
 		return directoryInfo.EnumerateDirectories ("*", SearchOption.TopDirectoryOnly);
 	}
 	
+	/// <summary>
+	/// 按模式枚举顶层子目录。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <returns>子目录可枚举序列。</returns>
 	public static IEnumerable<DirectoryInfo> EnumerateDirectories(
 		this DirectoryInfo directoryInfo, 
 		string searchPattern
@@ -54,6 +70,13 @@ public static class DirectoryInfoEditorExtensions{
 		return directoryInfo.EnumerateDirectories(searchPattern, SearchOption.TopDirectoryOnly);
 	}
 	
+	/// <summary>
+	/// 按模式与搜索选项枚举子目录。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <param name="searchOption">搜索选项（顶层/全部递归）。</param>
+	/// <returns>子目录可枚举序列。</returns>
 	public static IEnumerable<DirectoryInfo> EnumerateDirectories(
 		this DirectoryInfo directoryInfo,
 		string searchPattern, 
@@ -66,14 +89,32 @@ public static class DirectoryInfoEditorExtensions{
 		return DirectoryInfoEditorExtensions.CreateEnumerateDirectoriesIterator (directoryInfo, searchPattern, searchOption);
 	}
 	
+	/// <summary>
+	/// 枚举顶层文件（默认通配符）。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <returns>文件可枚举序列。</returns>
 	public static IEnumerable<FileInfo> EnumerateFiles(this DirectoryInfo directoryInfo){
 		return directoryInfo.EnumerateFiles ("*", SearchOption.TopDirectoryOnly);
 	}
 	
+	/// <summary>
+	/// 按模式枚举顶层文件。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <returns>文件可枚举序列。</returns>
 	public static IEnumerable<FileInfo> EnumerateFiles(this DirectoryInfo directoryInfo, string searchPattern){
 		return directoryInfo.EnumerateFiles (searchPattern, SearchOption.TopDirectoryOnly);
 	}
 	
+	/// <summary>
+	/// 按模式与搜索选项枚举文件。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <param name="searchOption">搜索选项。</param>
+	/// <returns>文件可枚举序列。</returns>
 	public static IEnumerable<FileInfo> EnumerateFiles(
 		this DirectoryInfo directoryInfo, 
 		string searchPattern, 
@@ -86,10 +127,21 @@ public static class DirectoryInfoEditorExtensions{
 		return DirectoryInfoEditorExtensions.CreateEnumerateFilesIterator(directoryInfo, searchPattern, searchOption);
 	}
 
+	/// <summary>
+	/// 枚举顶层文件系统信息（默认通配符）。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <returns>文件系统信息可枚举序列。</returns>
 	public static IEnumerable<FileSystemInfo> EnumerateFileSystemInfos (this DirectoryInfo directoryInfo){
 		return directoryInfo.EnumerateFileSystemInfos ("*", SearchOption.TopDirectoryOnly);
 	}
 	
+	/// <summary>
+	/// 按模式枚举顶层文件系统信息。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <returns>文件系统信息可枚举序列。</returns>
 	public static IEnumerable<FileSystemInfo> EnumerateFileSystemInfos(
 		this DirectoryInfo directoryInfo, 
 		string searchPattern
@@ -97,6 +149,13 @@ public static class DirectoryInfoEditorExtensions{
 		return directoryInfo.EnumerateFileSystemInfos (searchPattern, SearchOption.TopDirectoryOnly);
 	}
 	
+	/// <summary>
+	/// 按模式与搜索选项枚举文件系统信息。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <param name="searchOption">搜索选项。</param>
+	/// <returns>文件系统信息可枚举序列。</returns>
 	public static IEnumerable<FileSystemInfo> EnumerateFileSystemInfos (
 		this DirectoryInfo directoryInfo, 
 		string searchPattern, 
@@ -112,6 +171,13 @@ public static class DirectoryInfoEditorExtensions{
 	#endregion
 
 	#region private class methods
+	/// <summary>
+	/// 文件枚举迭代器（惰性枚举）。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <param name="searchOption">搜索选项。</param>
+	/// <returns>文件可枚举序列。</returns>
 	private static IEnumerable<FileInfo> CreateEnumerateFilesIterator(
 		this DirectoryInfo directoryInfo,
 		string searchPattern, 
@@ -122,6 +188,13 @@ public static class DirectoryInfoEditorExtensions{
 		}
 	}
 
+	/// <summary>
+	/// 目录枚举迭代器（惰性枚举）。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <param name="searchOption">搜索选项。</param>
+	/// <returns>子目录可枚举序列。</returns>
 	private static IEnumerable<DirectoryInfo> CreateEnumerateDirectoriesIterator(
 		DirectoryInfo directoryInfo,
 		string searchPattern, 
@@ -132,6 +205,13 @@ public static class DirectoryInfoEditorExtensions{
 		}
 	}
 
+	/// <summary>
+	/// 文件系统信息枚举迭代器（惰性枚举）。
+	/// </summary>
+	/// <param name="directoryInfo">目标目录。</param>
+	/// <param name="searchPattern">搜索模式。</param>
+	/// <param name="searchOption">搜索选项。</param>
+	/// <returns>文件系统信息可枚举序列。</returns>
 	private static IEnumerable<FileSystemInfo> CreateEnumerateFileSystemInfosIterator(
 		DirectoryInfo directoryInfo,
 		string searchPattern, 

@@ -7,25 +7,46 @@ using System.Collections.Generic;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 招式编辑器窗口（MoveEditorWindow，编辑器专用）。
+/// <para>用途：UFE 的招式编辑界面——编辑招式动画/帧数据/输入指令/命中判定/特效/飞行道具/演出等全部招式属性，</para>
+/// <para>并提供角色/对手/飞行道具的实时动画预览与摄像机编辑。</para>
+/// </summary>
 public class MoveEditorWindow : EditorWindow {
+	/// <summary>当前窗口单例。</summary>
 	public static MoveEditorWindow moveEditorWindow;
+	/// <summary>传入的招式资产引用。</summary>
 	public static MoveInfo sentMoveInfo;
 	
+	/// <summary>当前编辑的招式资产。</summary>
 	private MoveInfo moveInfo;
+	/// <summary>帧率缓存。</summary>
 	private int fpsTemp;
+	/// <summary>滚动位置。</summary>
 	private Vector2 scrollPos;
 	
+	/// <summary>预览角色预制体。</summary>
 	private GameObject characterPrefab;
+	/// <summary>预览对手预制体。</summary>
 	private GameObject opCharacterPrefab;
+	/// <summary>预览飞行道具预制体。</summary>
 	private GameObject projectilePrefab;
+	/// <summary>临时总帧数。</summary>
 	private int totalFramesTemp;
+	/// <summary>全局总帧数。</summary>
     private int totalFramesGlobal;
     //private int totalFramesUnsaved;
+	/// <summary>原始总帧数。</summary>
     private int totalFramesOriginal;
+	/// <summary>动画帧位置。</summary>
 	private float animFrame;
+	/// <summary>当前速度。</summary>
 	private float currentSpeed;
+	/// <summary>动画时间。</summary>
 	private float animTime;
+	/// <summary>平滑预览开关。</summary>
 	private bool smoothPreview;
+	/// <summary>全局配置引用（读取帧率等）。</summary>
 	private GlobalInfo globalInfo = null;
 
 	private float camTime;
@@ -89,6 +110,9 @@ public class MoveEditorWindow : EditorWindow {
 	
 	[MenuItem("Window/U.F.E./Move Editor")]
 	[CanEditMultipleObjects]
+	/// <summary>
+	/// 打开招式编辑器窗口（菜单入口）。
+	/// </summary>
 	public static void Init(){
 		moveEditorWindow = EditorWindow.GetWindow<MoveEditorWindow>(false, "Move", true);
 		moveEditorWindow.Show();
@@ -181,6 +205,9 @@ public class MoveEditorWindow : EditorWindow {
 			Application.OpenURL("http://www.ufe3d.com/doku.php/"+ page);
 	}
 
+	/// <summary>
+	/// 每帧更新：进入播放模式前销毁预览用的角色/对手/摄像机/飞行道具实例。
+	/// </summary>
 	void Update(){
 		if (EditorApplication.isPlayingOrWillChangePlaymode) {
 			if (characterPrefab != null){
@@ -260,6 +287,9 @@ public class MoveEditorWindow : EditorWindow {
 		}
 	}
 	
+	/// <summary>
+	/// 窗口 GUI：绘制招式编辑器的全部选项面板（帧数据/输入/命中/特效/飞行道具/演出/保存等）。
+	/// </summary>
 	public void OnGUI(){
 		if (moveInfo == null){
 			GUILayout.BeginHorizontal("GroupBox");

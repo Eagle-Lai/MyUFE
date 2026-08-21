@@ -32,20 +32,40 @@
 using System.Globalization;
 using System.Security.Permissions;
 
+/// <summary>
+/// 无效枚举参数异常（InvalidEnumArgumentExceptionDerived）。
+/// <para>用途：从 Mono 移植——当传递给方法的枚举参数值无效时抛出，</para>
+/// <para>附带参数名、无效值与目标枚举类型信息。</para>
+/// </summary>
 namespace System.ComponentModel
 {
+	/// <summary>
+	/// 无效枚举参数异常类。
+	/// </summary>
 	[Serializable]
 	public class InvalidEnumArgumentExceptionDerived : ArgumentException
 	{
-
+		/// <summary>
+		/// 默认构造函数。
+		/// </summary>
 		public InvalidEnumArgumentExceptionDerived () : this ((string) null)
 		{
 		}
 
+		/// <summary>
+		/// 构造函数（指定消息）。
+		/// </summary>
+		/// <param name="message">错误消息。</param>
 		public InvalidEnumArgumentExceptionDerived (string message) : base (message)
 		{
 		}
 
+		/// <summary>
+		/// 构造函数（指定参数名、无效值与枚举类型，自动生成错误消息）。
+		/// </summary>
+		/// <param name="argumentName">参数名。</param>
+		/// <param name="invalidValue">无效的枚举值。</param>
+		/// <param name="enumClass">目标枚举类型。</param>
 		public InvalidEnumArgumentExceptionDerived (string argumentName, int invalidValue, Type enumClass) :
 			base (string.Format (CultureInfo.CurrentCulture, "The value "
 					+ "of argument '{0}' ({1}) is invalid for "
@@ -54,6 +74,11 @@ namespace System.ComponentModel
 		{
 		}
 
+		/// <summary>
+		/// 构造函数（指定消息与内部异常）。
+		/// </summary>
+		/// <param name="message">错误消息。</param>
+		/// <param name="innerException">内部异常。</param>
 		public InvalidEnumArgumentExceptionDerived (string message, Exception innerException)
 			: base (message, innerException)
 		{

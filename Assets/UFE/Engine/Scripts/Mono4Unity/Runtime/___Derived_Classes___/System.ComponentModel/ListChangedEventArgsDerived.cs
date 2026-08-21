@@ -29,29 +29,59 @@
 
 using System.ComponentModel;
 
+/// <summary>
+/// 列表变更事件参数（ListChangedEventArgsDerived）。
+/// <para>用途：从 Mono 移植——为 ListChanged 事件提供数据（变更类型、新旧索引、相关属性描述符）。</para>
+/// </summary>
 namespace System.ComponentModel {
+	/// <summary>
+	/// 列表变更事件参数类。
+	/// </summary>
 	public class ListChangedEventArgsDerived : EventArgs
 	{
+		/// <summary>
+		/// 相关属性描述符。
+		/// </summary>
 		public PropertyDescriptor PropertyDescriptor {
 			get { return propDesc; }
 		}
 
+		/// <summary>变更类型。</summary>
 		ListChangedTypeDerived changedType;
+		/// <summary>旧索引。</summary>
 		int oldIndex;
+		/// <summary>新索引。</summary>
 		int newIndex;
+		/// <summary>相关属性描述符。</summary>
 		PropertyDescriptor propDesc;
 
+		/// <summary>
+		/// 构造函数（新索引，旧索引默认为 -1）。
+		/// </summary>
+		/// <param name="listChangedType">变更类型。</param>
+		/// <param name="newIndex">新索引。</param>
 		public ListChangedEventArgsDerived (ListChangedTypeDerived listChangedType, int newIndex)
 		: this (listChangedType, newIndex, -1)
 		{
 		}
 
+		/// <summary>
+		/// 构造函数（仅属性描述符）。
+		/// </summary>
+		/// <param name="listChangedType">变更类型。</param>
+		/// <param name="propDesc">属性描述符。</param>
 		public ListChangedEventArgsDerived (ListChangedTypeDerived listChangedType, PropertyDescriptor propDesc)
 		{
 			this.changedType = listChangedType;
 			this.propDesc = propDesc;
 		}
 
+		/// <summary>
+		/// 构造函数（新索引与属性描述符，旧索引=新索引）。
+		/// </summary>
+		/// <param name="listChangedType">变更类型。</param>
+		/// <param name="newIndex">新索引。</param>
+		/// <param name="propDesc">属性描述符。</param>
 		public ListChangedEventArgsDerived (ListChangedTypeDerived listChangedType, int newIndex, PropertyDescriptor propDesc)
 		{
 			this.changedType = listChangedType;
@@ -60,6 +90,12 @@ namespace System.ComponentModel {
 			this.propDesc = propDesc;
 		}
 
+		/// <summary>
+		/// 构造函数（新/旧索引）。
+		/// </summary>
+		/// <param name="listChangedType">变更类型。</param>
+		/// <param name="newIndex">新索引。</param>
+		/// <param name="oldIndex">旧索引。</param>
 		public ListChangedEventArgsDerived (ListChangedTypeDerived listChangedType, int newIndex, int oldIndex)
 		{
 			this.changedType = listChangedType;
@@ -67,14 +103,23 @@ namespace System.ComponentModel {
 			this.oldIndex = oldIndex;
 		}
 
+		/// <summary>
+		/// 变更类型。
+		/// </summary>
 		public ListChangedTypeDerived ListChangedTypeDerived {
 			get { return changedType; }
 		}
 	
+		/// <summary>
+		/// 旧索引。
+		/// </summary>
 		public int OldIndex {
 			get { return oldIndex; }
 		}
 	
+		/// <summary>
+		/// 新索引。
+		/// </summary>
 		public int NewIndex {
 			get { return newIndex; }
 		}

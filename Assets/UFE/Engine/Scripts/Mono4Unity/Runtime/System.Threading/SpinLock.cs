@@ -27,8 +27,16 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 
 //#if NET_4_0 || BOOTSTRAP_NET_4_0
+/// <summary>
+/// 自旋锁（SpinLock）。
+/// <para>用途：从 Mono 移植的基于"票证算法"（ticket algorithm）的自旋锁结构，</para>
+/// <para>支持持锁线程跟踪（IsHeldByCurrentThread）、Enter/TryEnter/Exit 及释放写入冲刷（flushReleaseWrites）。</para>
+/// </summary>
 namespace System.Threading
 {
+	/// <summary>
+	/// 票证数据结构：低 32 位为当前服务号（Value），高 32 位为取票计数（Users）。
+	/// </summary>
 	[StructLayout(LayoutKind.Explicit)]
 	internal struct TicketType {
 		[FieldOffset(0)]
@@ -42,13 +50,20 @@ namespace System.Threading
 	// Implement the ticket SpinLock algorithm described on http://locklessinc.com/articles/locks/
 	// This lock is usable on both endianness
 	// TODO: some 32 bits platform apparently doesn't support CAS with 64 bits value
+	/// <summary>
+	/// 自旋锁结构：线程自旋等待轮到自己持有锁。
+	/// </summary>
 	public struct SpinLock
 	{
+		/// <summary>票证数据。</summary>
 		TicketType ticket;
 		
+		/// <summary>当前持锁线程 ID。</summary>
 		int threadWhoTookLock;
+		/// <summary>是否跟踪持锁线程。</summary>
 		readonly bool isThreadOwnerTrackingEnabled;
 		
+		/// <summary>计时器（TryEnter 超时用）。</summary>
 		static Watch sw = Watch.StartNew ();
 		
 		public bool IsThreadOwnerTrackingEnabled {

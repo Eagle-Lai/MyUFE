@@ -3,18 +3,37 @@ using UnityEditor;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// UFE 版本升级工具（UFEUpgrade，编辑器专用）。
+/// <para>用途：将 UFE 1.x 版本的配置资产（全局/角色/招式）批量升级到 2.0 格式——</para>
+/// <para>把旧的 float/Vector 字段值同步到新的定点数（Fix64/FPVector）字段（_前缀），并更新版本号。</para>
+/// <para>提供菜单入口：更新全部定义/更新输入定义/更新变量定义。</para>
+/// </summary>
 public class UFEUpgrade : EditorWindow {
 
+    /// <summary>选中的全局配置资产。</summary>
     private static GlobalInfo globalInfo;
+    /// <summary>选中的角色资产。</summary>
     private static UFE3D.CharacterInfo characterInfo;
+    /// <summary>选中的招式资产。</summary>
     private static MoveInfo moveInfo;
 
+    /// <summary>
+    /// 升级击倒选项：将 float 字段同步到定点数字段。
+    /// </summary>
+    /// <param name="knockDown">击倒选项。</param>
+    /// <returns>升级后的击倒选项。</returns>
     private static SubKnockdownOptions UpgradeKnockdownOptions(SubKnockdownOptions knockDown) {
         knockDown._knockedOutTime = knockDown.knockedOutTime;
         knockDown._standUpTime = knockDown.standUpTime;
         knockDown._predefinedPushForce = FPVector.ToFPVector(knockDown.predefinedPushForce);
         return knockDown;
     }
+    /// <summary>
+    /// 升级命中类型选项：将 float 字段同步到定点数字段。
+    /// </summary>
+    /// <param name="hitType">命中类型选项。</param>
+    /// <returns>升级后的命中类型选项。</returns>
     private static HitTypeOptions UpgradeHitOptions(HitTypeOptions hitType) {
         hitType._freezingTime = hitType.freezingTime;
         hitType._animationSpeed = hitType.animationSpeed;
@@ -23,6 +42,10 @@ public class UFEUpgrade : EditorWindow {
         return hitType;
     }
 
+    /// <summary>
+    /// 获取当前选中的 UFE 资产（全局/角色/招式任一）。
+    /// </summary>
+    /// <returns>有有效选中资产返回 true，否则弹出提示并返回 false。</returns>
     private static bool RetrieveSelection()
     {
         globalInfo = null;
@@ -59,6 +82,9 @@ public class UFEUpgrade : EditorWindow {
         return true;
     }
 
+    /// <summary>
+    /// 更新全部定义（输入定义 + 变量定义，菜单入口）。
+    /// </summary>
     [MenuItem("Assets/UFE 2.0/Update All Definitions")]
     public static void UpdateAll()
     {
@@ -66,6 +92,9 @@ public class UFEUpgrade : EditorWindow {
         UpdateVariables();
     }
 
+    /// <summary>
+    /// 更新输入定义（菜单入口）：将选中的全局/角色/招式下所有招式的旧输入字段同步到 defaultInputs。
+    /// </summary>
     [MenuItem("Assets/UFE 2.0/Update Input Definitions")]
     public static void UpdateInputs()
     {
@@ -102,6 +131,11 @@ public class UFEUpgrade : EditorWindow {
         }
     }
 
+    /// <summary>
+    /// 升级单个招式的输入定义：将旧输入字段同步到 defaultInputs，弹窗确认覆盖。
+    /// </summary>
+    /// <param name="move">目标招式。</param>
+    /// <param name="dontAskAgain">是否不再询问（"全部覆盖"模式）。</param>
     private static void MoveInputUpdate(MoveInfo move, ref bool dontAskAgain)
     {
         int updateConfirm = dontAskAgain ? 0 : 1;
@@ -127,6 +161,9 @@ public class UFEUpgrade : EditorWindow {
         }
     }
 
+    /// <summary>
+    /// 更新变量定义（菜单入口）：将选中的全局/角色/招式的旧 float/Vector 字段同步到定点数字段（_前缀），并校验版本号。
+    /// </summary>
     [MenuItem("Assets/UFE 2.0/Update Variable Definitions")]
     public static void UpdateVariables()
     {
@@ -176,6 +213,10 @@ public class UFEUpgrade : EditorWindow {
         // End of Update
     }
 
+    /// <summary>
+    /// 升级全局配置：将各选项（摄像机/旋转/连击/弹跳/格挡/击倒/命中/场地/反击/回合等）的 float 字段同步到定点数字段，并递归升级角色。
+    /// </summary>
+    /// <param name="global">全局配置。</param>
     private static void GlobalUpdate(GlobalInfo global)
     {
         global.version = 2f;
@@ -251,6 +292,10 @@ public class UFEUpgrade : EditorWindow {
         Debug.Log("Global Options updated.");
     }
 
+    /// <summary>
+    /// 升级角色：同步物理/出招时间等定点数字段，并递归升级基础动作与必杀技。
+    /// </summary>
+    /// <param name="character">角色信息。</param>
     private static void CharacterUpdate(UFE3D.CharacterInfo character) {
         character.version = 2f;
         character._executionTiming = character.executionTiming;
@@ -328,6 +373,10 @@ public class UFEUpgrade : EditorWindow {
         Debug.Log("Character " + character.characterName + " updated.");
     }
 
+    /// <summary>
+    /// 升级基础动作：将动画片段同步到动画映射（animMap）并同步定点数字段。
+    /// </summary>
+    /// <param name="basicMove">基础动作。</param>
     private static void BasicMoveUpdate(BasicMoveInfo basicMove) {
         if (basicMove.clip1 != null) {
             basicMove.animMap[0].clip = basicMove.clip1;
@@ -360,6 +409,10 @@ public class UFEUpgrade : EditorWindow {
         basicMove._blendingOut = basicMove.blendingOut;
     }
 
+    /// <summary>
+    /// 升级必杀技/演出招式：同步能量/融合/蓄力/动画映射/命中/飞行道具/施加力/慢动作/摄像机等全部定点数字段。
+    /// </summary>
+    /// <param name="move">招式信息。</param>
     private static void SpecialMoveUpdate(MoveInfo move) {
         if (move == null) return;
         move.version = 2f;

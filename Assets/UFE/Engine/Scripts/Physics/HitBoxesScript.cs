@@ -5,125 +5,234 @@ using System.Collections.Generic;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 判定盒系统（HitBoxesScript）。
+/// <para>用途：本文件定义攻击判定盒（HitBox）、受击判定盒（HurtBox）、可格挡区域（BlockArea）、拉近（PullIn）等数据结构，</para>
+/// <para>以及 HitBoxesScript 组件——负责命中检测（圆/矩形碰撞）、判定盒镜像、映射更新与 Gizmos 可视化。</para>
+/// <para>碰撞检测使用定点数（Fix64）保证网络帧同步确定性。</para>
+/// </summary>
+
+/// <summary>
+/// 攻击判定盒（HitBox）：招式的攻击范围/身体碰撞体定义。
+/// </summary>
 [System.Serializable]
 public class HitBox: ICloneable {
+	/// <summary>默认是否可见（初始显示状态）。</summary>
 	public bool defaultVisibility = true;
+	/// <summary>绑定的身体部位。</summary>
 	public BodyPart bodyPart;
+	/// <summary>判定盒类型（高/低）。</summary>
 	public HitBoxType type;
+	/// <summary>判定盒形状（圆/矩形）。</summary>
 	public HitBoxShape shape;
+	/// <summary>矩形判定盒尺寸（float 版）。</summary>
 	public Rect rect = new Rect(0, 0, 4, 4);
+	/// <summary>矩形判定盒尺寸（定点数版，运行时使用）。</summary>
 	public FPRect _rect = new FPRect();
+	/// <summary>是否跟随角色渲染边界 X。</summary>
 	public bool followXBounds;
+	/// <summary>是否跟随角色渲染边界 Y。</summary>
 	public bool followYBounds;
+	/// <summary>圆形判定盒半径（float 版）。</summary>
 	public float radius = .5f;
+	/// <summary>圆形判定盒半径（定点数版，运行时使用）。</summary>
 	public Fix64 _radius = .5;
+	/// <summary>判定盒位置偏移（float 版）。</summary>
 	public Vector2 offSet;
+	/// <summary>判定盒位置偏移（定点数版，运行时使用）。</summary>
 	public FPVector _offSet;
 
+	/// <summary>碰撞类型（身体/攻击/投技/无）。</summary>
 	public CollisionType collisionType;
+	/// <summary>绑定的 Transform（编辑器映射用）。</summary>
 	public Transform position;
+	/// <summary>映射后的位置（帧映射数据）。</summary>
     public FPVector mappedPosition;
 
     #region trackable definitions
+	/// <summary>当前碰撞状态（0 未命中 / 1 命中，运行时跟踪）。</summary>
     public int state{get;set;}
+	/// <summary>渲染器边界（运行时跟踪）。</summary>
     public Rect rendererBounds{get;set;}
+	/// <summary>是否隐藏（禁用碰撞检测，运行时跟踪）。</summary>
     public bool hide{get;set;}          // Whether the hit box collisions will be detected
+	/// <summary>是否可见（GameObject 层级激活状态，运行时跟踪）。</summary>
     public bool visibility{get;set;}    // Whether the GameObject will be active in the hierarchy
     #endregion
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
     public object Clone() {
 		return CloneObject.Clone(this);
 	}
 }
 
+/// <summary>
+/// 受击判定盒（HurtBox）：角色可被攻击命中的部位定义。
+/// </summary>
 [System.Serializable]
 public class HurtBox: ICloneable {
+	/// <summary>绑定的身体部位。</summary>
 	public BodyPart bodyPart;
+	/// <summary>判定盒形状。</summary>
 	public HitBoxShape shape;
+	/// <summary>矩形尺寸（float 版）。</summary>
 	public Rect rect = new Rect(0, 0, 4, 4);
+	/// <summary>矩形尺寸（定点数版）。</summary>
 	public FPRect _rect = new FPRect();
+	/// <summary>是否跟随角色渲染边界 X。</summary>
 	public bool followXBounds;
+	/// <summary>是否跟随角色渲染边界 Y。</summary>
 	public bool followYBounds;
+	/// <summary>圆形半径（float 版）。</summary>
 	public float radius = .5f;
+	/// <summary>圆形半径（定点数版）。</summary>
 	public Fix64 _radius = .5;
+	/// <summary>位置偏移（float 版）。</summary>
     public Vector2 offSet;
+	/// <summary>位置偏移（定点数版）。</summary>
     public FPVector _offSet;
 
     #region trackable definitions
+	/// <summary>是否处于格挡状态（运行时跟踪）。</summary>
     public bool isBlock{get; set;}
+	/// <summary>世界位置（定点数，运行时跟踪）。</summary>
     public FPVector position{get;set;}
+	/// <summary>渲染器边界（运行时跟踪）。</summary>
     public Rect rendererBounds{get;set;}
     #endregion
 
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
     public object Clone() {
 		return CloneObject.Clone(this);
 	}
 }
 
+/// <summary>
+/// 可格挡区域（BlockArea）：招式判定帧内可以格挡的区域。
+/// </summary>
 [System.Serializable]
 public class BlockArea {
+	/// <summary>生效起始帧。</summary>
 	public int activeFramesBegin;
+	/// <summary>生效结束帧。</summary>
 	public int activeFramesEnds;
 
+	/// <summary>绑定的身体部位。</summary>
 	public BodyPart bodyPart;
+	/// <summary>形状。</summary>
 	public HitBoxShape shape;
+	/// <summary>矩形尺寸（float 版）。</summary>
 	public Rect rect = new Rect(0, 0, 4, 4);
+	/// <summary>矩形尺寸（定点数版）。</summary>
 	public FPRect _rect = new FPRect();
+	/// <summary>是否跟随角色渲染边界 X。</summary>
 	public bool followXBounds;
+	/// <summary>是否跟随角色渲染边界 Y。</summary>
 	public bool followYBounds;
+	/// <summary>圆形半径（float 版）。</summary>
 	public float radius = .5f;
+	/// <summary>圆形半径（定点数版）。</summary>
 	public Fix64 _radius = .5;
+	/// <summary>位置偏移（float 版）。</summary>
 	public Vector2 offSet;
+	/// <summary>位置偏移（定点数版）。</summary>
 	public FPVector _offSet;
 
+	/// <summary>世界位置（Inspector 隐藏，运行时使用）。</summary>
 	[HideInInspector] public FPVector position;
 }
 
+/// <summary>
+/// 拉近（PullIn）：投技/演出中将对手或自身拉向目标的配置。
+/// </summary>
 [System.Serializable]
 public class PullIn: ICloneable {
+	/// <summary>拉近速度。</summary>
 	public int speed = 50;
+	/// <summary>拉近期间是否强制目标站立。</summary>
 	public bool forceStand = true;
+	/// <summary>自身目标身体部位。</summary>
 	public BodyPart characterBodyPart;
+	/// <summary>对方目标身体部位。</summary>
 	public BodyPart enemyBodyPart;
+	/// <summary>目标距离（float 版，到达后停止拉近）。</summary>
 	public float targetDistance = .5f;
+	/// <summary>目标距离（定点数版，运行时使用）。</summary>
 	public Fix64 _targetDistance = .5;
 
+	/// <summary>拉近目标位置（运行时设置）。</summary>
     public FPVector position;
 	
+	/// <summary>
+	/// 深拷贝当前对象（ICloneable 实现）。
+	/// </summary>
+	/// <returns>克隆出的新对象实例。</returns>
 	public object Clone() {
 		return CloneObject.Clone(this);
 	}
 }
 
+/// <summary>
+/// 判定盒脚本（HitBoxesScript）：角色身上的判定盒管理器。
+/// <para>负责命中检测（TestCollision）、判定盒镜像、映射位置更新、无敌部位隐藏及编辑器 Gizmos 可视化。</para>
+/// </summary>
 public class HitBoxesScript : MonoBehaviour {
     
     #region trackable definitions
+	/// <summary>本帧是否已命中（运行时跟踪）。</summary>
     public bool isHit;
+	/// <summary>攻击判定盒列表。</summary>
     public HitBox[] hitBoxes;
+	/// <summary>当前生效的受击判定盒列表。</summary>
     public HurtBox[] activeHurtBoxes;
+	/// <summary>当前可格挡区域。</summary>
     public BlockArea blockableArea;
+	/// <summary>当前命中确认类型（普通命中/投技）。</summary>
     public HitConfirmType hitConfirmType;
+	/// <summary>碰撞盒尺寸（调试用）。</summary>
     public Fix64 collisionBoxSize;
+	/// <summary>当前是否已镜像（运行时跟踪）。</summary>
     public bool currentMirror;
+	/// <summary>是否烘焙动画速度。</summary>
     public bool bakeSpeed;
+	/// <summary>当前动画帧映射列表。</summary>
     public AnimationMap[] animationMaps = new AnimationMap[0];
     #endregion
 
+	/// <summary>角色控制脚本引用（Inspector 隐藏）。</summary>
 	[HideInInspector] public ControlsScript controlsScript;
+	/// <summary>编辑器用：是否预览反向旋转。</summary>
 	[HideInInspector] public bool previewInvertRotation;
+	/// <summary>编辑器用：是否预览镜像。</summary>
     [HideInInspector] public bool previewMirror;
+	/// <summary>编辑器用：是否显示矩形判定盒位置测试。</summary>
 	public bool rectangleHitBoxLocationTest;
+	/// <summary>矩形判定盒可视化贴图。</summary>
 	public Texture2D rectTexture;
 
+	/// <summary>招式集合脚本引用。</summary>
 	public MoveSetScript moveSetScript;
+	/// <summary>角色渲染器（用于边界跟随）。</summary>
     private Renderer characterRenderer;
+	/// <summary>帧位移增量（动画映射）。</summary>
     private FPVector deltaPosition;
 
+	/// <summary>本角色世界变换（定点数）快捷属性。</summary>
     private FPTransform worldTransform { get { return controlsScript.worldTransform; } set { controlsScript.worldTransform = value; } }
+	/// <summary>对手世界变换（定点数）快捷属性。</summary>
     private FPTransform opWorldTransform { get { return controlsScript.opControlsScript.worldTransform; } set { controlsScript.opControlsScript.worldTransform = value; } }
 
     //[HideInInspector] public Rect characterBounds = new Rect(0,0,0,0);
 
+	/// <summary>
+	/// 启动：获取控件脚本引用、为每个招式的无敌部位关联判定盒、创建可视化贴图。
+	/// </summary>
     void Start(){
 		if (transform.parent != null){
 			controlsScript = transform.parent.gameObject.GetComponent<ControlsScript>();
@@ -158,6 +267,15 @@ public class HitBoxesScript : MonoBehaviour {
         rectTexture.Apply();
 	}
 	
+	/// <summary>
+	/// 静态碰撞检测：遍历攻击判定盒与受击判定盒，进行圆/矩形交叉测试。
+	/// </summary>
+	/// <param name="rootPosition">攻击方根位置。</param>
+	/// <param name="hitBoxes">攻击判定盒列表。</param>
+	/// <param name="hurtBoxes">受击判定盒列表。</param>
+	/// <param name="hitConfirmType">命中确认类型（决定是否使用投技判定盒）。</param>
+	/// <param name="mirror">攻击方朝向（镜像矩形位置）。</param>
+	/// <returns>命中时返回 [受击盒位置, 攻击盒位置, 中点]；未命中返回空数组。</returns>
 	public static FPVector[] TestCollision(FPVector rootPosition, HitBox[] hitBoxes, HurtBox[] hurtBoxes, HitConfirmType hitConfirmType, int mirror) {
 		foreach (HitBox hitBox in hitBoxes) {
 			if (hitBox.hide) continue;
@@ -278,6 +396,12 @@ public class HitBoxesScript : MonoBehaviour {
 		return new FPVector[0];
 	}
 
+	/// <summary>
+	/// 实例碰撞检测（受击盒数组）：已命中且为普通命中时直接返回空；否则执行碰撞测试。
+	/// </summary>
+	/// <param name="hurtBoxes">受击判定盒列表。</param>
+	/// <param name="hitConfirmType">命中确认类型。</param>
+	/// <returns>命中时返回位置数组；未命中返回空数组。</returns>
 	public FPVector[] TestCollision(HurtBox[] hurtBoxes, HitConfirmType hitConfirmType) {
         if (isHit && hitConfirmType == HitConfirmType.Hit) return new FPVector[0];
 		foreach(HitBox hitbox in this.hitBoxes) if (hitbox.followXBounds || hitbox.followYBounds) hitbox.rendererBounds = GetBounds();
@@ -285,6 +409,11 @@ public class HitBoxesScript : MonoBehaviour {
 		return HitBoxesScript.TestCollision(worldTransform.position, this.hitBoxes, hurtBoxes, hitConfirmType, controlsScript.mirror);
 	}
 
+	/// <summary>
+	/// 格挡区域碰撞检测：将格挡区域作为特殊受击盒进行碰撞测试。
+	/// </summary>
+	/// <param name="blockableArea">可格挡区域。</param>
+	/// <returns>命中时返回位置数组；未命中返回空数组。</returns>
 	public FPVector[] TestCollision(BlockArea blockableArea) {
 		HurtBox hurtBox = new HurtBox();
 		hurtBox.position = blockableArea.position;
@@ -300,6 +429,13 @@ public class HitBoxesScript : MonoBehaviour {
 		return HitBoxesScript.TestCollision(worldTransform.position, this.hitBoxes, new HurtBox[]{hurtBox}, HitConfirmType.Hit, controlsScript.mirror);
 	}
 	
+	/// <summary>
+	/// 身体碰撞体推挤检测：计算双方身体碰撞体重叠产生的推挤力。
+	/// </summary>
+	/// <param name="myRootPosition">本方根位置。</param>
+	/// <param name="opRootPosition">对方根位置。</param>
+	/// <param name="opHitBoxes">对方身体碰撞体列表。</param>
+	/// <returns>总推挤力（重叠深度累积）。</returns>
 	public Fix64 TestCollision(FPVector myRootPosition, FPVector opRootPosition, HitBox[] opHitBoxes) {
 		Fix64 totalPushForce = 0;
 		foreach (HitBox hitBox in hitBoxes) {
@@ -320,6 +456,11 @@ public class HitBoxesScript : MonoBehaviour {
 		return totalPushForce;
 	}
 
+	/// <summary>
+	/// 获取指定身体部位的默认可见性。
+	/// </summary>
+	/// <param name="bodyPart">身体部位。</param>
+	/// <returns>默认可见返回 true。</returns>
 	public bool GetDefaultVisibility(BodyPart bodyPart){
 		foreach(HitBox hitBox in hitBoxes){
 			if (bodyPart == hitBox.bodyPart && hitBox.defaultVisibility) return true;
@@ -329,6 +470,11 @@ public class HitBoxesScript : MonoBehaviour {
 	}
 
 
+	/// <summary>
+	/// 获取指定身体部位的世界位置（运行时用映射位置+根位置；编辑器下用 Transform 位置）。
+	/// </summary>
+	/// <param name="bodyPart">身体部位。</param>
+	/// <returns>部位世界位置（定点数）。</returns>
 	public FPVector GetPosition(BodyPart bodyPart){
 		foreach(HitBox hitBox in hitBoxes){
             if (bodyPart == hitBox.bodyPart) {
@@ -345,6 +491,10 @@ public class HitBoxesScript : MonoBehaviour {
 		return FPVector.zero;
     }
 
+	/// <summary>
+	/// 获取本帧位移增量（使用动画映射时取映射数据，否则取招式脚本的位移）。
+	/// </summary>
+	/// <returns>位移增量（定点数，已按镜像反转）。</returns>
     public FPVector GetDeltaPosition() {
         if (controlsScript.myInfo.useAnimationMaps)
         {
@@ -356,6 +506,10 @@ public class HitBoxesScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 生成当前各判定盒的动画映射（用于烘焙逐帧映射数据）。
+	/// </summary>
+	/// <returns>HitBoxMap 数组。</returns>
     public HitBoxMap[] GetAnimationMaps() {
         List<HitBoxMap> animMaps = new List<HitBoxMap>();
         foreach (HitBox hitBox in hitBoxes) {
@@ -368,6 +522,11 @@ public class HitBoxesScript : MonoBehaviour {
         return animMaps.ToArray();
     }
 
+	/// <summary>
+	/// 获取指定身体部位绑定的 Transform。
+	/// </summary>
+	/// <param name="bodyPart">身体部位。</param>
+	/// <returns>对应的 Transform；未找到返回 null。</returns>
     public Transform GetTransform(BodyPart bodyPart){
 		foreach(HitBox hitBox in hitBoxes){
 			if (bodyPart == hitBox.bodyPart) return hitBox.position;
@@ -375,6 +534,11 @@ public class HitBoxesScript : MonoBehaviour {
 		return null;
 	}
 
+	/// <summary>
+	/// 为指定身体部位设置 Transform（编辑器烘焙用）。
+	/// </summary>
+	/// <param name="bodyPart">身体部位。</param>
+	/// <param name="transform">要设置的 Transform。</param>
 	public void SetTransform(BodyPart bodyPart, Transform transform){
 		foreach(HitBox hitBox in hitBoxes){
 			if (bodyPart == hitBox.bodyPart) {
@@ -384,6 +548,11 @@ public class HitBoxesScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 获取指定身体部位列表对应的判定盒列表。
+	/// </summary>
+	/// <param name="bodyParts">身体部位数组。</param>
+	/// <returns>匹配的 HitBox 数组。</returns>
 	public HitBox[] GetHitBoxes(BodyPart[] bodyParts){
 		List<HitBox> hitBoxesList = new List<HitBox>();
 		foreach(HitBox hitBox in hitBoxes){
@@ -398,6 +567,9 @@ public class HitBoxesScript : MonoBehaviour {
 		return hitBoxesList.ToArray();
 	}
 	
+	/// <summary>
+	/// 重置本帧命中状态（清空状态并复位 isHit）。
+	/// </summary>
 	public void ResetHit(){
 		//if (!isHit) return;
 		foreach (HitBox hitBox in hitBoxes) {
@@ -406,6 +578,10 @@ public class HitBoxesScript : MonoBehaviour {
 		isHit = false;
 	}
 
+	/// <summary>
+	/// 获取本帧命中（state==1）的攻击判定盒。
+	/// </summary>
+	/// <returns>命中的 HitBox；未命中返回 null。</returns>
 	public HitBox GetStrokeHitBox(){
 		if (!isHit) return null;
 		foreach (HitBox hitBox in hitBoxes) {
@@ -414,6 +590,11 @@ public class HitBoxesScript : MonoBehaviour {
 		return null;
 	}
 	
+	/// <summary>
+	/// 按身体部位隐藏/显示指定无敌判定盒列表。
+	/// </summary>
+	/// <param name="invincibleHitBoxes">无敌判定盒列表。</param>
+	/// <param name="hide">是否隐藏。</param>
 	public void HideHitBoxes(HitBox[] invincibleHitBoxes, bool hide){
 		foreach (HitBox invHitBox in invincibleHitBoxes)
         {
@@ -428,12 +609,20 @@ public class HitBoxesScript : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 隐藏/显示全部判定盒。
+	/// </summary>
+	/// <param name="hide">是否隐藏。</param>
 	public void HideHitBoxes(bool hide){
 		foreach (HitBox hitBox in hitBoxes) {
 			hitBox.hide = hide;
 		}
 	}
 
+	/// <summary>
+	/// 镜像左右对称身体部位的判定盒 Transform（交换左右绑定）。
+	/// </summary>
+	/// <param name="mirror">目标朝向（true 表示需要镜像）。</param>
 	public void InvertHitBoxes(bool mirror){
 		if (currentMirror == mirror) return;
 		currentMirror = mirror;
@@ -451,12 +640,22 @@ public class HitBoxesScript : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 交换两个判定盒的 Transform（左右镜像用）。
+	/// </summary>
+	/// <param name="hb1">判定盒1。</param>
+	/// <param name="hb2">判定盒2。</param>
 	private void invertTransform(HitBox hb1, HitBox hb2){
 		Transform hb2Transform = hb2.position;
 		hb2.position = hb1.position;
 		hb1.position = hb2Transform;
 	}
 	
+	/// <summary>
+	/// 在子物体中查找指定名称的 Transform（支持多种命名前缀：mixamorig:/角色名:/无前缀）。
+	/// </summary>
+	/// <param name="searchString">骨骼名称。</param>
+	/// <returns>找到的 Transform；未找到返回 null。</returns>
 	public Transform FindTransform(string searchString){
 		Transform[] transformChildren = GetComponentsInChildren<Transform>();
 		Transform found;
@@ -470,6 +669,10 @@ public class HitBoxesScript : MonoBehaviour {
 	}
 
 	
+	/// <summary>
+	/// 获取角色渲染器的包围盒。
+	/// </summary>
+	/// <returns>渲染器边界 Rect（无渲染器返回空 Rect）。</returns>
 	public Rect GetBounds(){
 		if (characterRenderer != null){
 			return new Rect(characterRenderer.bounds.min.x, 
@@ -483,10 +686,18 @@ public class HitBoxesScript : MonoBehaviour {
 		return new Rect();
 	}
 	
+	/// <summary>
+	/// 更新需要跟随渲染边界的受击盒的渲染边界数据。
+	/// </summary>
+	/// <param name="hurtBoxes">受击盒列表。</param>
 	public void UpdateBounds(HurtBox[] hurtBoxes){
 		foreach(HurtBox hurtBox in hurtBoxes) if (hurtBox.followXBounds || hurtBox.followYBounds) hurtBox.rendererBounds = GetBounds();
 	}
 
+	/// <summary>
+	/// 按动画帧更新判定盒映射位置：使用动画映射数据（含镜像处理）或实时从 Transform 计算。
+	/// </summary>
+	/// <param name="frame">当前动画帧。</param>
     public void UpdateMap(int frame)
     {
         if (controlsScript == null) return;
@@ -531,6 +742,9 @@ public class HitBoxesScript : MonoBehaviour {
         }
     }
 
+	/// <summary>
+	/// 更新角色渲染器引用（当有判定盒需要跟随渲染边界时）。
+	/// </summary>
 	public void UpdateRenderer(){
 		bool confirmUpdate = false;
 		foreach(HitBox hitBox in hitBoxes){
@@ -564,6 +778,13 @@ public class HitBoxesScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Gizmos 辅助：绘制矩形边框。
+	/// </summary>
+	/// <param name="topLeft">左上角。</param>
+	/// <param name="bottomLeft">左下角。</param>
+	/// <param name="bottomRight">右下角。</param>
+	/// <param name="topRight">右上角。</param>
 	private void GizmosDrawRectangle(Vector3 topLeft, Vector3 bottomLeft, Vector3 bottomRight, Vector3 topRight){
 		Gizmos.DrawLine(topLeft, bottomLeft);
 		Gizmos.DrawLine(bottomLeft, bottomRight);
@@ -571,6 +792,10 @@ public class HitBoxesScript : MonoBehaviour {
 		Gizmos.DrawLine(topRight, topLeft);
 	}
 
+	/// <summary>
+	/// 编辑器 Gizmos 可视化：绘制攻击判定盒（HitBox）、受击判定盒（HurtBox）与可格挡区域（BlockArea）的形状。
+	/// <para>颜色约定：命中=红、已命中=洋红、身体碰撞体=黄、无碰撞=白、投技=粉、受击盒=青、格挡区域=蓝。</para>
+	/// </summary>
 	void OnDrawGizmos() {
 		// HITBOXES
 		if (hitBoxes == null) return;

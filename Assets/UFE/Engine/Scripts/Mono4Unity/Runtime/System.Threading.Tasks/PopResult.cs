@@ -39,9 +39,15 @@ namespace System.Threading.Tasks
 #if INSIDE_MONO_PARALLEL
 	public
 #endif
+	/// <summary>
+	/// 弹出结果（PopResult）：双端队列弹出操作的返回值。
+	/// </summary>
 	enum PopResult	{
+		/// <summary>弹出成功。</summary>
 		Succeed,
+		/// <summary>队列为空。</summary>
 		Empty,
+		/// <summary>操作被中止。</summary>
 		Abort
 	}
 }

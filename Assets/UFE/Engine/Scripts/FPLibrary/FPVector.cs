@@ -23,8 +23,15 @@ using UnityEngine;
 namespace FPLibrary
 {
     /// <summary>
+    /// 定点三维向量（FPVector）。
+    /// <para>用途：以三个 Fix64 分量（x/y/z）表示三维向量，实现定点数的加减乘除、点积/叉积、长度、</para>
+    /// <para>归一化、插值、距离等运算，保证网络对战的确定性。</para>
+    /// </summary>
+
+    /// <summary>
     /// A vector structure.
     /// </summary>
+    /// <summary>定点三维向量结构体。</summary>
     [Serializable]
     public struct FPVector
     {
@@ -103,6 +110,11 @@ namespace FPLibrary
         }
         #endregion
 
+		/// <summary>
+		/// 返回每个分量取绝对值后的新向量。
+		/// </summary>
+		/// <param name="other">源向量。</param>
+		/// <returns>分量绝对值向量。</returns>
         public static FPVector Abs(FPVector other) {
             return new FPVector(Fix64.Abs(other.x), Fix64.Abs(other.y), Fix64.Abs(other.z));
         }
@@ -111,6 +123,8 @@ namespace FPLibrary
         /// Gets the squared length of the vector.
         /// </summary>
         /// <returns>Returns the squared length of the vector.</returns>
+        /// <summary>向量的长度平方。</summary>
+        /// <returns>长度平方值。</returns>
         public Fix64 sqrMagnitude {
             get { 
                 return (((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
@@ -121,6 +135,8 @@ namespace FPLibrary
         /// Gets the length of the vector.
         /// </summary>
         /// <returns>Returns the length of the vector.</returns>
+        /// <summary>向量的长度（模长）。</summary>
+        /// <returns>长度值。</returns>
         public Fix64 magnitude {
             get {
                 Fix64 num = ((this.x * this.x) + (this.y * this.y)) + (this.z * this.z);
@@ -128,6 +144,12 @@ namespace FPLibrary
             }
         }
 
+		/// <summary>
+		/// 将向量归一化后按指定最大长度缩放（限制向量长度）。
+		/// </summary>
+		/// <param name="vector">目标向量。</param>
+		/// <param name="maxLength">最大长度。</param>
+		/// <returns>长度受限的向量。</returns>
         public static FPVector ClampMagnitude(FPVector vector, Fix64 maxLength) {
             return Normalize(vector) * maxLength;
         }
@@ -136,6 +158,8 @@ namespace FPLibrary
         /// Gets a normalized version of the vector.
         /// </summary>
         /// <returns>Returns a normalized version of the vector.</returns>
+        /// <summary>获取归一化向量（单位向量）。</summary>
+        /// <returns>归一化后的向量。</returns>
         public FPVector normalized {
             get {
                 FPVector result = new FPVector(this.x, this.y, this.z);
@@ -151,6 +175,10 @@ namespace FPLibrary
         /// <param name="x">The X component of the vector.</param>
         /// <param name="y">The Y component of the vector.</param>
         /// <param name="z">The Z component of the vector.</param>
+        /// <summary>构造函数（整型分量）。</summary>
+        /// <param name="x">X 分量。</param>
+        /// <param name="y">Y 分量。</param>
+        /// <param name="z">Z 分量。</param>
 
         public FPVector(int x,int y,int z)
 		{
@@ -159,6 +187,12 @@ namespace FPLibrary
 			this.z = (Fix64)z;
 		}
 
+		/// <summary>
+		/// 构造函数（定点数分量）。
+		/// </summary>
+		/// <param name="x">X 分量。</param>
+		/// <param name="y">Y 分量。</param>
+		/// <param name="z">Z 分量。</param>
 		public FPVector(Fix64 x, Fix64 y, Fix64 z)
         {
             this.x = x;
@@ -169,6 +203,8 @@ namespace FPLibrary
         /// <summary>
         /// Multiplies each component of the vector by the same components of the provided vector.
         /// </summary>
+        /// <summary>将向量各分量与另一向量对应分量相乘（分量缩放）。</summary>
+        /// <param name="other">缩放向量。</param>
         public void Scale(FPVector other) {
             this.x = x * other.x;
             this.y = y * other.y;
@@ -181,11 +217,17 @@ namespace FPLibrary
         /// <param name="x">The X component of the vector.</param>
         /// <param name="y">The Y component of the vector.</param>
         /// <param name="z">The Z component of the vector.</param>
+        /// <summary>
+        /// 设置向量各分量。
+        /// </summary>
+        /// <param name="x">新 X 分量。</param>
+        /// <param name="y">新 Y 分量。</param>
+        /// <param name="z">新 Z 分量。</param>
         public void Set(Fix64 x, Fix64 y, Fix64 z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+        	this.x = x;
+        	this.y = y;
+        	this.z = z;
         }
 
         /// <summary>
@@ -199,6 +241,13 @@ namespace FPLibrary
             this.z = xyz;
         }
 
+		/// <summary>
+		/// 线性插值：from + (to - from) * percent。
+		/// </summary>
+		/// <param name="from">起点向量。</param>
+		/// <param name="to">终点向量。</param>
+		/// <param name="percent">插值参数（0~1）。</param>
+		/// <returns>插值结果向量。</returns>
 		public static FPVector Lerp(FPVector from, FPVector to, Fix64 percent) {
 			return from + (to - from) * percent;
 		}
@@ -278,6 +327,10 @@ namespace FPLibrary
         /// <returns>A vector with the minimum x,y and z values of both vectors.</returns>
         #region public static JVector Min(JVector value1, JVector value2)
 
+        /// <summary>取两个向量各分量较小值组成的新向量。</summary>
+        /// <param name="value1">向量1。</param>
+        /// <param name="value2">向量2。</param>
+        /// <returns>分量最小值向量。</returns>
         public static FPVector Min(FPVector value1, FPVector value2)
         {
             FPVector result;
@@ -291,6 +344,10 @@ namespace FPLibrary
         /// <param name="value1">The first value.</param>
         /// <param name="value2">The second value.</param>
         /// <param name="result">A vector with the minimum x,y and z values of both vectors.</param>
+        /// <summary>取两个向量各分量较小值（引用版本）。</summary>
+        /// <param name="value1">向量1。</param>
+        /// <param name="value2">向量2。</param>
+        /// <param name="result">分量最小值向量。</param>
         public static void Min(ref FPVector value1, ref FPVector value2, out FPVector result)
         {
             result.x = (value1.x < value2.x) ? value1.x : value2.x;
@@ -306,6 +363,10 @@ namespace FPLibrary
         /// <param name="value2">The second value.</param>
         /// <returns>A vector with the maximum x,y and z values of both vectors.</returns>
         #region public static JVector Max(JVector value1, JVector value2)
+        /// <summary>取两个向量各分量较大值组成的新向量。</summary>
+        /// <param name="value1">向量1。</param>
+        /// <param name="value2">向量2。</param>
+        /// <returns>分量最大值向量。</returns>
         public static FPVector Max(FPVector value1, FPVector value2)
         {
             FPVector result;
@@ -313,6 +374,12 @@ namespace FPLibrary
             return result;
         }
 		
+		/// <summary>
+		/// 计算两个三维向量的欧氏距离。
+		/// </summary>
+		/// <param name="v1">向量1。</param>
+		/// <param name="v2">向量2。</param>
+		/// <returns>距离值。</returns>
 		public static Fix64 Distance(FPVector v1, FPVector v2) {
 			return Fix64.Sqrt ((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
 		}
@@ -335,6 +402,7 @@ namespace FPLibrary
         /// Sets the length of the vector to zero.
         /// </summary>
         #region public void MakeZero()
+        /// <summary>将向量各分量置零。</summary>
         public void MakeZero()
         {
             x = Fix64.Zero;
@@ -347,6 +415,8 @@ namespace FPLibrary
         /// Checks if the length of the vector is zero.
         /// </summary>
         /// <returns>Returns true if the vector is zero, otherwise false.</returns>
+        /// <summary>判断向量长度是否为零。</summary>
+        /// <returns>为零返回 true。</returns>
         #region public bool IsZero()
         public bool IsZero()
         {
@@ -357,6 +427,8 @@ namespace FPLibrary
         /// Checks if the length of the vector is nearly zero.
         /// </summary>
         /// <returns>Returns true if the vector is nearly zero, otherwise false.</returns>
+        /// <summary>判断向量长度是否近似为零。</summary>
+        /// <returns>近似为零返回 true。</returns>
         public bool IsNearlyZero()
         {
             return (this.sqrMagnitude < ZeroEpsilonSq);
@@ -369,6 +441,10 @@ namespace FPLibrary
         /// <param name="position">The vector to transform.</param>
         /// <param name="matrix">The transform matrix.</param>
         /// <returns>The transformed vector.</returns>
+        /// <summary>用矩阵变换向量（返回新向量）。</summary>
+        /// <param name="position">待变换向量。</param>
+        /// <param name="matrix">变换矩阵。</param>
+        /// <returns>变换后的向量。</returns>
         #region public static JVector Transform(JVector position, JMatrix matrix)
         public static FPVector Transform(FPVector position, FPMatrix matrix)
         {
@@ -383,6 +459,10 @@ namespace FPLibrary
         /// <param name="position">The vector to transform.</param>
         /// <param name="matrix">The transform matrix.</param>
         /// <param name="result">The transformed vector.</param>
+        /// <summary>用矩阵变换向量（引用版本，结果写入 result）。</summary>
+        /// <param name="position">待变换向量。</param>
+        /// <param name="matrix">变换矩阵。</param>
+        /// <param name="result">变换后的向量。</param>
         public static void Transform(ref FPVector position, ref FPMatrix matrix, out FPVector result)
         {
             Fix64 num0 = ((position.x * matrix.M11) + (position.y * matrix.M21)) + (position.z * matrix.M31);
@@ -400,6 +480,10 @@ namespace FPLibrary
         /// <param name="position">The vector to transform.</param>
         /// <param name="matrix">The transform matrix.</param>
         /// <param name="result">The transformed vector.</param>
+        /// <summary>用矩阵的转置变换向量（引用版本）。</summary>
+        /// <param name="position">待变换向量。</param>
+        /// <param name="matrix">变换矩阵。</param>
+        /// <param name="result">变换后的向量。</param>
         public static void TransposedTransform(ref FPVector position, ref FPMatrix matrix, out FPVector result)
         {
             Fix64 num0 = ((position.x * matrix.M11) + (position.y * matrix.M12)) + (position.z * matrix.M13);
@@ -419,6 +503,10 @@ namespace FPLibrary
         /// <param name="vector2">The second vector.</param>
         /// <returns>Returns the dot product of both vectors.</returns>
         #region public static FP Dot(JVector vector1, JVector vector2)
+        /// <summary>计算两向量点积（返回新值）。</summary>
+        /// <param name="vector1">向量1。</param>
+        /// <param name="vector2">向量2。</param>
+        /// <returns>点积值。</returns>
         public static Fix64 Dot(FPVector vector1, FPVector vector2)
         {
             return FPVector.Dot(ref vector1, ref vector2);
@@ -431,6 +519,10 @@ namespace FPLibrary
         /// <param name="vector1">The first vector.</param>
         /// <param name="vector2">The second vector.</param>
         /// <returns>Returns the dot product of both vectors.</returns>
+        /// <summary>计算两向量点积（引用版本）。</summary>
+        /// <param name="vector1">向量1。</param>
+        /// <param name="vector2">向量2。</param>
+        /// <returns>点积值。</returns>
         public static Fix64 Dot(ref FPVector vector1, ref FPVector vector2)
         {
             return ((vector1.x * vector2.x) + (vector1.y * vector2.y)) + (vector1.z * vector2.z);
@@ -443,6 +535,10 @@ namespace FPLibrary
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <returns>The sum of both vectors.</returns>
+        /// <summary>向量相加（返回新向量）。</summary>
+        /// <param name="value1">向量1。</param>
+        /// <param name="value2">向量2。</param>
+        /// <returns>和向量。</returns>
         #region public static void Add(JVector value1, JVector value2)
         public static FPVector Add(FPVector value1, FPVector value2)
         {
@@ -457,6 +553,10 @@ namespace FPLibrary
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <param name="result">The sum of both vectors.</param>
+        /// <summary>向量相加（引用版本，结果写入 result）。</summary>
+        /// <param name="value1">向量1。</param>
+        /// <param name="value2">向量2。</param>
+        /// <param name="result">和向量。</param>
         public static void Add(ref FPVector value1, ref FPVector value2, out FPVector result)
         {
             Fix64 num0 = value1.x + value2.x;
@@ -545,6 +645,10 @@ namespace FPLibrary
         /// <param name="vector1">The first vector.</param>
         /// <param name="vector2">The second vector.</param>
         /// <param name="result">The cross product of both vectors.</param>
+        /// <summary>计算两向量叉积（引用版本，结果写入 result）。</summary>
+        /// <param name="vector1">向量1。</param>
+        /// <param name="vector2">向量2。</param>
+        /// <param name="result">叉积向量。</param>
         public static void Cross(ref FPVector vector1, ref FPVector vector2, out FPVector result)
         {
             Fix64 num3 = (vector1.y * vector2.z) - (vector1.z * vector2.y);
@@ -707,6 +811,7 @@ namespace FPLibrary
         /// <param name="value2">The second vector.</param>
         /// <returns>Returns the cross product of both.</returns>
         #region public static JVector operator %(JVector value1, JVector value2)
+        /// <summary>叉积运算符：value1 % value2。</summary>
         public static FPVector operator %(FPVector value1, FPVector value2)
         {
             FPVector result; FPVector.Cross(ref value1, ref value2, out result);
@@ -720,6 +825,7 @@ namespace FPLibrary
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <returns>Returns the dot product of both.</returns>
+        /// <summary>点积运算符：value1 * value2。</summary>
         #region public static FP operator *(JVector value1, JVector value2)
         public static Fix64 operator *(FPVector value1, FPVector value2)
         {
@@ -733,6 +839,7 @@ namespace FPLibrary
         /// <param name="value1">The vector to scale.</param>
         /// <param name="value2">The scale factor.</param>
         /// <returns>Returns the scaled vector.</returns>
+        /// <summary>向量乘以标量运算符。</summary>
         #region public static JVector operator *(JVector value1, FP value2)
         public static FPVector operator *(FPVector value1, Fix64 value2)
         {
@@ -748,6 +855,7 @@ namespace FPLibrary
         /// <param name="value2">The vector to scale.</param>
         /// <param name="value1">The scale factor.</param>
         /// <returns>Returns the scaled vector.</returns>
+        /// <summary>标量乘以向量运算符。</summary>
         #region public static JVector operator *(FP value1, JVector value2)
         public static FPVector operator *(Fix64 value1, FPVector value2)
         {
@@ -763,6 +871,7 @@ namespace FPLibrary
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <returns>The difference of both vectors.</returns>
+        /// <summary>向量减法运算符。</summary>
         #region public static JVector operator -(JVector value1, JVector value2)
         public static FPVector operator -(FPVector value1, FPVector value2)
         {
@@ -777,6 +886,7 @@ namespace FPLibrary
         /// <param name="value1">The first vector.</param>
         /// <param name="value2">The second vector.</param>
         /// <returns>The sum of both vectors.</returns>
+        /// <summary>向量加法运算符。</summary>
         #region public static JVector operator +(JVector value1, JVector value2)
         public static FPVector operator +(FPVector value1, FPVector value2)
         {
@@ -791,30 +901,56 @@ namespace FPLibrary
         /// <param name="value1">The vector to divide.</param>
         /// <param name="scaleFactor">The scale factor.</param>
         /// <returns>Returns the scaled vector.</returns>
+		/// <summary>
+		/// 向量除以标量运算符。
+		/// </summary>
         public static FPVector operator /(FPVector value1, Fix64 value2) {
             FPVector result;
             FPVector.Divide(ref value1, value2, out result);
             return result;
         }
 
+		/// <summary>
+		/// 计算两向量夹角（度）。
+		/// </summary>
+		/// <param name="a">向量 a。</param>
+		/// <param name="b">向量 b。</param>
+		/// <returns>夹角角度值。</returns>
         public static Fix64 Angle(FPVector a, FPVector b) {
             return Fix64.Acos(a.normalized * b.normalized) * Fix64.Rad2Deg;
         }
 
+		/// <summary>
+		/// 转换为二维定点向量（丢弃 Z 分量）。
+		/// </summary>
+		/// <returns>二维定点向量。</returns>
         public FPVector2 ToFPVector2() {
             return new FPVector2(this.x, this.y);
         }
 
+		/// <summary>
+		/// 从 Unity Vector3 转换为定点向量。
+		/// </summary>
+		/// <param name="vector">Unity 向量。</param>
+		/// <returns>定点向量。</returns>
         public static FPVector ToFPVector(Vector3 vector)
         {
             return new FPVector((Fix64)vector.x, (Fix64)vector.y, (Fix64)vector.z);
         }
         
+		/// <summary>
+		/// 转换为 Unity Vector3。
+		/// </summary>
+		/// <returns>Unity 向量。</returns>
         public Vector3 ToVector()
         {
             return new Vector3((float)this.x, (float)this.y, (float)this.z);
         }
 
+		/// <summary>
+		/// 转换为 Unity Vector2（丢弃 Z 分量）。
+		/// </summary>
+		/// <returns>Unity 二维向量。</returns>
         public Vector2 ToVector2()
         {
             return new Vector2((float)this.x, (float)this.y);

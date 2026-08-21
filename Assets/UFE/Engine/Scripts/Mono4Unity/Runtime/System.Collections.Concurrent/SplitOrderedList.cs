@@ -30,18 +30,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+/// <summary>
+/// 分裂有序列表（SplitOrderedList&lt;TKey, T&gt;）。
+/// <para>用途：从 Mono 移植的无锁哈希映射底层——采用分裂有序（split-ordered）技术实现</para>
+/// <para>按 ulong 键排序的链表，支持线程安全的按键查找/插入/删除（含逻辑删除标记 Marked）。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
+	/// <summary>
+	/// 分裂有序列表内部类。
+	/// </summary>
 	internal class SplitOrderedList<TKey, T>
 	{
+		/// <summary>
+		/// 链表节点。
+		/// </summary>
 		class Node
 		{
+			/// <summary>逻辑删除标记。</summary>
 			public bool Marked;
+			/// <summary>排序键。</summary>
 			public ulong Key;
+			/// <summary>原键。</summary>
 			public TKey SubKey;
+			/// <summary>节点数据。</summary>
 			public T Data;
+			/// <summary>下一节点。</summary>
 			public Node Next;
 
+			/// <summary>
+			/// 初始化节点（完整键/数据版本）。
+			/// </summary>
+			/// <param name="key">排序键。</param>
+			/// <param name="subKey">原键。</param>
+			/// <param name="data">数据。</param>
+			/// <returns>自身。</returns>
 			public Node Init (ulong key, TKey subKey, T data)
 			{
 				this.Key = key;

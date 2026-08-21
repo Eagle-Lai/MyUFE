@@ -30,14 +30,31 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 
+/// <summary>
+/// 用户范围分区器（UserRangePartitioner / UserLongRangePartitioner）。
+/// <para>用途：从 Mono 移植——将 [start, end) 整数/长整型范围按固定区间大小（rangeSize）动态划分为分区，</para>
+/// <para>供 Parallel.For 等按范围并行迭代使用。</para>
+/// </summary>
 namespace System.Collections.Concurrent.Partitioners
 {
+	/// <summary>
+	/// 整数范围分区器：产出 (范围起始, 范围结束) 元组的可排序分区。
+	/// </summary>
 	internal class UserRangePartitioner : OrderablePartitioner<Tuple<int,  int>>
 	{
+		/// <summary>范围起始。</summary>
 		readonly int start;
+		/// <summary>范围结束（不含）。</summary>
 		readonly int end;
+		/// <summary>每个分区的区间大小。</summary>
 		readonly int rangeSize;
 
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="start">范围起始。</param>
+		/// <param name="end">范围结束（不含）。</param>
+		/// <param name="rangeSize">区间大小。</param>
 		public UserRangePartitioner (int start, int end, int rangeSize) : base (true, true, true)
 		{
 			this.start = start;
@@ -45,6 +62,11 @@ namespace System.Collections.Concurrent.Partitioners
 			this.rangeSize = rangeSize;
 		}
 
+		/// <summary>
+		/// 生成指定数量的分区枚举器（原子递增分配下一个区间）。
+		/// </summary>
+		/// <param name="partitionCount">分区数量。</param>
+		/// <returns>分区枚举器列表。</returns>
 		public override IList<IEnumerator<KeyValuePair<long, Tuple<int, int>>>> GetOrderablePartitions (int partitionCount)
 		{
 			if (partitionCount <= 0)
@@ -60,6 +82,11 @@ namespace System.Collections.Concurrent.Partitioners
 			return enumerators;
 		}
 
+		/// <summary>
+		/// 范围枚举器：依次取下一个区间（起始=index*rangeSize+start，结束=min(end, 起始+rangeSize)）。
+		/// </summary>
+		/// <param name="getNextIndex">获取下一个区间索引的委托。</param>
+		/// <returns>分区枚举器。</returns>
 		IEnumerator<KeyValuePair<long, Tuple<int, int>>> GetEnumerator (Func<int> getNextIndex)
 		{
 			while (true) {
@@ -75,12 +102,24 @@ namespace System.Collections.Concurrent.Partitioners
 		}
 	}
 
+	/// <summary>
+	/// 长整型范围分区器：产出 (范围起始, 范围结束) 元组的可排序分区。
+	/// </summary>
 	internal class UserLongRangePartitioner : OrderablePartitioner<Tuple<long,  long>>
 	{
+		/// <summary>范围起始。</summary>
 		readonly long start;
+		/// <summary>范围结束（不含）。</summary>
 		readonly long end;
+		/// <summary>每个分区的区间大小。</summary>
 		readonly long rangeSize;
 
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="start">范围起始。</param>
+		/// <param name="end">范围结束（不含）。</param>
+		/// <param name="rangeSize">区间大小。</param>
 		public UserLongRangePartitioner (long start, long end, long rangeSize) : base (true, true, true)
 		{
 			this.start = start;
@@ -88,6 +127,11 @@ namespace System.Collections.Concurrent.Partitioners
 			this.rangeSize = rangeSize;
 		}
 
+		/// <summary>
+		/// 生成指定数量的分区枚举器。
+		/// </summary>
+		/// <param name="partitionCount">分区数量。</param>
+		/// <returns>分区枚举器列表。</returns>
 		public override IList<IEnumerator<KeyValuePair<long, Tuple<long, long>>>> GetOrderablePartitions (int partitionCount)
 		{
 			if (partitionCount <= 0)
@@ -103,6 +147,11 @@ namespace System.Collections.Concurrent.Partitioners
 			return enumerators;
 		}
 
+		/// <summary>
+		/// 范围枚举器：依次取下一个区间。
+		/// </summary>
+		/// <param name="getNextIndex">获取下一个区间索引的委托。</param>
+		/// <returns>分区枚举器。</returns>
 		IEnumerator<KeyValuePair<long, Tuple<long, long>>> GetEnumerator (Func<long> getNextIndex)
 		{
 			while (true) {

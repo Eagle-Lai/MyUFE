@@ -28,15 +28,27 @@
 
 //#if NET_4_0 || MOBILE
 
+/// <summary>
+/// 任务工厂（泛型）（TaskFactory&lt;TResult&gt;）。
+/// <para>用途：从 Mono 移植——以统一默认选项创建返回 TResult 的 Task 及其延续的工厂。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 泛型任务工厂类。
+	/// </summary>
 	public class TaskFactory<TResult>
 	{
+		/// <summary>默认任务调度器。</summary>
 		readonly TaskScheduler scheduler;
+		/// <summary>默认创建选项。</summary>
 		TaskCreationOptions creationOptions;
+		/// <summary>默认延续选项。</summary>
 		TaskContinuationOptions continuationOptions;
+		/// <summary>默认取消令牌。</summary>
 		CancellationToken cancellationToken;
 
+		/// <summary>父工厂（内部）。</summary>
 		TaskFactory parent;
 
 		public TaskFactory ()

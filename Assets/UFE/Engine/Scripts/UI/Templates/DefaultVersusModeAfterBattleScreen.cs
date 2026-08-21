@@ -1,18 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// 默认对战结算界面（DefaultVersusModeAfterBattleScreen）。
+/// <para>用途：对战结束后的结算界面——提供默认导航系统（取消返回主菜单）与音乐/音效播放。</para>
+/// </summary>
 public class DefaultVersusModeAfterBattleScreen : VersusModeAfterBattleScreen{
 	#region public instance properties
+	/// <summary>加载音效。</summary>
 	public AudioClip onLoadSound;
+	/// <summary>背景音乐。</summary>
 	public AudioClip music;
+	/// <summary>选择音效。</summary>
 	public AudioClip selectSound;
+	/// <summary>取消音效。</summary>
 	public AudioClip cancelSound;
+	/// <summary>移动光标音效。</summary>
 	public AudioClip moveCursorSound;
+	/// <summary>加载时是否停止之前的音效。</summary>
 	public bool stopPreviousSoundEffectsOnLoad = false;
+	/// <summary>延迟播放音乐的时间。</summary>
 	public float delayBeforePlayingMusic = 0.1f;
 	#endregion
 
 	#region public override methods
+	/// <summary>
+	/// 固定帧更新：调用默认导航系统（取消返回主菜单）。
+	/// </summary>
 	public override void DoFixedUpdate(
 		IDictionary<InputReferences, InputEvents> player1PreviousInputs,
 		IDictionary<InputReferences, InputEvents> player1CurrentInputs,
@@ -33,6 +47,9 @@ public class DefaultVersusModeAfterBattleScreen : VersusModeAfterBattleScreen{
 		);
 	}
 
+	/// <summary>
+	/// 屏幕显示时：播放音乐/音效。
+	/// </summary>
 	public override void OnShow (){
 		base.OnShow ();
 		

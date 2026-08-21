@@ -28,7 +28,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+/// <summary>
+/// 集合变更事件委托（CollectionChangeEventHandlerDerived）。
+/// <para>用途：从 Mono 移植——处理集合变更事件的委托签名。</para>
+/// </summary>
 namespace System.ComponentModel
 {
+	/// <summary>
+	/// 集合变更事件委托。
+	/// </summary>
+	/// <param name="sender">事件发送者。</param>
+	/// <param name="e">集合变更事件参数。</param>
 	public delegate void CollectionChangeEventHandlerDerived (object sender, CollectionChangeEventArgsDerived e);
-}	
+}

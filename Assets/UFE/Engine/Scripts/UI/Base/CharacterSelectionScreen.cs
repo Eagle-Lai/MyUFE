@@ -3,20 +3,37 @@ using System;
 using System.Reflection;
 using UFE3D;
 
+/// <summary>
+/// 角色选择界面（CharacterSelectionScreen）。
+/// <para>用途：选人界面的基类——维护双方悬停索引与可选角色列表，处理角色的选择/取消选择，</para>
+/// <para>支持本地即时选择与网络对战下的帧同步选择（通过 FluxCapacitor.RequestOptionSelection 同步），</para>
+/// <para>双人均选好后按游戏模式进入场地选择或故事开场。</para>
+/// </summary>
 public class CharacterSelectionScreen : UFEScreen {
 	#region public instance properties
+	/// <summary>选择角色时播放的音效。</summary>
 	public AudioClip selectSound;
+	/// <summary>取消选择时播放的音效。</summary>
 	public AudioClip cancelSound;
 	#endregion
 
 	#region protected instance fields
+	/// <summary>玩家1当前悬停的角色索引。</summary>
 	protected int p1HoverIndex = 0;
+	/// <summary>玩家2当前悬停的角色索引。</summary>
 	protected int p2HoverIndex = 0;
+	/// <summary>界面是否正在关闭。</summary>
 	protected bool closing = false;
+	/// <summary>当前模式可选角色列表。</summary>
 	protected UFE3D.CharacterInfo[] selectableCharacters = new UFE3D.CharacterInfo[0];
 	#endregion
 
 	#region public instance methods
+	/// <summary>
+	/// 获取指定玩家的悬停角色索引。
+	/// </summary>
+	/// <param name="player">玩家编号（1 或 2）。</param>
+	/// <returns>悬停索引。</returns>
 	public virtual int GetHoverIndex(int player){
 		if (player == 1){
 			return this.p1HoverIndex;
@@ -27,6 +44,9 @@ public class CharacterSelectionScreen : UFEScreen {
 		throw new ArgumentOutOfRangeException("player");
 	}
 
+	/// <summary>
+	/// 返回上一个界面（对战→对战模式界面，网络→网络界面，其他→主菜单）。
+	/// </summary>
 	public virtual void GoToPreviousScreen(){
 		this.closing = true;
 
@@ -39,6 +59,11 @@ public class CharacterSelectionScreen : UFEScreen {
 		}
 	}
 
+	/// <summary>
+	/// 角色选择确认回调：处理选中（设置角色、播放音效、双方选齐后进入下一界面）与取消（取消选择/返回上一界面）。
+	/// </summary>
+	/// <param name="characterIndex">角色索引。</param>
+	/// <param name="player">操作玩家。</param>
 	public virtual void OnCharacterSelectionAllowed(int characterIndex, int player){
 		// If we haven't started loading a different screen....
 		if (!this.closing){
@@ -98,6 +123,11 @@ public class CharacterSelectionScreen : UFEScreen {
 		}
 	}
 
+	/// <summary>
+	/// 设置指定玩家的悬停角色索引。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
+	/// <param name="characterIndex">角色索引。</param>
 	public virtual void SetHoverIndex(int player, int characterIndex){
 		if (!this.closing){
 			if (characterIndex >= 0 && characterIndex <= this.GetMaxCharacterIndex()){
@@ -110,6 +140,9 @@ public class CharacterSelectionScreen : UFEScreen {
 		}
 	}
 
+	/// <summary>
+	/// 尝试取消选择角色（自动选择当前应取消的玩家）。
+	/// </summary>
 	public void TryDeselectCharacter(){
 		if (!UFE.isConnected){
 			// If it's a local game, update the corresponding character immediately...
@@ -125,10 +158,17 @@ public class CharacterSelectionScreen : UFEScreen {
 		}
 	}
 
+	/// <summary>
+	/// 尝试取消指定玩家的角色选择。
+	/// </summary>
+	/// <param name="player">玩家编号。</param>
 	public void TryDeselectCharacter(int player){
 		this.TrySelectCharacter(-1, player);
 	}
 
+	/// <summary>
+	/// 尝试选择当前悬停的角色（本地/网络按玩家分配）。
+	/// </summary>
 	public void TrySelectCharacter(){
 		// If it's a local game, update the corresponding character immediately...
 		if (!UFE.isConnected){
@@ -150,6 +190,10 @@ public class CharacterSelectionScreen : UFEScreen {
 		}
 	}
 
+	/// <summary>
+	/// 尝试选择指定角色（自动分配到未选角色的玩家）。
+	/// </summary>
+	/// <param name="characterIndex">角色索引。</param>
 	public void TrySelectCharacter(int characterIndex){
 		if (!UFE.isConnected){
 			// If it's a local game, update the corresponding character immediately...
@@ -165,6 +209,11 @@ public class CharacterSelectionScreen : UFEScreen {
 		}
 	}
 	
+	/// <summary>
+	/// 尝试选择角色（本地立即生效；网络对战仅本机玩家通过帧同步请求同步）。
+	/// </summary>
+	/// <param name="characterIndex">角色索引。</param>
+	/// <param name="player">操作玩家。</param>
 	public virtual void TrySelectCharacter(int characterIndex, int player){
 		// Check if he was playing online or not...
 		if (!UFE.isConnected){
@@ -185,6 +234,9 @@ public class CharacterSelectionScreen : UFEScreen {
 	#endregion
 
 	#region public override methods
+	/// <summary>
+	/// 界面显示时：按游戏模式加载可选角色列表并清空双方已选角色。
+	/// </summary>
 	public override void OnShow (){
 		base.OnShow();
 
@@ -202,26 +254,44 @@ public class CharacterSelectionScreen : UFEScreen {
 		this.SetHoverIndex(2, this.GetMaxCharacterIndex());
 	}
 
+	/// <summary>
+	/// 处理菜单选项选择（确认角色）。
+	/// </summary>
+	/// <param name="option">角色索引。</param>
+	/// <param name="player">操作玩家。</param>
 	public override void SelectOption (int option, int player){
 		this.OnCharacterSelectionAllowed(option, player);
 	}
 	#endregion
 
 	#region protected instance methods
+	/// <summary>
+	/// 获取最大角色索引（列表末尾）。
+	/// </summary>
+	/// <returns>最大索引。</returns>
 	protected virtual int GetMaxCharacterIndex(){
 		return this.selectableCharacters.Length - 1;
 	}
 
+	/// <summary>
+	/// 返回主菜单（标记关闭）。
+	/// </summary>
 	protected void GoToMainMenuScreen(){
 		this.closing = true;
 		UFE.StartMainMenuScreen();
 	}
 
+	/// <summary>
+	/// 进入网络游戏界面（标记关闭）。
+	/// </summary>
 	protected void GoToNetworkGameScreen(){
 		this.closing = true;
 		UFE.StartNetworkGameScreen();
 	}
 
+	/// <summary>
+	/// 进入下一界面：故事模式→开场演出，其他→场地选择（延迟0.8秒）。
+	/// </summary>
 	protected virtual void GoToNextScreen(){
 		this.closing = true;
 
@@ -232,16 +302,25 @@ public class CharacterSelectionScreen : UFEScreen {
 		}
 	}
 
+	/// <summary>
+	/// 进入场地选择界面（标记关闭）。
+	/// </summary>
 	protected void GoToStageSelectionScreen(){
 		this.closing = true;
 		UFE.StartStageSelectionScreen();
 	}
 	
+	/// <summary>
+	/// 进入对战模式界面（标记关闭）。
+	/// </summary>
 	protected void GoToVersusModeScreen(){
 		this.closing = true;
 		UFE.StartVersusModeScreen();
 	}
 
+	/// <summary>
+	/// 进入故事模式开场演出（标记关闭）。
+	/// </summary>
 	protected void StartStoryMode(){
 		this.closing = true;
 		UFE.StartStoryModeOpeningScreen();

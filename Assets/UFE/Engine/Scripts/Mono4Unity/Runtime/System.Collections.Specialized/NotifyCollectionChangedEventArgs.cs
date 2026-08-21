@@ -27,11 +27,24 @@
 //
 using System.Collections.Generic;
 
+/// <summary>
+/// 集合变更事件参数（NotifyCollectionChangedEventArgs）。
+/// <para>用途：从 Mono 移植——携带集合变更的详细信息（动作、新增/移除元素与索引），</para>
+/// <para>供 CollectionChanged 事件处理器使用。</para>
+/// </summary>
 namespace System.Collections.Specialized {
 
+	/// <summary>
+	/// 集合变更事件参数类（sealed）。
+	/// </summary>
 	public sealed class NotifyCollectionChangedEventArgs : EventArgs {
+		/// <summary>新增元素列表。</summary>
 		List<object> new_items, old_items;
 
+		/// <summary>
+		/// 构造函数（Reset 动作）。
+		/// </summary>
+		/// <param name="action">变更动作（必须为 Reset）。</param>
 		public NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction action)
 		{
 			if (action != NotifyCollectionChangedAction.Reset)
@@ -42,6 +55,12 @@ namespace System.Collections.Specialized {
 			OldStartingIndex = -1;
 		}
 		
+		/// <summary>
+		/// 构造函数（Add/Remove 动作，单个元素）。
+		/// </summary>
+		/// <param name="action">变更动作。</param>
+		/// <param name="changedItem">变更的元素。</param>
+		/// <param name="index">元素索引。</param>
 		public NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction action, object changedItem, int index)
 		{
 			switch (action) {
@@ -64,6 +83,13 @@ namespace System.Collections.Specialized {
 			Action = action;
 		}
 
+		/// <summary>
+		/// 构造函数（Replace 动作，新/旧元素）。
+		/// </summary>
+		/// <param name="action">变更动作（必须为 Replace）。</param>
+		/// <param name="newItem">新元素。</param>
+		/// <param name="oldItem">旧元素。</param>
+		/// <param name="index">元素索引。</param>
 		public NotifyCollectionChangedEventArgs (NotifyCollectionChangedAction action, object newItem, object oldItem, int index)
 		{
 			if (action != NotifyCollectionChangedAction.Replace)
@@ -81,17 +107,22 @@ namespace System.Collections.Specialized {
 			OldStartingIndex = -1;
 		}
 
+		/// <summary>变更动作。</summary>
 		public NotifyCollectionChangedAction Action { get; private set; }
 
+		/// <summary>新增元素列表。</summary>
 		public IList NewItems {
 			get { return new_items; }
 		}
 
+		/// <summary>移除的元素列表。</summary>
 		public IList OldItems {
 			get { return old_items; }
 		}
 
+		/// <summary>新增元素的起始索引。</summary>
 		public int NewStartingIndex { get; private set; }
+		/// <summary>移除元素的起始索引。</summary>
 		public int OldStartingIndex { get; private set; }
 	}
 }

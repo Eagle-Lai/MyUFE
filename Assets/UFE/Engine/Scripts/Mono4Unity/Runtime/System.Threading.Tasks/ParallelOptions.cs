@@ -28,11 +28,19 @@
 using System;
 using System.Threading;
 
+/// <summary>
+/// 并行选项（ParallelOptions）。
+/// <para>用途：从 Mono 移植——配置 Parallel 循环/调用的选项（取消令牌、最大并行度、任务调度器）。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
 
+	/// <summary>
+	/// 并行选项类。
+	/// </summary>
 	public class ParallelOptions
 	{
+		/// <summary>默认并行选项（内部单例）。</summary>
 		internal static readonly ParallelOptions Default = new ParallelOptions ();
 
 		public ParallelOptions()

@@ -30,22 +30,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+/// <summary>
+/// 并发栈（ConcurrentStack&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的线程安全 LIFO 栈——基于无锁链表（Interlocked CAS）实现，</para>
+/// <para>支持 Push/TryPop/TryPeek 及批量 PushRange/TryPopRange。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
 	
+	/// <summary>
+	/// 并发栈：线程安全的后进先出栈。
+	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("Count = {Count}")]
 	[System.Diagnostics.DebuggerTypeProxy (typeof (CollectionDebuggerView<>))]
 	public class ConcurrentStack<T> : IProducerConsumerCollection<T>, IEnumerable<T>,
 	                                  ICollection, IEnumerable
 	{
+		/// <summary>
+		/// 链表节点。
+		/// </summary>
 		class Node
 		{
+			/// <summary>节点值。</summary>
 			public T Value = default (T);
+			/// <summary>下一节点。</summary>
 			public Node Next = null;
 		}
 
+		/// <summary>栈顶节点。</summary>
 		Node head = null;
 
+		/// <summary>元素数量。</summary>
 		int count;
 
 		public ConcurrentStack ()

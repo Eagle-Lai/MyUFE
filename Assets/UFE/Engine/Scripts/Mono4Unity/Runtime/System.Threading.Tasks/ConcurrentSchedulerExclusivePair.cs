@@ -36,8 +36,16 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
+/// <summary>
+/// 并发/独占调度器对（ConcurrentExclusiveSchedulerPair）。
+/// <para>用途：从 Mono 移植——提供一对调度器（并发调度器 + 独占调度器），</para>
+/// <para>独占调度器保证任务串行执行，用于读写锁模式的并行任务分组。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 并发/独占调度器对类。
+	/// </summary>
 	[DebuggerDisplay ("Concurrent={ConcurrentTaskCount}, Exclusive={ExclusiveTaskCount}")]
 	[DebuggerTypeProxy (typeof (SchedulerDebuggerView))]
 	public class ConcurrentExclusiveSchedulerPair

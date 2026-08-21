@@ -29,12 +29,26 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 分区器工厂（Partitioner）。
+/// <para>用途：从 Mono 移植——为 IEnumerable/List/数组/范围创建分区器，</para>
+/// <para>供 Parallel.ForEach 等并行循环将数据划分为可并行处理的分区。</para>
+/// </summary>
 namespace System.Collections.Concurrent
 {
 	using Partitioners;
 
+	/// <summary>
+	/// 分区器工厂：按源类型创建合适的分区器。
+	/// </summary>
 	public static class Partitioner
 	{
+		/// <summary>
+		/// 为可枚举源创建可排序分区器（列表/数组走索引分区，其他走枚举分区）。
+		/// </summary>
+		/// <typeparam name="TSource">元素类型。</typeparam>
+		/// <param name="source">数据源。</param>
+		/// <returns>可排序分区器。</returns>
 		public static OrderablePartitioner<TSource> Create<TSource> (IEnumerable<TSource> source)
 		{
 			IList<TSource> tempIList = source as IList<TSource>;

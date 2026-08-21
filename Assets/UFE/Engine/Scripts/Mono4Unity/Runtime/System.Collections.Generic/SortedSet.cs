@@ -39,22 +39,42 @@ using System.Diagnostics;
 
 //#if NET_4_0
 
+/// <summary>
+/// 有序集合（SortedSet&lt;T&gt;）。
+/// <para>用途：从 Mono 移植的自动排序集合——底层基于红黑树（RBTree）实现，</para>
+/// <para>保持元素有序，提供集合运算（并/交/差/对称差）与子集/超集判断。</para>
+/// </summary>
 namespace System.Collections.Generic {
 
+	/// <summary>
+	/// 有序集合：元素按比较器自动排序去重。
+	/// </summary>
 	[Serializable]
 	[DebuggerDisplay ("Count={Count}")]
 	[DebuggerTypeProxy (typeof (CollectionDebuggerView))]
 	public class SortedSet<T> : ISet<T>, ICollection/*, ISerializable, IDeserializationCallback*/
 	{
+		/// <summary>
+		/// 集合节点：红黑树节点包装元素。
+		/// </summary>
 		class Node : RBTree.Node {
 
+			/// <summary>节点元素。</summary>
 			public T item;
 
+			/// <summary>
+			/// 构造函数。
+			/// </summary>
+			/// <param name="item">元素。</param>
 			public Node (T item)
 			{
 				this.item = item;
 			}
 
+			/// <summary>
+			/// 交换节点值（红黑树重排用）。
+			/// </summary>
+			/// <param name="other">另一节点。</param>
 			public override void SwapValue (RBTree.Node other)
 			{
 				var o = (Node) other;

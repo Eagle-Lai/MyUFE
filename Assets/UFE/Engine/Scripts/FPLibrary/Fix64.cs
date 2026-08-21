@@ -43,60 +43,107 @@ using UnityEngine;
 namespace FPLibrary {
 
     /// <summary>
+    /// 定点数库（FPLibrary）。
+    /// <para>用途：本命名空间提供 32.32 位定点数（Fix64）及其数学运算实现，代替浮点数用于网络对战，</para>
+    /// <para>保证所有客户端在相同输入下产生完全一致的计算结果（帧同步确定性），避免浮点误差导致的反同步。</para>
+    /// <para>包含 Fix64/FPMath/FPMatrix/FPQuaternion/FPRandom/FPRect/FPTransform/FPVector/FPVector2 等类型。</para>
+    /// <para>本文件源自 libfixmath 移植（Apache License 2.0），三角函数使用查找表（LUT）实现。</para>
+    /// </summary>
+
+    /// <summary>
     /// Represents a Q31.32 fixed-point number.
     /// </summary>
+    /// <summary>32.32 位定点数（Fix64）：以 long 存储的 Q31.32 格式定点数，整数部分 31 位、小数部分 32 位。</summary>
     [Serializable]
     public partial struct Fix64 : IEquatable<Fix64>, IComparable<Fix64> {
 
         [SerializeField]
+        /// <summary>序列化的原始 long 值（底层存储，Unity 可序列化）。</summary>
         public long _serializedValue;
 
+		/// <summary>最大值。</summary>
 		public const long MAX_VALUE = long.MaxValue;
+		/// <summary>最小值。</summary>
 		public const long MIN_VALUE = long.MinValue;
+		/// <summary>总位数（64 位）。</summary>
 		public const int NUM_BITS = 64;
+		/// <summary>小数位数（32 位）。</summary>
 		public const int FRACTIONAL_PLACES = 32;
+		/// <summary>数值 1 的定点表示。</summary>
 		public const long ONE = 1L << FRACTIONAL_PLACES;
+		/// <summary>数值 10 的定点表示。</summary>
 		public const long TEN = 10L << FRACTIONAL_PLACES;
+		/// <summary>数值 0.5 的定点表示（用于四舍五入）。</summary>
 		public const long HALF = 1L << (FRACTIONAL_PLACES - 1);
+		/// <summary>2π 的定点表示。</summary>
 		public const long PI_TIMES_2 = 0x6487ED511;
+		/// <summary>π 的定点表示。</summary>
 		public const long PI = 0x3243F6A88;
+		/// <summary>π/2 的定点表示。</summary>
 		public const long PI_OVER_2 = 0x1921FB544;
+		/// <summary>三角函数查找表尺寸。</summary>
 		public const int LUT_SIZE = (int)(PI_OVER_2 >> 15);
 
         // Precision of this type is 2^-32, that is 2,3283064365386962890625E-10
+		/// <summary>精度（2^-32）。</summary>
         public static readonly decimal Precision = (decimal)(new Fix64(1L));//0.00000000023283064365386962890625m;
+		/// <summary>定点数最大值。</summary>
         public static readonly Fix64 MaxValue = new Fix64(MAX_VALUE-1);
+		/// <summary>定点数最小值。</summary>
         public static readonly Fix64 MinValue = new Fix64(MIN_VALUE+2);
+		/// <summary>定点数 1。</summary>
         public static readonly Fix64 One = new Fix64(ONE);
+		/// <summary>定点数 10。</summary>
 		public static readonly Fix64 Ten = new Fix64(TEN);
+		/// <summary>定点数 0.5。</summary>
         public static readonly Fix64 Half = new Fix64(HALF);
 
+		/// <summary>定点数 0。</summary>
         public static readonly Fix64 Zero = new Fix64();
+		/// <summary>正无穷。</summary>
         public static readonly Fix64 PositiveInfinity = new Fix64(MAX_VALUE);
+		/// <summary>负无穷。</summary>
         public static readonly Fix64 NegativeInfinity = new Fix64(MIN_VALUE+1);
+		/// <summary>非数值（NaN）。</summary>
         public static readonly Fix64 NaN = new Fix64(MIN_VALUE);
 
+		/// <summary>10^-1。</summary>
         public static readonly Fix64 EN1 = Fix64.One / 10;
+		/// <summary>10^-2。</summary>
         public static readonly Fix64 EN2 = Fix64.One / 100;
+		/// <summary>10^-3。</summary>
         public static readonly Fix64 EN3 = Fix64.One / 1000;
+		/// <summary>10^-4。</summary>
         public static readonly Fix64 EN4 = Fix64.One / 10000;
+		/// <summary>10^-5。</summary>
         public static readonly Fix64 EN5 = Fix64.One / 100000;
+		/// <summary>10^-6。</summary>
         public static readonly Fix64 EN6 = Fix64.One / 1000000;
+		/// <summary>10^-7。</summary>
         public static readonly Fix64 EN7 = Fix64.One / 10000000;
+		/// <summary>10^-8。</summary>
         public static readonly Fix64 EN8 = Fix64.One / 100000000;
+		/// <summary>最小可分辨增量（Epsilon）。</summary>
         public static readonly Fix64 Epsilon = Fix64.EN3;
 
         /// <summary>
         /// The value of Pi
         /// </summary>
+		/// <summary>圆周率 π。</summary>
         public static readonly Fix64 Pi = new Fix64(PI);
+		/// <summary>π/2。</summary>
         public static readonly Fix64 PiOver2 = new Fix64(PI_OVER_2);
+		/// <summary>2π。</summary>
         public static readonly Fix64 PiTimes2 = new Fix64(PI_TIMES_2);
+		/// <summary>1/π。</summary>
         public static readonly Fix64 PiInv = (Fix64)0.3183098861837906715377675267M;
+		/// <summary>1/(π/2)。</summary>
         public static readonly Fix64 PiOver2Inv = (Fix64)0.6366197723675813430755350535M;
 
+		/// <summary>角度转弧度系数（π/180）。</summary>
         public static readonly Fix64 Deg2Rad = Pi / new Fix64(180);
 
+		/// <summary>弧度转角度系数（180/π）。</summary>
         public static readonly Fix64 Rad2Deg = new Fix64(180) / Pi;
 
 		public static readonly Fix64 LutInterval = (Fix64)(LUT_SIZE - 1) / PiOver2;
@@ -105,6 +152,9 @@ namespace FPLibrary {
         /// Returns a number indicating the sign of a Fix64 number.
         /// Returns 1 if the value is positive, 0 if is 0, and -1 if it is negative.
         /// </summary>
+        /// <summary>返回定点数的符号（正为 1、零为 0、负为 -1）。</summary>
+        /// <param name="value">目标定点数。</param>
+        /// <returns>符号值。</returns>
         public static int Sign(Fix64 value) {
             return
                 value._serializedValue < 0 ? -1 :
@@ -117,6 +167,9 @@ namespace FPLibrary {
         /// Returns the absolute value of a Fix64 number.
         /// Note: Abs(Fix64.MinValue) == Fix64.MaxValue.
         /// </summary>
+        /// <summary>返回定点数的绝对值（Abs(MinValue) 定义为 MaxValue）。</summary>
+        /// <param name="value">目标定点数。</param>
+        /// <returns>绝对值。</returns>
         public static Fix64 Abs(Fix64 value) {
             if (value._serializedValue == MIN_VALUE) {
                 return MaxValue;
@@ -131,6 +184,9 @@ namespace FPLibrary {
         /// Returns the absolute value of a Fix64 number.
         /// FastAbs(Fix64.MinValue) is undefined.
         /// </summary>
+        /// <summary>返回定点数的快速绝对值（FastAbs(MinValue) 未定义，性能优先）。</summary>
+        /// <param name="value">目标定点数。</param>
+        /// <returns>绝对值。</returns>
         public static Fix64 FastAbs(Fix64 value) {
             // branchless implementation, see http://www.strchr.com/optimized_abs_function
             var mask = value._serializedValue >> 63;
@@ -141,6 +197,9 @@ namespace FPLibrary {
         /// <summary>
         /// Returns the largest integer less than or equal to the specified number.
         /// </summary>
+        /// <summary>返回不大于指定数的最小整数（向下取整）。</summary>
+        /// <param name="value">目标定点数。</param>
+        /// <returns>向下取整结果。</returns>
         public static Fix64 Floor(Fix64 value) {
             // Just zero out the fractional part
             return new Fix64((long)((ulong)value._serializedValue & 0xFFFFFFFF00000000));
@@ -149,6 +208,9 @@ namespace FPLibrary {
         /// <summary>
         /// Returns the smallest integral value that is greater than or equal to the specified number.
         /// </summary>
+        /// <summary>返回不小于指定数的最小整数（向上取整）。</summary>
+        /// <param name="value">目标定点数。</param>
+        /// <returns>向上取整结果。</returns>
         public static Fix64 Ceiling(Fix64 value) {
             var hasFractionalPart = (value._serializedValue & 0x00000000FFFFFFFF) != 0;
             return hasFractionalPart ? Floor(value) + One : value;
@@ -158,6 +220,9 @@ namespace FPLibrary {
         /// Rounds a value to the nearest integral value.
         /// If the value is halfway between an even and an uneven value, returns the even value.
         /// </summary>
+        /// <summary>四舍五入到最近的整数（与 System.Math.Round 一致，中值舍入到偶数）。</summary>
+        /// <param name="value">目标定点数。</param>
+        /// <returns>四舍五入结果。</returns>
         public static Fix64 Round(Fix64 value) {
             var fractionalPart = value._serializedValue & 0x00000000FFFFFFFF;
             var integralPart = Floor(value);
@@ -178,6 +243,7 @@ namespace FPLibrary {
         /// Adds x and y. Performs saturating addition, i.e. in case of overflow, 
         /// rounds to MinValue or MaxValue depending on sign of operands.
         /// </summary>
+        /// <summary>加法运算符：x + y（溢出时饱和到 MaxValue/MinValue）。</summary>
         public static Fix64 operator +(Fix64 x, Fix64 y) {
             return new Fix64(x._serializedValue + y._serializedValue);
         }
@@ -185,6 +251,7 @@ namespace FPLibrary {
         /// <summary>
         /// Adds x and y performing overflow checking. Should be inlined by the CLR.
         /// </summary>
+        /// <summary>带溢出检查的加法：溢出时饱和到 MaxValue/MinValue。</summary>
         public static Fix64 OverflowAdd(Fix64 x, Fix64 y) {
             var xl = x._serializedValue;
             var yl = y._serializedValue;
@@ -199,6 +266,7 @@ namespace FPLibrary {
         /// <summary>
         /// Adds x and y witout performing overflow checking. Should be inlined by the CLR.
         /// </summary>
+        /// <summary>快速加法（不做溢出检查）。</summary>
         public static Fix64 FastAdd(Fix64 x, Fix64 y) {
             return new Fix64(x._serializedValue + y._serializedValue);
         }
@@ -207,6 +275,7 @@ namespace FPLibrary {
         /// Subtracts y from x. Performs saturating substraction, i.e. in case of overflow, 
         /// rounds to MinValue or MaxValue depending on sign of operands.
         /// </summary>
+        /// <summary>减法运算符：x - y（溢出时饱和）。</summary>
         public static Fix64 operator -(Fix64 x, Fix64 y) {
             return new Fix64(x._serializedValue - y._serializedValue);
         }
@@ -214,6 +283,7 @@ namespace FPLibrary {
         /// <summary>
         /// Subtracts y from x witout performing overflow checking. Should be inlined by the CLR.
         /// </summary>
+        /// <summary>带溢出检查的减法：溢出时饱和。</summary>
         public static Fix64 OverflowSub(Fix64 x, Fix64 y) {
             var xl = x._serializedValue;
             var yl = y._serializedValue;
@@ -228,10 +298,18 @@ namespace FPLibrary {
         /// <summary>
         /// Subtracts y from x witout performing overflow checking. Should be inlined by the CLR.
         /// </summary>
+        /// <summary>快速减法（不做溢出检查）。</summary>
         public static Fix64 FastSub(Fix64 x, Fix64 y) {
             return new Fix64(x._serializedValue - y._serializedValue);
         }
 
+        /// <summary>
+        /// 溢出辅助方法：计算 x+y 并标记是否溢出。
+        /// </summary>
+        /// <param name="x">加数。</param>
+        /// <param name="y">加数。</param>
+        /// <param name="overflow">溢出标志（引用传递）。</param>
+        /// <returns>求和结果。</returns>
         static long AddOverflowHelper(long x, long y, ref bool overflow) {
             var sum = x + y;
             // x + y overflows if sign(x) ^ sign(y) != sign(sum)
@@ -239,6 +317,9 @@ namespace FPLibrary {
             return sum;
         }
 
+        /// <summary>
+        /// 乘法运算符：x * y（使用高 32 位与低 32 位分解相乘并处理溢出进位）。
+        /// </summary>
         public static Fix64 operator *(Fix64 x, Fix64 y) {
             var xl = x._serializedValue;
             var yl = y._serializedValue;
@@ -371,6 +452,9 @@ namespace FPLibrary {
             return result;
         }
 
+		/// <summary>
+		/// 除法运算符：x / y（使用 libfixmath 的定点除法算法，除数为零时抛出异常）。
+		/// </summary>
         public static Fix64 operator /(Fix64 x, Fix64 y) {
             var xl = x._serializedValue;
             var yl = y._serializedValue;
@@ -423,6 +507,9 @@ namespace FPLibrary {
             return new Fix64(result);
         }
 
+		/// <summary>
+		/// 取模运算符：x % y。
+		/// </summary>
         public static Fix64 operator %(Fix64 x, Fix64 y) {
             return new Fix64(
                 x._serializedValue == MIN_VALUE & y._serializedValue == -1 ?
@@ -438,30 +525,39 @@ namespace FPLibrary {
             return new Fix64(x._serializedValue % y._serializedValue);
         }
 
+		/// <summary>
+		/// 一元负号运算符：取反（MinValue 取反饱和到 MaxValue）。
+		/// </summary>
         public static Fix64 operator -(Fix64 x) {
             return x._serializedValue == MIN_VALUE ? MaxValue : new Fix64(-x._serializedValue);
         }
 
+		/// <summary>相等运算符。</summary>
         public static bool operator ==(Fix64 x, Fix64 y) {
             return x._serializedValue == y._serializedValue;
         }
 
+		/// <summary>不相等运算符。</summary>
         public static bool operator !=(Fix64 x, Fix64 y) {
             return x._serializedValue != y._serializedValue;
         }
 
+		/// <summary>大于运算符。</summary>
         public static bool operator >(Fix64 x, Fix64 y) {
             return x._serializedValue > y._serializedValue;
         }
 
+		/// <summary>小于运算符。</summary>
         public static bool operator <(Fix64 x, Fix64 y) {
             return x._serializedValue < y._serializedValue;
         }
 
+		/// <summary>大于等于运算符。</summary>
         public static bool operator >=(Fix64 x, Fix64 y) {
             return x._serializedValue >= y._serializedValue;
         }
 
+		/// <summary>小于等于运算符。</summary>
         public static bool operator <=(Fix64 x, Fix64 y) {
             return x._serializedValue <= y._serializedValue;
         }

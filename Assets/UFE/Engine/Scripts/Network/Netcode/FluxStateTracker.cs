@@ -8,6 +8,12 @@ using UFENetcode;
 using FPLibrary;
 using UFE3D;
 
+/// <summary>
+/// 帧同步状态追踪器（FluxStateTracker）。
+/// <para>用途：在完整游戏状态（FluxStates）与运行时对象之间保存/加载全部需同步字段——</para>
+/// <para>包括 UFE 全局字段、延迟动作、双方角色（控制/物理/招式/判定盒/动画）、摄像机、HUD 等，</para>
+/// <para>是帧同步回滚（Rollback）时恢复任意帧游戏状态的核心工具。</para>
+/// </summary>
 public class FluxStateTracker {
 
     /*public static void LoadBattleGUI(FluxBattleGUIState state) {
@@ -61,6 +67,12 @@ public class FluxStateTracker {
         }
     }*/
 
+	/// <summary>
+	/// 从游戏历史加载指定帧的游戏状态并应用到运行时对象（用于回滚恢复）。
+	/// </summary>
+	/// <param name="history">游戏历史。</param>
+	/// <param name="frame">目标帧号。</param>
+	/// <returns>更新后的历史。</returns>
     public static FluxGameHistory LoadGameState(FluxGameHistory history, long frame) {
         FluxStates gameState;
 
@@ -127,11 +139,20 @@ public class FluxStateTracker {
     }*/
 
     // TODO FIX THIS
+	/// <summary>
+	/// 加载游戏状态到运行时（按配置决定是否加载 RecordVar 追踪器）。
+	/// </summary>
+	/// <param name="gameState">游戏状态。</param>
     public static void LoadGameState(FluxStates gameState) {
         LoadGameState(gameState, UFE.config.networkOptions.ufeTrackers);
     }
 
     // TODO FIX THIS
+	/// <summary>
+	/// 加载游戏状态到运行时：恢复 UFE 全局字段、延迟动作、双方角色（控制/物理/招式/判定盒/动画）、摄像机与 HUD。
+	/// </summary>
+	/// <param name="gameState">游戏状态。</param>
+	/// <param name="loadTrackers">是否加载 RecordVar 追踪器字段。</param>
     public static void LoadGameState(FluxStates gameState, bool loadTrackers) {
         // Static Variables
         UFE.currentFrame = gameState.networkFrame;
@@ -234,11 +255,22 @@ public class FluxStateTracker {
     }
 
     // TODO FIX THIS
+	/// <summary>
+	/// 保存当前帧的游戏状态（不保存 RecordVar 追踪器）。
+	/// </summary>
+	/// <param name="frame">帧号。</param>
+	/// <returns>游戏状态快照。</returns>
     public static FluxStates SaveGameState(long frame) {
         return SaveGameState(frame, false);
     }
 
     // TODO FIX THIS
+	/// <summary>
+	/// 保存当前帧的游戏状态快照：采集 UFE 全局字段、延迟动作、双方角色（控制/物理/招式/判定盒/动画）、摄像机与 HUD。
+	/// </summary>
+	/// <param name="frame">帧号。</param>
+	/// <param name="saveTrackers">是否保存 RecordVar 追踪器字段。</param>
+	/// <returns>游戏状态快照。</returns>
     public static FluxStates SaveGameState(long frame, bool saveTrackers) {
         FluxStates gameState = new FluxStates();
         gameState.networkFrame = frame;

@@ -28,28 +28,46 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+/// <summary>
+/// 集合变更事件参数（CollectionChangeEventArgsDerived）。
+/// <para>用途：从 Mono 移植——为 CollectionChanged 事件提供数据（变更动作与涉及的元素）。</para>
+/// </summary>
 namespace System.ComponentModel
 {
 	/// <summary>
 	/// Provides data for the CollectionChanged event.
 	/// </summary>
+	/// <summary>集合变更事件参数类。</summary>
 	public class CollectionChangeEventArgsDerived : EventArgs
 	{
+		/// <summary>变更动作。</summary>
 		private CollectionChangeActionDerived changeAction;
+		/// <summary>涉及的元素。</summary>
 		private object theElement;
 		
+		/// <summary>
+		/// 构造函数。
+		/// </summary>
+		/// <param name="action">变更动作。</param>
+		/// <param name="element">涉及的元素。</param>
 		public CollectionChangeEventArgsDerived (CollectionChangeActionDerived action,
 						  object element) {
 			changeAction = action;
 			theElement = element;
 		}
 
+		/// <summary>
+		/// 变更动作。
+		/// </summary>
 		public virtual CollectionChangeActionDerived Action {
 			get {
 				return changeAction;
 			}
 		}
 
+		/// <summary>
+		/// 涉及的元素。
+		/// </summary>
 		public virtual object Element {
 			get {
 				return theElement;

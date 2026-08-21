@@ -27,21 +27,35 @@
 //#if NET_4_0 || MOBILE
 using System;
 
+/// <summary>
+/// 并行循环结果（ParallelLoopResult）。
+/// <para>用途：从 Mono 移植——描述 Parallel 循环的执行结果（是否完成与最低中断迭代）。</para>
+/// </summary>
 namespace System.Threading.Tasks
 {
+	/// <summary>
+	/// 并行循环结果结构体。
+	/// </summary>
 	public struct ParallelLoopResult
 	{
+		/// <summary>
+		/// 内部构造函数。
+		/// </summary>
+		/// <param name="lowest">最低中断迭代。</param>
+		/// <param name="isCompleted">是否完成。</param>
 		internal ParallelLoopResult (long? lowest, bool isCompleted) : this ()
 		{
 			LowestBreakIteration = lowest;
 			IsCompleted = isCompleted;
 		}
 
+		/// <summary>最低的中断（Break）迭代号；未中断为 null。</summary>
 		public long? LowestBreakIteration {
 			get;
 			private set;
 		}
 
+		/// <summary>循环是否完整执行完成（未被 Stop/Break 中断）。</summary>
 		public bool IsCompleted {
 			get;
 			private set;

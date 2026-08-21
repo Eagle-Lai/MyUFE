@@ -3,7 +3,18 @@ using System;
 using System.Collections.Generic;
 using FPLibrary;
 
+/// <summary>
+/// 帧同步扩展（FluxExtensions）。
+/// <para>用途：在 FrameInput（紧凑网络输入结构）与 UFE 输入字典（Dictionary&lt;InputReferences, InputEvents&gt;）之间转换，</para>
+/// <para>并按网络消息位数（8/16/32 位）裁剪按钮位掩码，实现网络对战的输入序列化/反序列化。</para>
+/// </summary>
 public static class FluxExtensions{
+	/// <summary>
+	/// 将 FrameInput 转换为 UFE 输入字典与选中选项（网络→本地）。
+	/// </summary>
+	/// <param name="inputReferences">输入引用列表。</param>
+	/// <param name="frameInput">网络帧输入数据。</param>
+	/// <returns>转换后的输入字典与可空选中选项。</returns>
 	public static Tuple<Dictionary<InputReferences, InputEvents>, sbyte?> GetInputEvents(
 		this IList<InputReferences> inputReferences,
 		FrameInput frameInput
@@ -35,6 +46,13 @@ public static class FluxExtensions{
 	}
 
 
+	/// <summary>
+	/// 将 UFE 输入字典转换为 FrameInput（本地→网络）。
+	/// <para>可选强制数字输入（方向取符号）；按消息位数裁剪按钮位掩码。</para>
+	/// </summary>
+	/// <param name="inputs">输入字典。</param>
+	/// <param name="selectedOption">可空的选中选项（菜单选择用）。</param>
+	/// <returns>转换后的 FrameInput。</returns>
 	public static FrameInput ToFrameInput(this Dictionary<InputReferences, InputEvents> inputs, sbyte? selectedOption){
 		Fix64 horizontalAxisRaw = 0;
 		Fix64 verticalAxisRaw = 0;

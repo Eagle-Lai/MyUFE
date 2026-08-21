@@ -3,27 +3,56 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// AI 规则生成器（AIRulesGenerator）。
+/// <para>用途：为 Fuzzy AI 自动生成模糊推理规则字符串列表——根据配置（移动/跳跃/攻击/格挡的频率与偏好距离），</para>
+/// <para>生成符合 AIRule 语法的 IF...THEN 规则（如 距离=近 THEN 前进=可取），供 RuleBasedAI 加载使用。</para>
+/// <para>支持调试文本转换（ToDebugInformation）便于阅读规则。</para>
+/// </summary>
 [Serializable]
 public class AIRulesGenerator {
+	/// <summary>AI 偏好的交战距离。</summary>
 	public CharacterDistance preferableCombatDistance = CharacterDistance.Any;
+	/// <summary>在偏好距离处的攻击渴望度。</summary>
 	public AIDesirability attacksAtPreferableDistance = AIDesirability.VeryDesirable;
+	/// <summary>是否自动移动。</summary>
 	public bool autoMove;
+	/// <summary>是否在到达位置后待机（静止）。</summary>
 	public bool restOnLocation = true;
+	/// <summary>移动频率档位。</summary>
 	public int moveFrequency = 4;
+	/// <summary>是否自动跳跃。</summary>
 	public bool autoJump;
+	/// <summary>后跳频率。</summary>
 	public int jumpBackFrequency = 1;
+	/// <summary>垂直跳频率。</summary>
 	public int jumpStraightFrequency = 2;
+	/// <summary>前跳频率。</summary>
 	public int jumpForwardFrequency = 3;
+	/// <summary>是否自动格挡。</summary>
 	public bool autoBlock;
+	/// <summary>格挡规则是否遵循命中类型（上段/下段）。</summary>
 	public bool obeyHitType = true;
+	/// <summary>站立格挡准确度。</summary>
 	public int standBlockAccuracy = 6;
+	/// <summary>下蹲格挡准确度。</summary>
 	public int crouchBlockAccuracy = 6;
+	/// <summary>空中格挡准确度。</summary>
 	public int jumpBlockAccuracy = 0;
+	/// <summary>是否自动攻击。</summary>
 	public bool autoAttack;
+	/// <summary>攻击规则是否遵循偏好距离。</summary>
 	public bool obeyPreferableDistances = false;
+	/// <summary>攻击频率档位。</summary>
 	public int attackFrequency = 5;
+	/// <summary>调试开关。</summary>
 	public bool debugToggle;
 	
+	/// <summary>
+	/// 将浮点数值转换为渴望度枚举（按预定义阈值分级）。
+	/// </summary>
+	/// <param name="value">渴望度数值。</param>
+	/// <returns>渴望度枚举。</returns>
 	public AIDesirability GetDesirabilityValue(float value){
 		DesirabilityDefinitions desirability = new DesirabilityDefinitions();
 		if (value >= desirability.theBestOption) return AIDesirability.TheBestOption;
@@ -36,6 +65,11 @@ public class AIRulesGenerator {
 		return AIDesirability.TheWorstOption;
 	}
 	
+	/// <summary>
+	/// 将整数值转换为渴望度枚举（6=最佳，5=非常可取 ... 1=非常不可取，0=最差）。
+	/// </summary>
+	/// <param name="value">渴望度数值（0~6）。</param>
+	/// <returns>渴望度枚举。</returns>
 	public AIDesirability GetDesirabilityValue(int value){
 		if (value >= 6) return AIDesirability.TheBestOption;
 		if (value == 5) return AIDesirability.VeryDesirable;
@@ -47,6 +81,10 @@ public class AIRulesGenerator {
 		return AIDesirability.TheWorstOption;
 	}
 	
+	/// <summary>
+	/// 生成全部模糊规则字符串列表：按移动/跳跃/攻击/格挡配置组装 IF...THEN 规则。
+	/// </summary>
+	/// <returns>模糊规则字符串列表。</returns>
 	public List<string> GenerateRules(){
 		List<string> fuzzyRules = new List<string>();
 		
@@ -195,10 +233,30 @@ public class AIRulesGenerator {
 		return fuzzyRules;
 	}
 	
+	/// <summary>
+	/// 添加系统性距离规则（非抛物线版本）。
+	/// </summary>
+	/// <param name="fuzzyRules">已有规则列表。</param>
+	/// <param name="preferableDistance">偏好距离。</param>
+	/// <param name="reaction">AI 反应动作。</param>
+	/// <param name="multiplier">距离影响乘数。</param>
+	/// <param name="frequencyVariant">频率基础值。</param>
+	/// <returns>更新后的规则列表。</returns>
 	private List<string> addSystematicRules(List<string> fuzzyRules, CharacterDistance preferableDistance, string reaction, int multiplier, int frequencyVariant){
 		return addSystematicRules(fuzzyRules, preferableDistance, reaction, multiplier, frequencyVariant, false);
 	}
 	
+	/// <summary>
+	/// 添加系统性距离规则：为各距离档位（非常近/近/中/远/非常远）生成一条规则，
+	/// 渴望度按偏好距离呈线性或抛物线分布。
+	/// </summary>
+	/// <param name="fuzzyRules">已有规则列表。</param>
+	/// <param name="preferableDistance">偏好距离。</param>
+	/// <param name="reaction">AI 反应动作。</param>
+	/// <param name="multiplier">距离影响乘数。</param>
+	/// <param name="frequencyVariant">频率基础值。</param>
+	/// <param name="parabola">是否抛物线分布（中心频率最高）。</param>
+	/// <returns>更新后的规则列表。</returns>
 	private List<string> addSystematicRules(List<string> fuzzyRules, CharacterDistance preferableDistance, string reaction, int multiplier, int frequencyVariant, bool parabola){
 		if (frequencyVariant == 0) return fuzzyRules;
 		// predefined values for preferableDistance == CharacterDistance.VeryClose
@@ -321,6 +379,14 @@ public class AIRulesGenerator {
 		return fuzzyRules;
 	}
 	
+	/// <summary>
+	/// 添加格挡反应规则（单帧阶段条件版本）。
+	/// </summary>
+	/// <param name="fuzzyRules">已有规则列表。</param>
+	/// <param name="frameData1">对方招式帧阶段条件。</param>
+	/// <param name="reaction">格挡反应动作。</param>
+	/// <param name="frequency">格挡渴望度值。</param>
+	/// <returns>更新后的规则列表。</returns>
 	private List<string> addBlockReaction(List<string> fuzzyRules, CurrentFrameData frameData1, string reaction, int frequency){
 		fuzzyRules.Add(
 			AIRule.Rule_IF								+ 
@@ -341,6 +407,16 @@ public class AIRulesGenerator {
 		return fuzzyRules;
 	}
 	
+	/// <summary>
+	/// 添加格挡反应规则（双帧阶段条件版本）：可选按命中类型（上段/下段）过滤格挡姿势。
+	/// </summary>
+	/// <param name="fuzzyRules">已有规则列表。</param>
+	/// <param name="frameData1">对方招式帧阶段条件1。</param>
+	/// <param name="frameData2">对方招式帧阶段条件2。</param>
+	/// <param name="reaction">格挡反应动作。</param>
+	/// <param name="frequency">格挡渴望度值。</param>
+	/// <param name="obeyHitType">是否按命中类型过滤。</param>
+	/// <returns>更新后的规则列表。</returns>
 	private List<string> addBlockReaction(List<string> fuzzyRules, CurrentFrameData frameData1, CurrentFrameData frameData2, string reaction, int frequency, bool obeyHitType){
 		string hitTypeString = "";
 		if (obeyHitType){
@@ -384,6 +460,14 @@ public class AIRulesGenerator {
 		return fuzzyRules;
 	}
 	
+	/// <summary>
+	/// 添加距离反应规则：指定距离下执行指定动作（带渴望度）。
+	/// </summary>
+	/// <param name="fuzzyRules">已有规则列表。</param>
+	/// <param name="distance">距离条件。</param>
+	/// <param name="reaction">反应动作。</param>
+	/// <param name="frequency">渴望度值。</param>
+	/// <returns>更新后的规则列表。</returns>
 	private List<string> addDistanceReaction(List<string> fuzzyRules, CharacterDistance distance, string reaction, int frequency){
 		fuzzyRules.Add(
 			AIRule.Rule_IF							+ 
@@ -400,6 +484,10 @@ public class AIRulesGenerator {
 		return fuzzyRules;
 	}
 	
+	/// <summary>
+	/// 生成可读的规则调试信息（将规则符号替换为易读文本）。
+	/// </summary>
+	/// <returns>调试文本行列表。</returns>
 	public List<string> ToDebugInformation(){
 		List<string> debugInformation = new List<string>();
 		List<string> rules = this.GenerateRules();
