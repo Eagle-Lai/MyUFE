@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{78D4A7EA-AF7F-FD1B-257C-AEC9799BDC34}</ProjectGuid>
+    <ProjectGuid>{4EAA4A33-25BF-0DDC-5B4E-93C81985595D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -173,6 +173,7 @@
     <Compile Include="Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\CancellationToken.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Network\States\FluxSimpleState.cs" />
+    <Compile Include="Assets\TestDemo\AIScripts\CameraFollow.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\IReadOnlyCollection.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Network\Netcode\FluxCapacitor.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Physics\ProjectileMoveScript.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="Assets\UFE\Engine\Scripts\Animation\AnimationRecorder.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Network\Messages\InputBufferMessageContent.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Network\Netcode\FluxPlayerManager.cs" />
+    <Compile Include="Assets\TestDemo\MyScripts\CameraFollow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\UFE\Engine\Scripts\AI\Fuzzy\Dependencies\Copyright.txt" />

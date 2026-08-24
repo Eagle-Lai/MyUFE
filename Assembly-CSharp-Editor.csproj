@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{1523FE25-9A45-1E1E-0A73-48529A0465F4}</ProjectGuid>
+    <ProjectGuid>{88DF0D30-844C-888D-E23F-6E50883FD930}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -53,28 +53,31 @@
     <UnityVersion>2020.3.17f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\UFE\Engine\Editor\AIAsset.cs" />
+    <Compile Include="Assets\UFE\Engine\Editor\SimpleAIBehaviourEditor.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\CharacterAsset.cs" />
+    <Compile Include="Assets\UFE\Engine\Editor\StanceEditor.cs" />
+    <Compile Include="Assets\UFE\Engine\Editor\UFEUpgrade.cs" />
+    <Compile Include="Assets\UFE\Engine\Editor\GlobalAsset.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\AIEditor.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\PlayerPrefsEditor.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\EditorCamera.cs" />
     <Compile Include="Assets\UFE\Engine\Scripts\Mono4Unity\Editor\System.IO\DirectoryInfoExtensions.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\MoveEditor.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\ScriptableObjectUtility.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\StanceEditor.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\SimpleAIBehaviourEditorWindow.cs" />
-    <Compile Include="Assets\UFE\Engine\Scripts\UI\Templates\Editor\DefaultCharacterSelectionScreenEditor.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\CharacterEditorWindow.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\GlobalEditor.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\MoveEditorWindow.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\UFEInputSetup.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\MoveAsset.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\UFEUpgrade.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\AIEditorWindow.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\GlobalAsset.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\AIAsset.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\GlobalEditorWindow.cs" />
-    <Compile Include="Assets\UFE\Engine\Editor\SimpleAIBehaviourEditor.cs" />
     <Compile Include="Assets\UFE\Engine\Editor\CharacterEditor.cs" />
+    <Compile Include="Assets\UFE\Engine\Editor\MoveEditor.cs" />
+    <Compile Include="Assets\UFE\Engine\Scripts\UI\Templates\Editor\DefaultCharacterSelectionScreenEditor.cs" />
+    <Compile Include="Assets\UFE\Engine\Editor\CharacterEditorWindow.cs" />
+    <Compile Include="Assets\UFE\Engine\Editor\MoveEditorWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -311,26 +314,41 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="log4netPlastic">
-      <HintPath>Library\PackageCache\com.unity.collab-proxy@1.7.1\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
+    <Reference Include="UnityEngine.StandardEvents">
+      <HintPath>Library\PackageCache\com.unity.standardevents@1.0.13\UnityEngine.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Analytics">
+      <HintPath>Library\PackageCache\com.unity.analytics@2.0.16\Editor\UnityEditor.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Plastic.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1.7.1\Lib\Editor\PlasticSCM\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="unityplastic">
-      <HintPath>Library\PackageCache\com.unity.collab-proxy@1.7.1\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
+    <Reference Include="AForge.Fuzzy">
+      <HintPath>Assets\UFE\Engine\Scripts\AI\Fuzzy\Dependencies\AForge.Fuzzy.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="UnityEditor.Purchasing">
+      <HintPath>Library\PackageCache\com.unity.purchasing@2.0.3\Editor\UnityEditor.Purchasing.dll</HintPath>
     </Reference>
-    <Reference Include="AI4Unity.Fuzzy">
-      <HintPath>Assets\UFE\Engine\Scripts\AI\Fuzzy\Dependencies\AI4Unity.Fuzzy.dll</HintPath>
+    <Reference Include="log4netPlastic">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@1.7.1\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
     </Reference>
     <Reference Include="AForge.Core">
       <HintPath>Assets\UFE\Engine\Scripts\AI\Fuzzy\Dependencies\AForge.Core.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Fuzzy">
-      <HintPath>Assets\UFE\Engine\Scripts\AI\Fuzzy\Dependencies\AForge.Fuzzy.dll</HintPath>
+    <Reference Include="UnityEditor.Advertisements">
+      <HintPath>Library\PackageCache\com.unity.ads@2.0.8\Editor\UnityEditor.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>Library\PackageCache\com.unity.analytics@2.0.16\UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="AI4Unity.Fuzzy">
+      <HintPath>Assets\UFE\Engine\Scripts\AI\Fuzzy\Dependencies\AI4Unity.Fuzzy.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="unityplastic">
+      <HintPath>Library\PackageCache\com.unity.collab-proxy@1.7.1\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>
@@ -695,32 +713,35 @@
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Rider.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
+    <Reference Include="Unity.VSCode.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline">
-      <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+    <Reference Include="Unity.VisualStudio.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.VisualStudio.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
+    <Reference Include="Unity.Timeline">
+      <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.StandardEvents">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Rider.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
@@ -728,7 +749,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{78D4A7EA-AF7F-FD1B-257C-AEC9799BDC34}</Project>
+      <Project>{4EAA4A33-25BF-0DDC-5B4E-93C81985595D}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,0 +1,3802 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AIDefinitions">
+    <Position X="70.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAAAAAAAEAAAQAAAAAAAAAAAAg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DamageDefinitions">
+    <Position X="77.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAgAAAAgAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DistanceDefinitions">
+    <Position X="86.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAQAAAAAAAAAAAAAAAAACAAAIBAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DesirabilityDefinitions">
+    <Position X="83" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAQAAACAACAAAAQAAAAAAAAAAAAAAAQAAAEAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HealthDefinitions">
+    <Position X="77.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAkAAAIAAAAAAAAAAAAAAAAAQAAEIAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIAdvancedOptions">
+    <Position X="67.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAACBAAAAAAAEAACQAQAAAABAAACAAAQAAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIReactionParameters">
+    <Position X="84.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAIAAAABAEAAAAAAEQAAAIAAAABAAgAIBAEACAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpeedDefinitions">
+    <Position X="76" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAIAAAAAAAAAgAAAAACAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AICondition">
+    <Position X="69" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEADACAANGBZEIFiAUiAUIISISBIiAC4gzIkCASAARA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AIEvent">
+    <Position X="76" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAIAAAEAAAAACAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AIReaction">
+    <Position X="83" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GQAJIQngABohgYQApzEAAJgCQBNvAAUAIBIQNVIBKRQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AIRule">
+    <Position X="86.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBgAgAAACGQAABBAgAAAAAAAAIABgBogEIAhAAQAAHA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AIRulesGenerator">
+    <Position X="62" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BCEAAAEAABCAIAAQEAACIAAAQAEAACgiAIABQgAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIRulesGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InferenceSystemThread">
+    <Position X="67.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QABAAEAAQAAAAAAAAAAIAAAACABAAAAAQAAAAAAwAAo=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\InferenceSystemThread.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RuleBasedAI">
+    <Position X="10.75" Y="7.25" Width="1.5" />
+    <NestedTypes>
+      <Class Name="RuleBasedAI.MovementInfo">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\RuleBasedAI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BQkIABGAMACNQQACAAmQMEAFAAwOABAAEEIBkAEgIIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\RuleBasedAI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RandomAI">
+    <Position X="10.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAIAAAAQAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Random\RandomAI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleAI">
+    <Position X="13" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAQCAAAAAAQAAAAgAEAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Simple\SimpleAI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleAIBehaviour">
+    <Position X="65.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAIAAAEAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Simple\SimpleAIBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleAIStep">
+    <Position X="67.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAQAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Simple\SimpleAIBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AnimationRecorder">
+    <Position X="67.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAIAAAEwgAAQAgAoAgJEAAABAAAIgABiACEEAACAkA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\AnimationRecorder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BendingSegment">
+    <Position X="83" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEhAAAAACIAgAgAQAAAAAACBAAAAAAAABAJCABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\HeadLookScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NonAffectedJoints">
+    <Position X="81.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACABAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\HeadLookScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HeadLookScript">
+    <Position X="76" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAACAAAECAAAQAAIAAAIAAAAAAAAAAAQIAAAEAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\HeadLookScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LegacyAnimationData">
+    <Position X="65.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAEECAAAACAAAAAkAAAAAABAAAAQAgAAgAAgAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\LegacyControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LegacyControl">
+    <Position X="67.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAwggIAAASAACAgAAGAAABYACCcAMAABoQCQAgABAGA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\LegacyControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MecanimAnimationData">
+    <Position X="79.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQAAAECAAAACQAAAAkAAAAAABAAAAQAgAggAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\MecanimControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MecanimControl">
+    <Position X="81.25" Y="8.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="MecanimControl.AnimEvent">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Animation\MecanimControl.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>hQwgoIAEBSBAWgkAIGCAABcBmBeAMBAJoQGQEgBFAGA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\MecanimControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StickyGameObject">
+    <Position X="86.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAiAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Animation\StickyGameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraFade">
+    <Position X="69" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECoAABAAAAAAAAAhoAAAAQQAAABAABYAAACAAAAAAEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Camera\CameraFade.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraScript">
+    <Position X="74.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wQoMEAABACAAAAEAEAAAQAAQAAAAAAAICQhAIgABIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Camera\CameraScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysicsData">
+    <Position X="72.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AREBQEAAAAAEAAIYEAQAAAAAC2gEAEAgEMAAAgEAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\CharacterInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HeadLook">
+    <Position X="74.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgCAAAAAAAAAAAIACAIAAAAAAAAAAAQIAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\CharacterInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CustomControls">
+    <Position X="74.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IGACAAAAAAAAAAABAAKAAAAABMw7AAAgIAAAAAAAgAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\CharacterInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MoveSetData">
+    <Position X="63.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAACIAAAAAAAAAAAAEAAAAAAAAAAABAEAQABAAgABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\CharacterInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AltCostume">
+    <Position X="63.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAEAAAAAIAAAAEAACAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\CharacterInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIInstructionsSet">
+    <Position X="79.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAQAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AIDifficultySettings">
+    <Position X="72.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAEAAQCABAAAAACAAAAAQBAAAAABAAACCAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DebugOptions">
+    <Position X="79.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAghAAAAAAAEAAAAEAAAFEAIAAAAMABCAAgAEAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainingModeOptions">
+    <Position X="67.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAACAAAAAAABBACAgAAAAAAAAEAAoAAQAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChallengeModeOptions">
+    <Position X="81.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACgIBAAAAAABIAUAMAAAAAAEAAACAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ActionSequence">
+    <Position X="63.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAABAAAAAAAAAAAAAAAAGAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharacterDebugInfo">
+    <Position X="83" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABIAAAIAAAAABBIAAAIAAAAAEAABAAgAAQAAAAQAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIOptions">
+    <Position X="81.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAIAAAgAAAAAAEAAAAAhAAEAgQAiAQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOptions">
+    <Position X="72.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAUAAAAAAAAAAAEEEEAAQBAAAIESIAABAQAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharacterRotationOptions">
+    <Position X="86.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAQAQAAAAAAAAAAAEAEgEAAUAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ComboOptions">
+    <Position X="77.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AkAAgAgCIAAABAAAQAAAAEoAgAABAEAgAHAAAABCABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BounceOptions">
+    <Position X="65.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQyAAAAAAJACAAAAAAAAEBAAAAIAAAAACAAAIAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BlockOptions">
+    <Position X="62" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABIBEiAAgAAJxAAkqBAAAAAAAAJAAAAJABwAAACAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CanvasScalerInformation">
+    <Position X="77.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAACBAAAABIAAAQABAEAEAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameGUI">
+    <Position X="63.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QIBEQgAAEAAARAABBAAgACAAQgEASAoAoIoJAEAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KnockDownOptions">
+    <Position X="84.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAABgAAACABAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SubKnockdownOptions">
+    <Position X="67.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEEEAAAQAAAABAIAIAAABAAgAACAAAAUAAgAgAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HitTypeOptions">
+    <Position X="62" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAEAJAEAsQAAAAAUgABAABAAAAEAAAAIACA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HitOptions">
+    <Position X="86.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAIAAAAAgAgA4AAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputOptions">
+    <Position X="74.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAIEAAAAAAQgAAAAAAAAAAAAGAABAAACAAECAAEAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StageOptions">
+    <Position X="81.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIABAAAYAACEAAYAAgAAACQAEAAIAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LanguageOptions">
+    <Position X="86.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAEEAIBAIABAgCAIFAAEAAAAAAAAAIoAJAIAJAFA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AnnouncerOptions">
+    <Position X="70.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAEkAIBAIAAAACAAEAAEAAAgAAAAAAgAAACABAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ComboAnnouncer">
+    <Position X="76" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAQAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CounterHitOptions">
+    <Position X="72.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAQCAAAAAAAAAAIAAAAQAAAEAAAAAAAAAAABBAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GUIBarOptions">
+    <Position X="67.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAABAEAAAABAAQAABAAAAAAAAAgACAMAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputReferences">
+    <Position X="76" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAACAYAAAAARACUBQBAAABAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RoundOptions">
+    <Position X="86.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gIUQgAAAJAAgCIACAAgMCgAAgQIAAQAAAAEAAABAAII=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharacterStories">
+    <Position X="0.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoryMode">
+    <Position X="62" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAQAAAAAAAAAAIAAAABAAAAAgAAAAAAAg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoryModeBattle">
+    <Position X="63.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAYAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoryModeInfo">
+    <Position X="65.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABABAIAAAAAAAAAAAAAAAAAAAAACAAQAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FightsGroup">
+    <Position X="63.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAECIAAAAAAAAAAAEAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharacterStory">
+    <Position X="63.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAIAAAAAAQAgAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIDistanceBehaviour">
+    <Position X="74.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAABAAAABBAAACABAAAAAAAAACAQBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NetworkUserData">
+    <Position X="77.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAIAAAAIAQAgAAAABAAAAAABAAAAAAIAACAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LobbyOptions">
+    <Position X="74.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAgAAAAAQAGAAAAAAACAAABAAEIAABQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NetworkOptions">
+    <Position X="76" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAKUAgNEAgAAEACBQkAMAAqgEhARBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CloneObject">
+    <Position X="67.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABIAAAAAAAAAAAAAAACAAQAAAAIAAAABE=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParticleInfo">
+    <Position X="69" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAJQAAEAAAAAAAAAAAIAAAAAAICgAAEAAAAAAhA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BodyPartVisibilityChange">
+    <Position X="63.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAABAAAAAAAAAAAAEAAAAAAAIAAAAAAAACAAAgBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Projectile">
+    <Position X="79.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DEPAGCJgGAE6CMwYYBREIABAAAogJUQJBAAhSASAFBo=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="InvincibleBodyParts">
+    <Position X="83" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CACABABAAAAAIAAAAAAAAAAAAAAAABAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AppliedForce">
+    <Position X="72.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAoAAAACAAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Hit">
+    <Position X="79.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>OBHIKiImIDE4SMQIYYBcgPR2CAqhhY4JBKLzGFC0Xho=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FrameLink">
+    <Position X="62" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CKCAACAAABAAIAAAAgAAAAEAAhIgABALAIABwAABADA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MoveParticleEffect">
+    <Position X="62" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAABAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SlowMoEffect">
+    <Position X="70.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAIAABAAAAAAABAEAAAAAAAAAAAIAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SoundEffect">
+    <Position X="74.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAEAAAAAAAEAIAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="InGameAlert">
+    <Position X="69" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAgAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="StanceChange">
+    <Position X="83" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAIEAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ArmorOptions">
+    <Position X="74.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CACAAAAAAAAAAAAAQEBAAAQAAAAAAAAAAAAgAAAAAAQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraMovement">
+    <Position X="70.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIBAAIoAAAgAgCAABCEIAIAAAABAAAIAAIACgFAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="OpponentOverride">
+    <Position X="62" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAIAgQAQCCAAAkYAAACAAAQAAIAAAAgAAAAhA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CharacterSpecificMoves">
+    <Position X="62" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PossibleMoveStates">
+    <Position X="77.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JgAABAAAAAAABAAAAAAAABEAAAAAAgAgAAQAAACAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PlayerConditions">
+    <Position X="76" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAIAAAAAAAAAAAAAAEAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MoveInputs">
+    <Position X="86.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEoAAAAAAAAIBIAAAAAAgAAkAAAgAAAEgAAAAAIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MoveClassification">
+    <Position X="83" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAABAACAEAAAAEAAAAAAAAAAAAAAABEgAACCA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AnimSpeedKeyFrame">
+    <Position X="69" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAQAABAAAAAAAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SerializedAnimationMap">
+    <Position X="63.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAABAAAAAAAAgAAAAAAAAAIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AnimationMap">
+    <Position X="65.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HitBoxMap">
+    <Position X="84.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BasicMoveInfo">
+    <Position X="79.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIWAAIBAMEgCwIAgAACYAAABIABEAIABAAFAAAgQQBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DestroyScript">
+    <Position X="84.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\DestroyScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AbstractInputController">
+    <Position X="15.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQgAIECAAAAAAQAAIAAAEAAAAAAAABABAABAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Input\AbstractInputController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputController">
+    <Position X="15.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAACAACAAAQAAAAEQAAAAAAAAAAAgAAAAIAEAAAI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Input\InputController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputEvents">
+    <Position X="72.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAABAAAAAAAAAABAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Input\InputEvents.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputTouchController">
+    <Position X="15.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAEACAACAAAAAEAAAQAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Input\InputTouchController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputTouchControllerBridge">
+    <Position X="77.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgACgAAAAAAAQgAAEAAAAAAAgAEAAAIgAACQAQASAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Input\InputTouchControllerBridge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RewiredInputController">
+    <Position X="17.5" Y="6" Width="1.5" />
+    <NestedTypes>
+      <Interface Name="RewiredInputController.IInputSource">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Input\RewiredInputController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="RewiredInputController.ITouchInputUI">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Input\RewiredInputController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="RewiredInputController.IInputConfiguration">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Input\RewiredInputController.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Class Name="RewiredInputController.UnityInputSource">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Input\RewiredInputController.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CAAAAACQAAAACRAAAAAAEAAAAFAAAAAAgAAAAAUAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Input\RewiredInputController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFEController">
+    <Position X="19.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAACAAAAAAQAACAAAEAAAAAAAAAABAAAgAAIEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Input\UFEController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChallengeMode">
+    <Position X="79.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAYAQAAAAiAAAAAABIgAAAAAAAgEAAAAIECAAAAAoAI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Manager\ChallengeMode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DelayedAction">
+    <Position X="81.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Manager\DelayedAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantiatedGameObject">
+    <Position X="79.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAABAgAAASAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Manager\InstantiatedGameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFE">
+    <Position X="84.75" Y="13.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="UFE.ParticleEffectsHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.ScreenChangedHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.HitHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.GameBeginHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Enum Name="UFE.MultiplayerMode">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Delegate Name="UFE.SideSwitchHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.GameEndsHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.MoveHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.StringHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.StoryModeHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.TimerHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.GamePausedHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.MeterHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.BodyVisibilityHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.IntHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.BasicMoveHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.InputHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.TimeOverHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="UFE.ButtonHandler">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>9X5jGv/64n9/Sf298d/2Zy++z5f/fS38/PXt/v70bXk=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Manager\UFE.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ConnectionInformation">
+    <Position X="63.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAgAgAAgAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\ConnectionInformation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ListMatchResponse">
+    <Position X="72.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MultiplayerAPI">
+    <Position X="3.5" Y="14.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="MultiplayerAPI.OnMatchDiscoveryErrorDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Class Name="MultiplayerAPI.MatchCreationRequest">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Delegate Name="MultiplayerAPI.OnInitializationSuccessfulDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnPlayerDisconnectedFromMatchDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnMatchesDiscoveredDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Class Name="MultiplayerAPI.CreatedMatchInformation">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="MultiplayerAPI.MatchInformation">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="MultiplayerAPI.JoinedMatchInformation">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Delegate Name="MultiplayerAPI.OnJoinedDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnInitializationErrorDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnJoinErrorDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnMatchCreatedDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnMessageReceivedDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnPlayerConnectedToMatchDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnMatchDestroyedDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="MultiplayerAPI.OnDisconnectionDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Class Name="MultiplayerAPI.PlayerInformation">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Delegate Name="MultiplayerAPI.OnMatchCreationErrorDelegate">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>cAQABgAAIgAKAYRABQBAEQECCA4AAAUIBAAkgSEAAgA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NullMultiplayerAPI">
+    <Position X="3.5" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAgAAAAAAAAAABAAAAQACCAoAAAUAAAAAASAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\NullMultiplayerAPI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DummyInputController">
+    <Position X="19.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAACAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Controller\DummyInputController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkButtonPressExtensions">
+    <Position X="69" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Controller\NetworkButtonPress.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputBufferMessage">
+    <Position X="10.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Messages\InputBufferMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputBufferMessageContent">
+    <Position X="70.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Messages\InputBufferMessageContent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkMessage&lt;T&gt;">
+    <Position X="11.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAEAAhEAAAAAAAAACAAABAAAAAAAEAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Messages\NetworkMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SynchronizationMessage">
+    <Position X="12.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgEAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Messages\SynchronizationMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxCapacitor">
+    <Position X="67.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wBgUAlAAiDJACRgGAwCBABEAAIyxIilQDAgCAEEAJgU=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxCapacitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxExtensions">
+    <Position X="69" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAABAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxGameHistory">
+    <Position X="70.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AVAAEEAAAAAAgQFZCAQAAAQIAAAgAAAgAAAAAAQCAAg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxGameHistory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxGameReplay">
+    <Position X="72.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEBAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxGameReplay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxPlayer">
+    <Position X="74.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAJBAAAAQAAAAAACAAAAAAIAAABAAACAAEAAAg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxPlayerInput">
+    <Position X="76" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAhAAAAAAAEAAAAAAQAAAAAAAABAAAAMAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxPlayerInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxPlayerInputBuffer">
+    <Position X="77.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEBAEAQiABAAERgUGAAQAAQIAAKYgACIAAAYAAAAABI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxPlayerInputBuffer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxPlayerManager">
+    <Position X="79.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wMAAAAACABAAEUgAEAMQABAAAAIYgICAAIAYAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxPlayerManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxStateTracker">
+    <Position X="81.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAQQAAAAAAAAAAAAAAAAAAAAAAIQAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxStateTracker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MrFusion">
+    <Position X="67.25" Y="9.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="MrFusion.TrackableInterface">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\Netcode\MrFusion.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAACBAACAAAAAIAAABAAAAAAAAAAAAAECAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\MrFusion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluxBattleGUIState">
+    <Position X="65.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\States\FluxBattleGUIState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ControlsScript">
+    <Position X="65.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>cSwapTQzqCPz5kRhNSLF3QakJxkTpwkggqBmCXgqQEE=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\ControlsScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HitBox">
+    <Position X="81.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAARACAgAAQAACAAAIBBAAAABAAAEIAAAAABApBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\HitBoxesScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HurtBox">
+    <Position X="63.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAARACAAAAQAACAAAIABBAAAAAAAAIAAAAAAAhBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\HitBoxesScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BlockArea">
+    <Position X="84.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CACAAARACAAAAQAACAAAIAAAAAAAAAAAIAAAAAAAhAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\HitBoxesScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PullIn">
+    <Position X="81.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAIAAAAAAAAQCAQAAAAgAAQBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\HitBoxesScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="HitBoxesScript">
+    <Position X="83" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AOAEBiBABGgAgAAAAEBIAgJAAAAEAkaAUABEEAQAAqA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\HitBoxesScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BasicMoves">
+    <Position X="81.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gACwEoIEoBAWQQYAkAAIAQVFAQcAAACUAABA4QSDoXU=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\MoveSetScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ButtonSequenceRecord">
+    <Position X="67.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAQAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\MoveSetScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MoveSetScript">
+    <Position X="65.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQICQC1gJiQASAAghkACFSoIwLuhAgCZmAWKAAlhBGY=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\MoveSetScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysicsScript">
+    <Position X="74.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CEAQACBQAqqAgCBQCAEAQAKAAIAgAAUCBQAESgAAAAE=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\PhysicsScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectileMoveScript">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEAEAAABACkEAkASAACAwEAAAAAILAIAAAAQGAAAAIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Physics\ProjectileMoveScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BattleGUI">
+    <Position X="59.5" Y="2" Width="1.5" />
+    <NestedTypes>
+      <Class Name="BattleGUI.PlayerInfo">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Base\BattleGUI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>wAwAAAAQIAAACBBAAMAAAEAAhAACAATAAEAKAASEYAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\BattleGUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BluetoothGameScreen">
+    <Position X="3.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAEBAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\BluetoothGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CharacterSelectionScreen">
+    <Position X="5.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAIAQIAAAAAYEACBACAAACAAAAARAAUIEEgA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\CharacterSelectionScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConnectionLostScreen">
+    <Position X="7.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\ConnectionLostScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CreditsScreen">
+    <Position X="10" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\CreditsScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HostGameScreen">
+    <Position X="12.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAACAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\HostGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IntroScreen">
+    <Position X="15.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\IntroScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JoinGameScreen">
+    <Position X="19" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAwABIEQAAAAAAQAIACEAAAIAEABABAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\JoinGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LoadingBattleScreen">
+    <Position X="21.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\LoadingBattleScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainMenuScreen">
+    <Position X="23.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAEAAhAACAAAAAARAAAIAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\MainMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkGameScreen">
+    <Position X="25.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\NetworkGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OptionsScreen">
+    <Position X="28" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAQEAAAAAEAQAUgBAFAAAgCAAQiAAIAQAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\OptionsScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PauseScreen">
+    <Position X="30.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\PauseScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RandomMatchScreen">
+    <Position X="32.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgCBIEASAAAAAQAAAAEAgAIAAAAABABAAAAEABQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\RandomMatchScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SearchMatchScreen">
+    <Position X="34.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEgEAIEASAASAAQABAAEAiAIIAAAABABAAAAEABQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\SearchMatchScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StageSelectionScreen">
+    <Position X="38" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAgCgAIAgAAAAAAwEAgAAAAAAAACAAEQAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\StageSelectionScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoryModeContinueScreen">
+    <Position X="41.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\StoryModeContinueScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoryModeScreen">
+    <Position X="47" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\StoryModeScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFEScreen">
+    <Position X="31.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAiAAAAEAIAAEAAAAAgAAAAABAAAABAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\UFEScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VersusModeAfterBattleScreen">
+    <Position X="55" Y="2" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="VersusModeAfterBattleScreen.Option">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Base\VersusModeAfterBattleScreen.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAIABAAAAAAgAAAAAAAAAAAACAAAAEAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\VersusModeAfterBattleScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VersusModeScreen">
+    <Position X="57.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAACAAAAAAAAABAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Base\VersusModeScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GUIExtensions">
+    <Position X="69" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\CommunityScripts\GUIExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFEGradient">
+    <Position X="86.5" Y="13.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="UFEGradient.Type">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\CommunityScripts\UFEGradient.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAQAAAAAACAAAAAAAAAAAAAAQAAAAAAAgAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\CommunityScripts\UFEGradient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultBattleGUI">
+    <Position X="59.5" Y="3.25" Width="1.5" />
+    <NestedTypes>
+      <Class Name="DefaultBattleGUI.PlayerGUI">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultBattleGUI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="DefaultBattleGUI.AlertGUI">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultBattleGUI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="DefaultBattleGUI.WonRoundsGUI">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultBattleGUI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Enum Name="DefaultBattleGUI.VisibleImages">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultBattleGUI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIwCQAAQBKAAALCAAMBMCCAAhAAGAQQCQABDQEAEYAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultBattleGUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultBluetoothGameScreen">
+    <Position X="3.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAgBAAAAAAQAACAAAAAAAAAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultBluetoothGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultCharacterSelectionScreen">
+    <Position X="5.5" Y="3.25" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="DefaultCharacterSelectionScreen.DisplayMode">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultCharacterSelectionScreen.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAkIoQAADAgBcAAQAAIAECCADAEBAIgACIQAAQIEIIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultCharacterSelectionScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultCongratulationsScreen">
+    <Position X="48.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgBAAAAAAAAAAAAAAAECAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultCongratulationsScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultConnectionLostScreen">
+    <Position X="7.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAgBAAAAAAQAACAAAAAAAAAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultConnectionLostScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultContinueScreen">
+    <Position X="41.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAABgBAAAAAAQAACAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultContinueScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultCreditsScreen">
+    <Position X="10" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAgBAAAAAAQAACAAAAAAAAAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultCreditsScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultGameOverScreen">
+    <Position X="50.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAgBAAAAAAAAAAAAAAAACAAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultGameOverScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultHostGameScreen">
+    <Position X="12.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAgBAAAAAAQAACAAAAAAAAAICAAAABAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultHostGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultJoinGameScreen">
+    <Position X="19" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAQABAAgBAAAAAAQAACAAAAAAAAAICAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultJoinGameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultLoadingBattleScreen">
+    <Position X="21.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAIABAAAQAAIAAAAAAAEAAAQACQAAAAAEAQI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultLoadingBattleScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultMainMenuScreen">
+    <Position X="23.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAgBAAAAAAQAAGAAAAAAAEAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultMainMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultNetworkScreen">
+    <Position X="25.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAgDAAAAAAQAACAAAAAAAAAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultNetworkScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultOptionsScreen">
+    <Position X="28" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAABAQgEwBEAAAAAUAACcABAFAAAkECAWgCABEAQQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultOptionsScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultPauseScreen">
+    <Position X="30.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAJAAEAAAAAAgAAAEBAIAgAAAAAAgAAkEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultPauseScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultStageSelectionScreen">
+    <Position X="37" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAQgAgAIgBAAAQAAIAACAACAEAAAAACAQAAAAEAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultStageSelectionScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultUFEScreen">
+    <Position X="52.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAwBAAAAAAQAACAAAAAAAAAACAAAAABEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultUFEScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultVersusModeAfterBattleScreen">
+    <Position X="55" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAgBAAAAAAQAACAAAAAAAAAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultVersusModeAfterBattleScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DefaultVersusModeScreen">
+    <Position X="57.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAgBAAAAAAQAACAAAAAAAAAACAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\DefaultVersusModeScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GridStageSelectionScreen">
+    <Position X="39.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAgACiAwAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\GridStageSelectionScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoryModeTextureScreen">
+    <Position X="43.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAADgBAAAABAAAAAAAAAAAAAAACAAACAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\StoryModeTextureScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StoryModeVideoScreen">
+    <Position X="46" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAEAAAAAAABIAACAAAAAAAEBDAIIAAgAEEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\StoryModeVideoScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextureIntroScreen">
+    <Position X="14.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAhgBAAAABAAAAAAAAAAAAAAACAAACAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\TextureIntroScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFEScreenExtensions">
+    <Position X="62" Y="14.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="UFEScreenExtensions.ActionCallback">
+        <NestedTypes>
+          <Delegate Name="UFEScreenExtensions.ActionCallback.ActionDelegate" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\UFEScreenExtensions.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Delegate>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\UFEScreenExtensions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="UFEScreenExtensions.MoveCursorCallback">
+        <NestedTypes>
+          <Delegate Name="UFEScreenExtensions.MoveCursorCallback.ActionDelegate" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\UFEScreenExtensions.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Delegate>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\UI\Templates\UFEScreenExtensions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AACBggAAAAgAAwQACAEAAACAAAAAAgAAAACAAAAAAEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\UFEScreenExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VideoIntroScreen">
+    <Position X="16.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAEAAAAAAABIAACAAAAAAAEBDAIIAAgAEEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\UI\Templates\VideoIntroScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GUITextCompat">
+    <Position X="70.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAACAAAAAAAAAAAAgAAAAAgACAAAAiIBACAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GUITextureCompat">
+    <Position X="72.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAACAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RPCCompat">
+    <Position X="62" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkViewCompat">
+    <Position X="79.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAEAAAAgAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkCompat">
+    <Position X="70.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAQAAAACgAABAAAAoAAAAAAAgABIAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkIdentityCompat">
+    <Position X="74.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAEgAAAAAAAAAAAAAAIAAAAAAEAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NetworkConnectionCompat">
+    <Position X="72.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAABAAIIAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFE3D.AIInfo">
+    <Position X="77.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQQCAKCBBEAAAgCAAEAIAAIAICAAAAAgJAABAAIAEAE=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFE3D.CharacterInfo">
+    <Position X="84.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEABCHIAQlAEUoRAAKIIgCAEQEEIAECAAAACBAACICA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\CharacterInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFE3D.GlobalInfo">
+    <Position X="65.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACBCYelHgAAzEIiBEgCBQCCAYEIlKCAAKBAAiGDB0AA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFE3D.MoveInfo">
+    <Position X="84.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>I0HQEuBAtAgGxoLZIAqpAAY7hh9LwgwDKBflhIXQXMg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFE3D.StanceInfo">
+    <Position X="84.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAACIAAAAAAAAAAAAAAAAAAAAAAAABAEAAAAAAgAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\StanceInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DGP.Util.Collections.SerializableDictionary&lt;TKey, TValue&gt;">
+    <Position X="0.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAIQAgAAAAAEABAAGAQABAQAAAAAAAAEAAAgIABAACA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\DPG.Util.Collection\SerializableDictionary.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FPLibrary.FPMath">
+    <Position X="83" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gACAQAABABAgABgAlAAGAgIBAgUQAABAgEgAAGIAAEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPMath.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FPLibrary.FPRandom">
+    <Position X="84.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>LgACJRIAAAAACSAAyAAQAAAAAABRACAAiAAqABoACFA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPRandom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FPLibrary.FPTransform">
+    <Position X="86.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAhAAAAAAEAAQAACAIAACEAAEAAAAAAAEggAAgCI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPTransform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.ArrayExtensions">
+    <Position X="76" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\ArrayExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.ConvertExtensions">
+    <Position X="67.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAEAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\ConvertExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.OperationCanceledExceptionDerived">
+    <Position X="86.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\OperationCanceledExceptionDerived.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.AggregateException">
+    <Position X="65.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAEAAAAAAAAAEAAAAAAAAQAAAQAIAAEAAABAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\AggregateException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Lazy&lt;T&gt;">
+    <Position X="62" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAACEAAAAABAAgAAAAHAAAAAgAAAAAEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Lazy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.MonoTODOAttribute">
+    <Position X="5.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\MonoTODOAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.MonoDocumentationNoteAttribute">
+    <Position X="0.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\MonoTODOAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.MonoExtensionAttribute">
+    <Position X="3" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\MonoTODOAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.MonoInternalNoteAttribute">
+    <Position X="5.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\MonoTODOAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.MonoLimitationAttribute">
+    <Position X="7.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\MonoTODOAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.MonoNotSupportedAttribute">
+    <Position X="9.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\MonoTODOAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Tuple">
+    <Position X="70.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuple.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Tuple&lt;T1, T2, T3, T4, T5, T6, T7, TRest&gt;">
+    <Position X="83" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgEBAAIBAACAEgAAgIBAAAiAQAIAAABAQAAAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Tuple&lt;T1&gt;">
+    <Position X="72.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgABAAIAAAAAEgAAAAAAAAgAAAIAAABAQAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Tuple&lt;T1, T2&gt;">
+    <Position X="69" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgABAAIAAAAAEgAAAAAAAAgAAAIAAABAQAAAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Tuple&lt;T1, T2, T3&gt;">
+    <Position X="74.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgABAAIAAACAEgAAgAAAAAgAAAIAAABAQAAAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Tuple&lt;T1, T2, T3, T4&gt;">
+    <Position X="76" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgEBAAIBAACAEgAAgAAAAAgAAAIAAABAQAAAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Tuple&lt;T1, T2, T3, T4, T5&gt;">
+    <Position X="77.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgEBAAIBAACAEgAAgAAAAAgAAAIAAABAQAAAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Tuple&lt;T1, T2, T3, T4, T5, T6&gt;">
+    <Position X="79.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgEBAAIBAACAEgAAgABAAAgAQAIAAABAQAAAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Tuple&lt;T1, T2, T3, T4, T5, T6, T7&gt;">
+    <Position X="81.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABgEBAAIBAACAEgAAgABAAAgAQAIAAABAQAAAAAQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\Tuples.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Generic.IEnumeratorExtensions">
+    <Position X="65.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.Collections.Generic\IEnumeratorExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Generic.CollectionDebuggerView&lt;T&gt;">
+    <Position X="72.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\CollectionDebuggerView_T.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Generic.CollectionDebuggerView&lt;T, U&gt;">
+    <Position X="70.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\CollectionDebuggerView_T.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Generic.RBTree">
+    <Position X="83" Y="10.5" Width="1.5" />
+    <NestedTypes>
+      <Interface Name="System.Collections.Generic.RBTree.INodeHelper&lt;T&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\RBTree.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Class Name="System.Collections.Generic.RBTree.Node">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\RBTree.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Struct Name="System.Collections.Generic.RBTree.NodeEnumerator">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\RBTree.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIAACGAAAACAABAAKAAwJAQACEQABAAEABEAAMRgAgA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\RBTree.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Generic.SortedSet&lt;T&gt;">
+    <Position X="72.5" Y="11.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="System.Collections.Generic.SortedSet&lt;T&gt;.Node">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\SortedSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Collections.Generic.SortedSet&lt;T&gt;.NodeHelper">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\SortedSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Struct Name="System.Collections.Generic.SortedSet&lt;T&gt;.Enumerator">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\SortedSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Struct>
+      <Class Name="System.Collections.Generic.SortedSet&lt;T&gt;.SortedSubSet">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\SortedSet.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EB4AEBBASDBFQFBAkAAAFAXAIAAEACAEIwACABJQIQI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\SortedSet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.ComponentModel.CollectionChangeEventArgsDerived">
+    <Position X="69" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAEAAAAAAAAAAAAIAAAQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\CollectionChangeEventArgsDerived.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.ComponentModel.ListEntryDerived">
+    <Position X="70.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAACAAAAAAAAIAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\EventHandlerListDerived.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.ComponentModel.EventHandlerListDerived">
+    <Position X="62" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAgAACAAgAAAgAABAAAAAAABAAAAAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\EventHandlerListDerived.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.ComponentModel.InvalidEnumArgumentExceptionDerived">
+    <Position X="81.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\InvalidEnumArgumentExceptionDerived.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.ComponentModel.ListChangedEventArgsDerived">
+    <Position X="69" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAQAAAAAAAAgAAABAAAAAAAgAAAgAIAAAIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\ListChangedEventArgsDerived.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DGP.Util.System.ComparerGenerator">
+    <Position X="79.5" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="DGP.Util.System.ComparerGenerator.ComparerImplementation&lt;T&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\ComparerGenerator.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System\ComparerGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.CollectionDebuggerView">
+    <Position X="74.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections\CollectionDebuggerView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.BlockingCollection&lt;T&gt;">
+    <Position X="86.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAIAAAAKCCAEACAAAAAADCSABAEAEBAFAAEgIQHAISI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\BlockingCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Concurrent.ConcurrentBag&lt;T&gt;">
+    <Position X="81.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BgJACAAAAQACABAQDAAAAAQEAAEAACAEAAAAAABAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentBag.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Concurrent.ConcurrentDictionary&lt;TKey, TValue&gt;">
+    <Position X="83" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.ConcurrentDictionary&lt;TKey, TValue&gt;.ConcurrentDictionaryEnumerator">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentDictionary.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CAJEBgAAaBJFEhAACIYABASAAAAhgCAGAAApAJZAIAI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentDictionary.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Concurrent.ConcurrentOrderedList&lt;T&gt;">
+    <Position X="84.75" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.ConcurrentOrderedList&lt;T&gt;.Node">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentOrderedList.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAgAEAAAoAABEAAALAAAAoSAIAIAAAAEAAQBAEBQIwA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentOrderedList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Concurrent.ConcurrentQueue&lt;T&gt;">
+    <Position X="86.5" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.ConcurrentQueue&lt;T&gt;.Node">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentQueue.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AABAEAABiAAEABAQBAAAAAQEAAAAAAAEAACAAAJAIgI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentQueue.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Concurrent.ConcurrentStack&lt;T&gt;">
+    <Position X="62" Y="4.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.ConcurrentStack&lt;T&gt;.Node">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentStack.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AABAEAAAiAAEABAQBAAAAIQEAAAAAAAEAACAAANAOAI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\ConcurrentStack.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Collections.Concurrent.OrderablePartitioner&lt;TSource&gt;">
+    <Position X="4" Y="5.75" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.OrderablePartitioner&lt;TSource&gt;.ProxyEnumerator">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\OrderablePartitioner.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAQAAAAEABAAAAIAAAAAAAAIAAAEgAAAAAAJEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\OrderablePartitioner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.Partitioner">
+    <Position X="70.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\Partitioner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.Partitioner&lt;TSource&gt;">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAgAAAAAAAEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\Partitioner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.SplitOrderedList&lt;TKey, T&gt;">
+    <Position X="79.5" Y="11.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.SplitOrderedList&lt;TKey, T&gt;.Node">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\SplitOrderedList.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Struct Name="System.Collections.Concurrent.SplitOrderedList&lt;TKey, T&gt;.SimpleRwLock">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\SplitOrderedList.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IAgAAEAQoAAAABABBIABQAQAAQMIAAAhAACBAkQAAgA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\SplitOrderedList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.Partitioners.EnumerablePartitioner&lt;T&gt;">
+    <Position X="0.75" Y="7.25" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.Partitioners.EnumerablePartitioner&lt;T&gt;.PartitionerState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent.Partitioners\EnumerablePartitioner.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAIABAAAAAQAAAAAAAAgAAAAIAAAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent.Partitioners\EnumerablePartitioner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.Partitioners.ListPartitioner&lt;T&gt;">
+    <Position X="3" Y="7.25" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Collections.Concurrent.Partitioners.ListPartitioner&lt;T&gt;.Range">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent.Partitioners\ListPartitioner.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgIAAAAAAAAAAAAAABAAAAAAAAAAIIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent.Partitioners\ListPartitioner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.Partitioners.UserRangePartitioner">
+    <Position X="5.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAACAAAAABAgAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent.Partitioners\UserRangePartitioner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Concurrent.Partitioners.UserLongRangePartitioner">
+    <Position X="7.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAACAAAAABAgAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent.Partitioners\UserRangePartitioner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Specialized.NotifyCollectionChangedEventArgs">
+    <Position X="83" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAgAAAAAAAQCAAAAAAAAAAAAAAAgACAAAQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Specialized\NotifyCollectionChangedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.Specialized.NotifyCollectionChangedEventHandlerExtensions">
+    <Position X="84.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Specialized\NotifyCollectionChangedHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.AtomicBoolean">
+    <Position X="77.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgBAAAAAAAABAAAgIACEAAAAAAAAIAEAAAwAFAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\AtomicBoolean.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.CancellationTokenSource">
+    <Position X="76" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJAAAAQYCAAAAAAgARAAIAgIAABgAAAAAgCCAABIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\CancellationTokenSource.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.CountdownEvent">
+    <Position X="70.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAQAAAAACAADAAAIAAAAAAAIAYEACAAACAACAAgEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\CountdownEvent.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.LazyInitializer">
+    <Position X="63.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\LazyInitializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.ManualResetEventSlim">
+    <Position X="77.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABIAAAAAACAAhAAAgAAAACAAIAQgAAAEACACQIAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\ManualResetEventSlim.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.SpinLockWrapper">
+    <Position X="77.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\SpinLock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.ThreadLocal&lt;T&gt;">
+    <Position X="65.5" Y="13.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Threading.ThreadLocal&lt;T&gt;.DataSlotWrapper">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\ThreadLocal.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAABAEAAKAAAAAEAAJACAAAAAAACBAAAAAkAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\ThreadLocal.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.CyclicDeque&lt;T&gt;">
+    <Position X="76" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAABAAAABAAQAgAAAgAIAgAAAABAEgAAAQAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\CyclicDequeue.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.CircularArray&lt;T&gt;">
+    <Position X="65.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAgQAICIAAAAAAAAgAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\CyclicDequeue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.Parallel">
+    <Position X="63.75" Y="10.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="System.Threading.Tasks.Parallel.StealValue64">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\Parallel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Class Name="System.Threading.Tasks.Parallel.StealRange">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\Parallel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BBACCAAAAAAIAAAAAAAAAAAAKAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\Parallel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.ParallelLoopState">
+    <Position X="65.5" Y="10.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Threading.Tasks.ParallelLoopState.ExternalInfos">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\ParallelLoopState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAQAAAAABAAEAAAAAAAAEAEgIAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\ParallelLoopState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.ParallelOptions">
+    <Position X="67.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAEAAAAIAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\ParallelOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.SimpleConcurrentBag&lt;T&gt;">
+    <Position X="69" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEKAAAAAAAAAAAAAAAAAAAAAAAAAIIBAAAAAAABBAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\SimpleConcurrentBag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.SynchronizationContextScheduler">
+    <Position X="0.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAABEEAAAAAAAAAAAAAAACAAAABAIAAAAAAAgAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\SynchronizationContextScheduler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.Task">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAUTwAaWRiAAEA5hqBECgQREgFRBRJBNwgBACgACAwg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\Task.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.Task&lt;TResult&gt;">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAgACAAIAAAAAQAAAAAACABAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\Task_T.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskActionInvoker">
+    <Position X="70.75" Y="12.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionTaskObjectInvoke&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncInvoke&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionObjectInvoke">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncObjectInvoke&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncTaskInvoke&lt;TResult, TNewResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncTaskObjectInvoke&lt;TResult, TNewResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncTaskObjectInvoke&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionTaskInvoke">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncTaskSelected&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.DelayTaskInvoker">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionTaskInvoke&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncTasksInvoke&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionTaskObjectInvoke">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.EmptyTaskActionInvoker">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionTaskSelected">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionInvoke">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.ActionTasksInvoke">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="System.Threading.Tasks.TaskActionInvoker.FuncTaskInvoke&lt;TResult&gt;">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAIAAAAAAAIIAEAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskActionInvoker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskCanceledException">
+    <Position X="72.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskCanceledException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskCompletionSource&lt;TResult&gt;">
+    <Position X="74.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAIAABAAQAAAAAACAAAABkAAAAAgAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskCompletionSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskConstants">
+    <Position X="76" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskConstants&lt;T&gt;">
+    <Position X="77.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskConstants_T.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskContinuation">
+    <Position X="79.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAABYAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.ActionContinuation">
+    <Position X="62" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.SynchronizationContextContinuation">
+    <Position X="69" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.WhenAllContinuation">
+    <Position X="65.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAAAAAAAAAAAAkAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.WhenAllContinuation&lt;TResult&gt;">
+    <Position X="67.25" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAAAAAAAAAAAAkAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.WhenAnyContinuation&lt;T&gt;">
+    <Position X="69" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAQAAAAAAAAAAAAAAAgAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.ManualResetContinuation">
+    <Position X="76" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAACAAAAQAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.CountdownContinuation">
+    <Position X="69" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAACAAAAQAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskDebuggerView">
+    <Position X="81.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAIEAAAAAAAAAAAgAAAAAAAABAAAAABAAABAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskDebuggerView.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskExceptionSlot">
+    <Position X="83" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAgAAAAAAAAAAABAAAAAAIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskExceptionSlot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskExtensionsImpl">
+    <Position X="84.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAEAAAAAAAABAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskExtensionsImpl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskFactory">
+    <Position X="86.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAIAAAAAAAAAACQMA2AABABAAIAAAAAKAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskFactory&lt;TResult&gt;">
+    <Position X="62" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAIAAAAIAAABAAAAAACQMAkAABABAIIAAAAAKAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskFactory_T.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskScheduler">
+    <Position X="1.75" Y="11.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="System.Threading.Tasks.TaskScheduler.TaskSchedulerDebuggerView">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskScheduler.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAACBAEBEEAAAAAAQACAIIAAACAAAABEAAAIAAAAggA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskScheduler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TaskSchedulerException">
+    <Position X="63.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskSchedulerException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.TpScheduler">
+    <Position X="2.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAABBEAAAAAAAAAAAAAAACAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TpScheduler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Threading.Tasks.UnobservedTaskExceptionEventArgs">
+    <Position X="63.75" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABIIAAAAIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\UnobservedTaskExceptionEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFENetcode.UFEBehaviour">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\UFENetcode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UFENetcode.RecordVar">
+    <Position X="84.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gACAAACAAAAAAhAAEAgAAAAAgAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\UFENetcode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="BasicResponse">
+    <Position X="63.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAEAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="CreateMatchResponse">
+    <Position X="72.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAACAAAAAAAAAAgAIgAAkgAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="JoinMatchResponse">
+    <Position X="65.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAgAIgAAEggAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\MultiplayerAPI.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FrameInput">
+    <Position X="63.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAEoAAAAAAAAAAAAIgAAAAAAAAAAiQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Controller\FrameInput.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="FluxFrameInput">
+    <Position X="76" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAAAAACAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\FluxFrameInput.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FluxSimpleState">
+    <Position X="77.75" Y="15.75" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="FluxSimpleState.PlayerInformation">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxSimpleState.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgEgAAAAAAAACFAAIAAgAAAAUAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\States\FluxSimpleState.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="FluxStates">
+    <Position X="79.5" Y="15.75" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="FluxStates.GlobalState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="FluxStates.InstantiatedGameObjectState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="FluxStates.TransformState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="FluxStates.GUIState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="FluxStates.CameraState">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="FluxStates.CharacterState">
+        <NestedTypes>
+          <Struct Name="FluxStates.CharacterState.BlockAreaState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.AnimatiorState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.HitBoxesState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.AnimationDataState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.MoveState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.HurtBoxState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.HitBoxState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.PhysicsState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.MoveSetState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+          <Struct Name="FluxStates.CharacterState.PullInState" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+            </TypeIdentifier>
+          </Struct>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>wAEAAAAAAwAAAAAAABAAAAAAAAAAAAAAIAAAAAAAQAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\States\FluxStates.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NetworkPlayerCompat">
+    <Position X="69" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAIgEAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NetworkMessageInfoCompat">
+    <Position X="67.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FPLibrary.Fix64">
+    <Position X="74.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kVBA4IAAJIA6gJ4k5BeXQwIjhyUyAI5KBB0hIMaAF6k=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\Fix64.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="FPLibrary.FPMatrix">
+    <Position X="81.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJIAFQAAAAAAAAE5AMBACACIQAAALAAAEAAAAgAAiI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPMatrix.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FPLibrary.FPQuaternion">
+    <Position X="83" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIIABIAAAAABAAEcQcDAAEAKgAAAAgBgkhgBQFAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPQuaternion.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FPLibrary.FPRect">
+    <Position X="84.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAEAAQAQAAAAAAgAEAIEAAABABgAAIAEIA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPRect.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FPLibrary.FPVector">
+    <Position X="86.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAggEAEZECBAgG8AcTAAQBCAANQIFAgUHkAwAAhiA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPVector.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FPLibrary.FPVector2">
+    <Position X="62" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQKAgAAFKRACBAAE8AcDAgABCAAIQIBEhUBkAgFggmA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\FPLibrary\FPVector2.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="System.Numerics.BigInteger">
+    <Position X="65.5" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gJIihgQAAVUACBdU8Ie7KyFoAwqCAJoCEglUQBnAZ6A=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Numerics\BigInteger.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="System.Numerics.Complex">
+    <Position X="70.75" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACBBAAAAAgAMAE4AWEACIBAQ2AAIAAAAgAAAEABqA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Numerics\Complex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="System.Threading.AtomicBooleanValue">
+    <Position X="62" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgBAAAAAAAABAAAgIACCAAAAAAAAIAEAAAwAFAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\AtomicBoolean.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="System.Threading.CancellationToken">
+    <Position X="67.25" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAIAIAgAAAQAAAIAABAIAAAAgAAAEAAiA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\CancellationToken.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="System.Threading.CancellationTokenRegistration">
+    <Position X="69" Y="15.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAIAgAAAAAAAAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\CancellationTokenRegistration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="System.Threading.TicketType">
+    <Position X="77.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\SpinLock.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="System.Threading.SpinLock">
+    <Position X="72.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAIAEAAAABEAAQAAAAAECAEAIAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\SpinLock.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="System.Threading.SpinWait">
+    <Position X="74.25" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAABEAAAAAAAIQAAAAgAAAAQAAAgAAAQAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\SpinWait.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="System.Threading.Watch">
+    <Position X="79.5" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAACIAAAAAAAAAECAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\Watch.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="System.Threading.Tasks.ParallelLoopResult">
+    <Position X="70.75" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\ParallelLoopResult.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="System.Threading.Tasks.TaskCompletionQueue&lt;TCompletion&gt;">
+    <Position X="76" Y="16.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAIAAgAAAAAAAIAABIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskCompletionQueue.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="System.Collections.Generic.IReadOnlyCollection&lt;T&gt;">
+    <Position X="6.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\IReadOnlyCollection.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.Generic.IReadOnlyDictionary&lt;TKey, TValue&gt;">
+    <Position X="5.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAEAAAACAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\IReadOnlyDictionary.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.Generic.IReadOnlyList&lt;T&gt;">
+    <Position X="7.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\IReadOnlyList.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.Generic.ISet&lt;T&gt;">
+    <Position X="70.75" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAoAABBAACBAQABAAAAAAAAAAAAAACAAAgAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Generic\ISet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.IStructuralComparable">
+    <Position X="72.5" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections\IEstructuralComparable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.IStructuralEquatable">
+    <Position X="74.25" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections\IEstructuralEquatable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.Concurrent.IProducerConsumerCollection&lt;T&gt;">
+    <Position X="67.25" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAABAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Concurrent\IProducerConsumerCollection.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Collections.Specialized.INotifyCollectionChanged">
+    <Position X="65.5" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Specialized\INotifyCollectionChanged.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Threading.Tasks.IConcurrentDeque&lt;T&gt;">
+    <Position X="62" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAIAgAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\IConcurrentDeque.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Threading.Tasks.IScheduler">
+    <Position X="69" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAABAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\IScheduler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Threading.Tasks.IContinuation">
+    <Position X="63.75" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="UFENetcode.UFEInterface">
+    <Position X="76" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Netcode\UFENetcode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="HealthStatus">
+    <Position X="79.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgCAABACAAAAAAAABABAAAAAAAAAAQAAACAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TargetCharacter">
+    <Position X="84.75" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABBAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIAttackDesirabilityCalculation">
+    <Position X="63.75" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAABAAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIConditionType">
+    <Position X="70.75" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAEAAAJAAAAAAAAAAgAAIAACACAAAABAAIAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIBlocking">
+    <Position X="67.25" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAwAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIDesirability">
+    <Position X="74.25" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAgAAAAAAAABAAAAAQAAIAAAgAE=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIReactionType">
+    <Position X="83" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAKABAAAgCgAAAAAEAAAACAAEAAAAAAAAAAAIAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIBoolean">
+    <Position X="69" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIDamage">
+    <Position X="72.5" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IACAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAIAEIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIHorizontalMovement">
+    <Position X="79.5" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAEAAgAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIMovementSpeed">
+    <Position X="81.25" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAgAAAAAAAAAAAAAAAIAAAIAAAAAAAAAIAABAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIVerticalMovement">
+    <Position X="62" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\AI\Fuzzy\Runtime\AIInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AnimationFlow">
+    <Position X="63.75" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AnimationType">
+    <Position X="65.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MatchType">
+    <Position X="83" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ChallengeAutoSequence">
+    <Position X="76" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ActionType">
+    <Position X="62" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAQAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BlockType">
+    <Position X="70.75" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQCIAAAAIABAAAAAAAAoEAAAAAAAAAAAAAQCEQAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BodyPart">
+    <Position X="72.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQAAAAgQkAAIIAAAAICgAAAAAOw3AAAAAAQAQAAEEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkService">
+    <Position X="76" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAACAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PhotonHostingService">
+    <Position X="62" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkMessageSize">
+    <Position X="69" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkRollbackBalancing">
+    <Position X="74.25" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAACAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkFrameDelay">
+    <Position X="65.5" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAACBAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkInputMessageFrequency">
+    <Position X="67.25" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAIAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkSynchronizationMessageFrequency">
+    <Position X="81.25" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAACAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CollisionType">
+    <Position X="84.75" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgCAAAAAAAAAAAAAAAAAAAAAABAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ComboDisplayMode">
+    <Position X="62" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="GameMode">
+    <Position X="74.25" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAACAAAAAAAAAAAAAAAAAAEAAAAAAACEABAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Gender">
+    <Position X="77.75" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAABA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HitBoxType">
+    <Position X="83" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HitBoxShape">
+    <Position X="81.25" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACCAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ExecutionBufferType">
+    <Position X="69" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ParryType">
+    <Position X="86.5" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAABCAAAAAAAAAACAAAAAAAFY8Ac=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ParryStunType">
+    <Position X="84.75" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Player">
+    <Position X="63.75" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Side">
+    <Position X="76" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Sizes">
+    <Position X="77.75" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAAAAAAAEEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AirJuggleDeteriorationType">
+    <Position X="84.75" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AirRecoveryType">
+    <Position X="86.5" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAABAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InputManagerType">
+    <Position X="67.25" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAIgAAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIEngine">
+    <Position X="77.75" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIBehavior">
+    <Position X="65.5" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAEAAAAAACAgAAAAAAAAAAEAAAAAAAAAAg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AIDifficultyLevel">
+    <Position X="76" Y="19" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAECAAAAAAAAAAAAAAAAgIAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LifeBarTrainingMode">
+    <Position X="74.25" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAIgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LobbyMatchCreationSystem">
+    <Position X="79.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MatchMakingFilterType">
+    <Position X="81.25" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAACAAAgAAAACAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ServerVariableUpdateType">
+    <Position X="74.25" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAABAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ServerVariableType">
+    <Position X="72.5" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAQAAAAAAAAAAAAgAAAAAAAAAgAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="StorageMode">
+    <Position X="81.25" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="UFEBoolean">
+    <Position X="65.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HitEffectSpawnPoint">
+    <Position X="86.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAEAABAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MotionSensor">
+    <Position X="84.75" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FightsGroupMode">
+    <Position X="70.75" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAoAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\GlobalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ButtonPress">
+    <Position X="74.25" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAgIgQKEAAAAAAAAAzDsAACAAAAAAAAAAAAAAAAo=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BasicMoveReference">
+    <Position X="69" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>khLBIApAABIwBggABSEAAAAASAGIAAUHAKOwgQAAQBA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ClipNum">
+    <Position X="81.25" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEAAAACBACAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="StandUpOptions">
+    <Position X="79.5" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAEAAAAAAIAAAAAAACAEAEAAACCAAABAAAMAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InputType">
+    <Position X="69" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAACBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PossibleStates">
+    <Position X="67.25" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAhAAAAAAEAAAAAAACAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SubStates">
+    <Position X="83" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACACACAAAEAAAAAACAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CombatStances">
+    <Position X="86.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAADPgDAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DamageType">
+    <Position X="67.25" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AttackType">
+    <Position X="67.25" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAgAAAAAAAAAEAAAAAYAAAAAAAAAEAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="GaugeUsage">
+    <Position X="76" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAIAAAAAAAAAAAAAAAAEAAAAAAIAAQAEAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ProjectileType">
+    <Position X="69" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HitConfirmType">
+    <Position X="84.75" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HitType">
+    <Position X="65.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAACAAAEAIAAAgAAAgAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HitStrengh">
+    <Position X="62" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAACAAAAAAAAAAAAAADQAAAAAAAAAAAAAAIAEAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HitStunType">
+    <Position X="63.75" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAE=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LinkType">
+    <Position X="76" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAEAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CounterMoveType">
+    <Position X="63.75" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CinematicType">
+    <Position X="79.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAgAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CharacterDistance">
+    <Position X="77.75" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JAAAAAAAgAAAAAAAEAAAAAAAAAAAAAAAAAAgAACAQAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FrameSpeed">
+    <Position X="72.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAgAAAAAAAAAAAAAAAIAAAIAAAAAAAAAIAABAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="JumpArc">
+    <Position X="70.75" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JACAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAACgAAAAIAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CurrentFrameData">
+    <Position X="65.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAIAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Definitions\MoveInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkState">
+    <Position X="77.75" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAQ=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Connectors\NetworkState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkButtonPress">
+    <Position X="86.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAIgACEAAAAAAAAAzDsAACAAAAAAAAAAAAEAAAI=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Controller\NetworkButtonPress.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkMessageType">
+    <Position X="70.75" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAQAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Network\Messages\NetworkMessageType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkConnectionErrorCompat">
+    <Position X="62" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAjKIBAAAAQBgEACEgAKIAwAABAAAJKABIAAACAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkPeerTypeCompat">
+    <Position X="72.5" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAgAAAAQ=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkDisconnectionCompat">
+    <Position X="63.75" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RPCModeCompat">
+    <Position X="70.75" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAIAAggAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NetworkStateSynchronizationCompat">
+    <Position X="79.5" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAIAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE Addons\Compatibility\UFELegacyAPICompat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.ComponentModel.CollectionChangeActionDerived">
+    <Position X="83" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAABAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\CollectionChangeActionDerived.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.ComponentModel.ListChangedTypeDerived">
+    <Position X="77.75" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAARAAAAAAAAAgQAAAAEAEAAAAAAAQAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\ListChangedTypeDerived.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.Collections.Specialized.NotifyCollectionChangedAction">
+    <Position X="83" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAABAAAAAAABAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Specialized\NotifyCollectionChangedAction.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.Threading.LazyThreadSafetyMode">
+    <Position X="72.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABEAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading\LazyThreadSafetyMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.Threading.Tasks.PopResult">
+    <Position X="65.5" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAIAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\PopResult.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.Threading.Tasks.TaskContinuationOptions">
+    <Position X="86.5" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RAAAAAEAAAAAAAAQAAgEAAAAACEAAAAAAQQAAAEAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskContinuationOptions.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.Threading.Tasks.TaskCreationOptions">
+    <Position X="62" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskCreationOptions.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="System.Threading.Tasks.TaskStatus">
+    <Position X="63.75" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAQAAAAAAAAAIgAAAAAAAAAAAAAYIAAAABAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Threading.Tasks\TaskStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="System.Action&lt;T1, T2, T3, T4, T5&gt;">
+    <Position X="62" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\ActionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Action&lt;T1, T2, T3, T4, T5, T6&gt;">
+    <Position X="63.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\ActionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Action&lt;T1, T2, T3, T4, T5, T6, T7&gt;">
+    <Position X="65.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABBAEAAAAAEAAAAABAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\ActionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Action&lt;T1, T2, T3, T4, T5, T6, T7, T8&gt;">
+    <Position X="67.25" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABBAEAAAAAEAAAAABAAAAAAAAAAEAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\ActionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Action&lt;T1, T2, T3, T4, T5, T6, T7, T8, T9&gt;">
+    <Position X="69" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABFAEAAAAAEAAAAABAAAAAAAAAAEAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\ActionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Func&lt;T1, T2, T3, T4, T5, TResult&gt;">
+    <Position X="72.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\FuncExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Func&lt;T1, T2, T3, T4, T5, T6, TResult&gt;">
+    <Position X="74.25" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAABAEAAAAAEAAAAABAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\FuncExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Func&lt;T1, T2, T3, T4, T5, T6, T7, TResult&gt;">
+    <Position X="76" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABBAEAAAAAEAAAAABAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\FuncExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Func&lt;T1, T2, T3, T4, T5, T6, T7, T8, TResult&gt;">
+    <Position X="77.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABBAEAAAAAEAAAAABAAAAAAAAAAEAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\FuncExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Func&lt;T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult&gt;">
+    <Position X="79.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAABFAEAAAAAEAAAAABAAAAAAAAAAEAAEAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System\FuncExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.ComponentModel.CollectionChangeEventHandlerDerived">
+    <Position X="70.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\CollectionChangeEventHandlerDerived.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.ComponentModel.ListChangedEventHandlerDerived">
+    <Position X="81.25" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\___Derived_Classes___\System.ComponentModel\ListChangedEventHandlerDerived.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="System.Collections.Specialized.NotifyCollectionChangedEventHandler">
+    <Position X="83" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UFE\Engine\Scripts\Mono4Unity\Runtime\System.Collections.Specialized\NotifyCollectionChangedHandler.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
