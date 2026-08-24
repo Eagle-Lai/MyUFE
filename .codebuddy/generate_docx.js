@@ -6,12 +6,13 @@ let globalRoot = "";
 try { globalRoot = execSync("npm root -g").toString().trim(); } catch (e) {}
 const docx = require(globalRoot ? path.join(globalRoot, "docx") : "docx");
 
-const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, PageBreak, TableOfContents, LevelFormat } = docx;
+const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, PageBreak, TableOfContents, Table, TableRow, TableCell, WidthType, Footer, PageNumber } = docx;
 
 const ROOT = "g:\\MyUFE";
-const DATA = JSON.parse(fs.readFileSync(path.join(ROOT, ".codebuddy", "members_analysis.json"), "utf-8"));
+const OUT = path.join(ROOT, "Assets", "___Doc", "UFE类图详细说明文档.docx");
+const DATA = JSON.parse(fs.readFileSync(path.join(ROOT, "Assets", "___Doc", "members_analysis.json"), "utf-8"));
 
-// ---------- helpers ----------
+// ---------- XML comment cleaning ----------
 function cleanXml(c) {
   if (!c) return "";
   let text = c;
@@ -39,9 +40,17 @@ function cleanXml(c) {
   return out;
 }
 
+// ---------- labels / colors ----------
 const KIND_LABEL = {
   type_class: "类", type_struct: "结构体", type_interface: "接口", type_enum: "枚举",
   enum_member: "枚举成员", method: "方法", property: "属性", field: "字段", event: "事件"
+};
+const KIND_COLOR = {
+  method: "1F4E79",   // deep blue
+  property: "2E7D32", // green
+  field: "8D6E63",    // brown
+  event: "6A1B9A",    // purple
+  enum_member: "00695C" // teal
 };
 
 // ---------- grouping ----------
@@ -95,57 +104,95 @@ const byGroup = {};
 files.forEach(f => { const g = groupOf(f); (byGroup[g] = byGroup[g] || []).push(f); });
 GROUPS.forEach(g => byGroup[g.id] = byGroup[g.id] || []);
 
-// ---------- paragraph builders ----------
-function pBreak() { return new Paragraph({ children: [new PageBreak()] }); }
-
-function memberParagraph(m, compact) {
-  const runs = [];
-  const label = KIND_LABEL[m.kind] || m.kind;
-  if (compact) {
-    runs.push(new TextRun({ text: "[" + label + "] " + m.name, size: 18, color: "333333" }));
-    const cm = cleanXml(m.comment);
-    if (cm) runs.push(new TextRun({ text: " — " + cm, size: 18, color: "595959" }));
-  } else {
-    runs.push(new TextRun({ text: "【" + label + "】" + m.name, bold: true, color: "1F4E79", size: 20 }));
-    const sig = m.sig.replace(/\s+/g, " ").trim();
-    if (sig) runs.push(new TextRun({ break: 1, text: sig, font: "Consolas", size: 16, color: "444444" }));
-    const cm = cleanXml(m.comment);
-    if (cm) runs.push(new TextRun({ break: 1, text: "说明：" + cm, size: 18, color: "595959" }));
-  }
-  return new Paragraph({ children: runs, spacing: { after: compact ? 40 : 90 }, indent: compact ? { left: 340 } : { left: 360 } });
+// ---------- helpers ----------
+function para(children, opts) {
+  return new Paragraph(Object.assign({ children }, opts || {}));
 }
 
-function typeParagraphs(fileData, typeName, compact) {
-  const paras = [];
-  const members = fileData.members.filter(m => m.kind === "type_" + "class" || m.kind === "type_struct" || m.kind === "type_interface" || m.kind === "type_enum" || m.kind === "type_" + typeName);
-  const typeEntries = fileData.members.filter(m => m.kind && m.kind.indexOf("type_") === 0);
-  const t = typeEntries.find(m => m.name === typeName);
-  if (t) {
-    const kind = KIND_LABEL[t.kind] || t.kind;
-    paras.push(new Paragraph({
-      children: [new TextRun({ text: "[" + kind + "] " + t.name, bold: true, size: 22, color: "1F4E79" })],
-      heading: HeadingLevel.HEADING_3,
-      spacing: { before: 160, after: 40 }
-    }));
-    const tc = cleanXml(t.comment);
-    if (tc) paras.push(new Paragraph({
-      children: [new TextRun({ text: tc, size: 19, color: "404040" })],
-      spacing: { after: 80 }, indent: { left: 240 }
-    }));
-  } else {
-    paras.push(new Paragraph({
-      children: [new TextRun({ text: typeName, bold: true, size: 22, color: "1F4E79" })],
-      heading: HeadingLevel.HEADING_3, spacing: { before: 160, after: 40 }
-    }));
+function gap(after) {
+  return new Paragraph({ children: [], spacing: { after: after || 60 } });
+}
+
+function matchTypeEntry(fd, tn) {
+  return fd.members.find(m => m.kind.indexOf("type_") === 0 && (m.name === tn || (tn && tn.startsWith(m.name + "<"))));
+}
+
+function collectMembers(fd, t) {
+  const out = [];
+  if (!t) return out;
+  const idx = fd.members.indexOf(t);
+  for (let j = idx + 1; j < fd.members.length && fd.members[j].kind.indexOf("type_") !== 0; j++) {
+    out.push(fd.members[j]);
   }
-  // members of this type: group contiguous members after the type entry
-  if (t) {
-    const idx = fileData.members.indexOf(t);
-    let j = idx + 1;
-    while (j < fileData.members.length && fileData.members[j].kind.indexOf("type_") !== 0) {
-      paras.push(memberParagraph(fileData.members[j], compact));
-      j++;
-    }
+  return out;
+}
+
+// ---------- table builders ----------
+function cell(children, opts) {
+  return new TableCell(Object.assign({
+    margins: { top: 50, bottom: 50, left: 100, right: 100 }
+  }, opts || {}, { children: Array.isArray(children) ? children : [children] }));
+}
+
+function memberTable(members) {
+  const header = new TableRow({
+    tableHeader: true,
+    children: [
+      cell([para([new TextRun({ text: "类别", bold: true, size: 17, color: "FFFFFF" })], { alignment: AlignmentType.CENTER, spacing: { after: 0 } })], { shading: { fill: "1F4E79" } }),
+      cell([para([new TextRun({ text: "成员", bold: true, size: 17, color: "FFFFFF" })], { spacing: { after: 0 } })], { shading: { fill: "1F4E79" } }),
+      cell([para([new TextRun({ text: "说明", bold: true, size: 17, color: "FFFFFF" })], { spacing: { after: 0 } })], { shading: { fill: "1F4E79" } })
+    ]
+  });
+  const rows = [header];
+  members.forEach(m => {
+    const label = KIND_LABEL[m.kind] || m.kind;
+    const color = KIND_COLOR[m.kind] || "444444";
+    const nameRuns = [new TextRun({ text: m.name, bold: true, size: 18, color: "17365D" })];
+    const sig = (m.sig || "").replace(/\s+/g, " ").trim();
+    if (sig) nameRuns.push(new TextRun({ break: 1, text: sig, size: 14, color: "808080", font: "Consolas" }));
+    const cm = cleanXml(m.comment);
+    const cmRuns = cm
+      ? [new TextRun({ text: cm, size: 17, color: "404040" })]
+      : [new TextRun({ text: "（无说明）", size: 16, italics: true, color: "A6A6A6" })];
+    rows.push(new TableRow({
+      children: [
+        cell([para([new TextRun({ text: label, bold: true, size: 16, color: color })], { alignment: AlignmentType.CENTER, spacing: { after: 0 } })]),
+        cell([para(nameRuns, { spacing: { after: 0 } })]),
+        cell([para(cmRuns, { spacing: { after: 0 } })])
+      ]
+    }));
+  });
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [1240, 3400, 4386],
+    rows
+  });
+}
+
+// ---------- section builders ----------
+function typeSection(fd, tn) {
+  const paras = [];
+  const t = matchTypeEntry(fd, tn);
+  const kind = t ? (KIND_LABEL[t.kind] || "类型") : "类型";
+  paras.push(new Paragraph({
+    heading: HeadingLevel.HEADING_3,
+    spacing: { before: 260, after: 40 },
+    children: [
+      new TextRun({ text: "◆ " + kind + "　", bold: true, size: 22, color: "1F4E79" }),
+      new TextRun({ text: tn, bold: true, size: 22, color: "17365D" })
+    ]
+  }));
+  if (t && t.sig) {
+    paras.push(para([new TextRun({ text: t.sig.replace(/\s+/g, " ").trim(), size: 15, color: "595959", font: "Consolas" })], { indent: { left: 220 }, spacing: { after: 30 } }));
+  }
+  const tc = cleanXml(t && t.comment);
+  if (tc) {
+    paras.push(para([new TextRun({ text: tc, size: 19, color: "404040" })], { indent: { left: 220 }, spacing: { after: 60 } }));
+  }
+  const members = collectMembers(fd, t);
+  if (members.length) {
+    paras.push(memberTable(members));
+    paras.push(gap(80));
   }
   return paras;
 }
@@ -155,27 +202,23 @@ function fileSection(file) {
   const paras = [];
   const fname = file.split("/").pop();
   paras.push(new Paragraph({
-    children: [new TextRun({ text: fname, bold: true, size: 26, color: "17365D" })],
-    heading: HeadingLevel.HEADING_2, spacing: { before: 220, after: 40 }
+    heading: HeadingLevel.HEADING_2,
+    spacing: { before: 320, after: 40 },
+    children: [new TextRun({ text: fname, bold: true, size: 24, color: "17365D" })]
   }));
-  const typeNames = fd.types;
-  const nMembers = fd.members.length;
-  const isMono = file.indexOf("/Mono4Unity/") >= 0;
-  paras.push(new Paragraph({
-    children: [new TextRun({ text: file + "　|　类型 " + typeNames.length + " 个　|　成员 " + nMembers + " 个" + (isMono ? "　|　（Mono4Unity .NET 兼容层，紧凑模式）" : ""), italics: true, size: 16, color: "7F7F7F" })],
-    spacing: { after: 60 }
-  }));
-  // overview: types list
-  paras.push(new Paragraph({
-    children: [new TextRun({ text: "本文件定义类型：", bold: true, size: 18 }), new TextRun({ text: typeNames.join("、"), size: 18, color: "333333" })],
-    spacing: { after: 80 }
-  }));
-  // per-type
-  typeNames.forEach(tn => { paras.push.apply(paras, typeParagraphs(fd, tn, isMono)); });
-  // members not covered by any known type entry (orphan members) -> list at end in compact form
+  paras.push(para([
+    new TextRun({ text: file + "　|　类型 " + fd.types.length + " 个　|　成员 " + fd.members.length + " 个", italics: true, size: 15, color: "7F7F7F" })
+  ], { spacing: { after: 40 } }));
+  paras.push(para([
+    new TextRun({ text: "定义类型：", bold: true, size: 18, color: "1F4E79" }),
+    new TextRun({ text: fd.types.join("、"), size: 18, color: "333333" })
+  ], { spacing: { after: 60 } }));
+  fd.types.forEach(tn => { paras.push.apply(paras, typeSection(fd, tn)); });
+
+  // orphan members (not following any type entry)
   const covered = new Set();
-  typeNames.forEach(tn => {
-    const te = fd.members.find(m => m.kind.indexOf("type_") === 0 && m.name === tn);
+  fd.types.forEach(tn => {
+    const te = matchTypeEntry(fd, tn);
     if (te) {
       const idx = fd.members.indexOf(te);
       for (let j = idx + 1; j < fd.members.length && fd.members[j].kind.indexOf("type_") !== 0; j++) covered.add(j);
@@ -184,11 +227,9 @@ function fileSection(file) {
   const orphan = [];
   fd.members.forEach((m, i) => { if (m.kind.indexOf("type_") !== 0 && !covered.has(i)) orphan.push(m); });
   if (orphan.length) {
-    paras.push(new Paragraph({
-      children: [new TextRun({ text: "文件级其他成员：", bold: true, size: 18, color: "1F4E79" })],
-      spacing: { before: 80, after: 40 }
-    }));
-    orphan.forEach(m => paras.push(memberParagraph(m, true)));
+    paras.push(para([new TextRun({ text: "文件级其他成员", bold: true, size: 18, color: "1F4E79" })], { spacing: { before: 100, after: 40 } }));
+    paras.push(memberTable(orphan));
+    paras.push(gap(80));
   }
   return paras;
 }
@@ -196,67 +237,67 @@ function fileSection(file) {
 function groupSection(g) {
   const paras = [];
   paras.push(new Paragraph({
-    children: [new TextRun({ text: g.title, bold: true, size: 30, color: "1F4E79" })],
-    heading: HeadingLevel.HEADING_1, spacing: { before: 240, after: 80 }, pageBreakBefore: true
+    heading: HeadingLevel.HEADING_1,
+    spacing: { before: 240, after: 80 },
+    pageBreakBefore: true,
+    children: [new TextRun({ text: g.title, bold: true, size: 30, color: "1F4E79" })]
   }));
-  paras.push(new Paragraph({
-    children: [new TextRun({ text: g.desc, size: 19, color: "404040" })],
-    spacing: { after: 160 }, indent: { left: 120 }
-  }));
+  paras.push(para([new TextRun({ text: g.desc, size: 19, color: "404040" })], { indent: { left: 120 }, spacing: { after: 140 } }));
   const filesInGroup = byGroup[g.id];
   const totalM = filesInGroup.reduce((s, f) => s + DATA[f].members.length, 0);
-  paras.push(new Paragraph({
-    children: [new TextRun({ text: "本部分共 " + filesInGroup.length + " 个文件、" + totalM + " 个成员。", italics: true, size: 16, color: "7F7F7F" })],
-    spacing: { after: 120 }
-  }));
+  paras.push(para([
+    new TextRun({ text: "本部分共 " + filesInGroup.length + " 个文件、" + totalM + " 个成员。", italics: true, size: 16, color: "7F7F7F" })
+  ], { spacing: { after: 120 } }));
   filesInGroup.forEach(f => { paras.push.apply(paras, fileSection(f)); });
   return paras;
 }
 
-// ---------- build document ----------
+// ---------- document ----------
 const children = [];
+const today = "2026-08-24";
 
-// cover page
-children.push(new Paragraph({ children: [new TextRun({ text: "UFE 格斗引擎类图", bold: true, size: 52, color: "1F4E79" })], alignment: AlignmentType.CENTER, spacing: { before: 1800, after: 120 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "详细说明文档", bold: true, size: 52, color: "1F4E79" })], alignment: AlignmentType.CENTER, spacing: { after: 600 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "ClassDiagram 代码文件 · 类型 · 成员 全量解析", size: 28, color: "404040" })], alignment: AlignmentType.CENTER, spacing: { after: 900 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "数据来源：ClassDiagram1.cd / ClassDiagram2.cd / ClassDiagram3.cd", size: 20, color: "595959" })], alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "三个类图文件内容一致，均覆盖 UFE 引擎全部核心脚本", size: 20, color: "595959" })], alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "规模：213 个源码文件　|　439 个类型　|　4550 个成员", size: 20, color: "595959" })], alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "生成日期：2026-08-22", size: 20, color: "595959" })], alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
+// cover
+children.push(para([new TextRun({ text: "UFE 格斗引擎类图", bold: true, size: 52, color: "1F4E79" })], { alignment: AlignmentType.CENTER, spacing: { before: 1800, after: 120 } }));
+children.push(para([new TextRun({ text: "详细说明文档", bold: true, size: 52, color: "1F4E79" })], { alignment: AlignmentType.CENTER, spacing: { after: 600 } }));
+children.push(para([new TextRun({ text: "ClassDiagram 代码文件 · 类型 · 成员 全量解析", size: 28, color: "404040" })], { alignment: AlignmentType.CENTER, spacing: { after: 900 } }));
+children.push(para([new TextRun({ text: "数据来源：ClassDiagram1.cd / ClassDiagram2.cd / ClassDiagram3.cd", size: 20, color: "595959" })], { alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
+children.push(para([new TextRun({ text: "三个类图文件内容一致，均覆盖 UFE 引擎全部核心脚本", size: 20, color: "595959" })], { alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
+children.push(para([new TextRun({ text: "规模：213 个源码文件　|　439 个类型　|　4550 个成员", size: 20, color: "595959" })], { alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
+children.push(para([new TextRun({ text: "生成日期：" + today, size: 20, color: "595959" })], { alignment: AlignmentType.CENTER, spacing: { after: 60 } }));
 
-// intro page
-children.push(pBreak());
-children.push(new Paragraph({ children: [new TextRun({ text: "阅读指南", bold: true, size: 32, color: "1F4E79" })], heading: HeadingLevel.HEADING_1, spacing: { after: 120 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "本文档根据 Visual Studio 类设计器导出的 ClassDiagram1.cd 自动生成，对类图中出现的每一个代码文件、每一个类型、每一个成员进行了逐项整理与说明。", size: 20, color: "404040" })], spacing: { after: 100 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "阅读方法：", bold: true, size: 20, color: "17365D" })], spacing: { after: 40 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "1. 文档按 13 个功能模块分章节组织，每章为一个 UFE 引擎子系统（核心、定义数据、角色物理、AI、动画、相机、输入、网络、定点数学、UI、Mono4Unity 兼容层、旧版兼容、工具）。", size: 19, color: "404040" })], indent: { left: 240 }, spacing: { after: 40 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "2. 每个文件小节先给出文件路径与类型清单，再按类型逐个展开：类型说明 + 每个成员（方法/属性/字段/事件/枚举值）的签名与作用说明。", size: 19, color: "404040" })], indent: { left: 240 }, spacing: { after: 40 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "3. 成员说明文字取自源码中的 XML 文档注释（已做标签清理），未写注释的成员标注为“无说明”。", size: 19, color: "404040" })], indent: { left: 240 }, spacing: { after: 40 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "4. Mono4Unity 部分为 .NET 标准库兼容实现，成员采用紧凑列表形式，便于快速浏览而不至篇幅失控。", size: 19, color: "404040" })], indent: { left: 240 }, spacing: { after: 100 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: "5. 目录为 Word 自动目录，打开文档后如有提示请点击“更新域”刷新页码。", size: 19, color: "404040" })], indent: { left: 240 }, spacing: { after: 100 } }));
+// reading guide
+children.push(new Paragraph({ children: [new PageBreak()] }));
+children.push(para([new TextRun({ text: "阅读指南", bold: true, size: 32, color: "1F4E79" })], { heading: HeadingLevel.HEADING_1, spacing: { after: 120 } }));
+children.push(para([new TextRun({ text: "本文档根据 Visual Studio 类设计器导出的 ClassDiagram1.cd 自动生成，对类图中出现的每一个代码文件、每一个类型、每一个成员进行了逐项整理与说明。", size: 20, color: "404040" })], { spacing: { after: 100 } }));
+children.push(para([new TextRun({ text: "阅读方法：", bold: true, size: 20, color: "17365D" })], { spacing: { after: 40 } }));
+children.push(para([new TextRun({ text: "1. 文档按 13 个功能模块分章节组织（一级标题），每章为一个 UFE 引擎子系统；每个代码文件为二级标题，每个类型为三级标题。", size: 19, color: "404040" })], { indent: { left: 240 }, spacing: { after: 40 } }));
+children.push(para([new TextRun({ text: "2. 每个类型以一张表格列出全部成员，共 3 列：类别 / 成员 / 说明。类别列以颜色区分：方法（蓝）、属性（绿）、字段（棕）、事件（紫）、枚举成员（青）。", size: 19, color: "404040" })], { indent: { left: 240 }, spacing: { after: 40 } }));
+children.push(para([new TextRun({ text: "3. 成员列第一行为成员名，第二行为完整签名（含修饰符、参数、返回类型）。", size: 19, color: "404040" })], { indent: { left: 240 }, spacing: { after: 40 } }));
+children.push(para([new TextRun({ text: "4. 说明列取自源码 XML 文档注释（已清理标签），未写注释的成员显示“（无说明）”。", size: 19, color: "404040" })], { indent: { left: 240 }, spacing: { after: 40 } }));
+children.push(para([new TextRun({ text: "5. 目录为 Word 自动目录，打开文档后若提示，请按 Ctrl+A 全选后按 F9 更新页码；或点击“引用 → 更新目录”。", size: 19, color: "404040" })], { indent: { left: 240 }, spacing: { after: 100 } }));
 
-// TOC page
-children.push(pBreak());
-children.push(new Paragraph({ children: [new TextRun({ text: "目录", bold: true, size: 32, color: "1F4E79" })], heading: HeadingLevel.HEADING_1, spacing: { after: 120 } }));
-children.push(new TableOfContents("目录", { hyperlink: true, headingStyleRange: "1-2" }));
-children.push(pBreak());
+// TOC
+children.push(new Paragraph({ children: [new PageBreak()] }));
+children.push(para([new TextRun({ text: "目录", bold: true, size: 32, color: "1F4E79" })], { heading: HeadingLevel.HEADING_1, spacing: { after: 120 } }));
+children.push(new TableOfContents("目录", { hyperlink: true, headingStyleRange: "1-3" }));
+children.push(new Paragraph({ children: [new PageBreak()] }));
 
 // body
 GROUPS.forEach(g => { children.push.apply(children, groupSection(g)); });
 
 // appendix
-children.push(new Paragraph({ children: [new TextRun({ text: "附录　类图概况与统计", bold: true, size: 30, color: "1F4E79" })], heading: HeadingLevel.HEADING_1, spacing: { before: 240, after: 80 }, pageBreakBefore: true }));
+children.push(new Paragraph({ heading: HeadingLevel.HEADING_1, spacing: { before: 240, after: 80 }, pageBreakBefore: true, children: [new TextRun({ text: "附录　类图概况与统计", bold: true, size: 30, color: "1F4E79" })] }));
 const statLines = [];
 statLines.push("类图文件：ClassDiagram1.cd / ClassDiagram2.cd / ClassDiagram3.cd（内容一致）");
 statLines.push("源码根目录：Assets/UFE/Engine/Scripts 与 Assets/UFE Addons");
 statLines.push("文件总数：213　类型总数：439　成员总数：4550");
+statLines.push("成员构成：字段 2247　方法 1138　枚举成员 474　属性 136　事件 39");
 GROUPS.forEach(g => {
   const n = byGroup[g.id].length;
   const m = byGroup[g.id].reduce((s, f) => s + DATA[f].members.length, 0);
   statLines.push(g.title.replace(/^第[一二三四五六七八九十]+部分\s*/, "") + "：" + n + " 个文件 / " + m + " 个成员");
 });
-statLines.forEach(s => children.push(new Paragraph({ children: [new TextRun({ text: s, size: 19, color: "404040" })], spacing: { after: 60 }, indent: { left: 120 } })));
+statLines.forEach(s => children.push(para([new TextRun({ text: s, size: 19, color: "404040" })], { spacing: { after: 60 }, indent: { left: 120 } })));
 
 const doc = new Document({
   creator: "CodeBuddy",
@@ -267,15 +308,25 @@ const doc = new Document({
     default: { document: { run: { font: "微软雅黑", size: 20 } } },
     paragraphStyles: [
       { id: "Heading1", name: "Heading 1", basedOn: "Normal", next: "Normal", quickFormat: true, run: { size: 30, bold: true, color: "1F4E79", font: "微软雅黑" }, paragraph: { spacing: { before: 240, after: 80 } } },
-      { id: "Heading2", name: "Heading 2", basedOn: "Normal", next: "Normal", quickFormat: true, run: { size: 26, bold: true, color: "17365D", font: "微软雅黑" }, paragraph: { spacing: { before: 220, after: 60 } } },
-      { id: "Heading3", name: "Heading 3", basedOn: "Normal", next: "Normal", quickFormat: true, run: { size: 22, bold: true, color: "1F4E79", font: "微软雅黑" }, paragraph: { spacing: { before: 160, after: 40 } } }
+      { id: "Heading2", name: "Heading 2", basedOn: "Normal", next: "Normal", quickFormat: true, run: { size: 24, bold: true, color: "17365D", font: "微软雅黑" }, paragraph: { spacing: { before: 320, after: 40 } } },
+      { id: "Heading3", name: "Heading 3", basedOn: "Normal", next: "Normal", quickFormat: true, run: { size: 22, bold: true, color: "1F4E79", font: "微软雅黑" }, paragraph: { spacing: { before: 260, after: 40 } } }
     ]
   },
-  sections: [{ properties: {}, children }]
+  sections: [{
+    properties: {},
+    footers: {
+      default: new Footer({
+        children: [new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [new TextRun({ children: ["第 ", PageNumber.CURRENT, " 页 / 共 ", PageNumber.TOTAL_PAGES, " 页"], size: 16, color: "7F7F7F" })]
+        })]
+      })
+    },
+    children
+  }]
 });
 
-const out = path.join(ROOT, "UFE类图详细说明文档.docx");
 Packer.toBuffer(doc).then(buf => {
-  fs.writeFileSync(out, buf);
-  console.log("OK -> " + out + "  (" + Math.round(buf.length / 1024) + " KB)");
+  fs.writeFileSync(OUT, buf);
+  console.log("OK -> " + OUT + "  (" + Math.round(buf.length / 1024) + " KB)");
 }).catch(e => { console.error("FAIL:", e.message); process.exit(1); });
