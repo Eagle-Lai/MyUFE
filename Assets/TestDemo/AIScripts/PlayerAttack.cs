@@ -51,14 +51,14 @@ namespace AIScripts
             }
 
             // 第 6 步内容：前冲结束时在面前生成攻击判定球（届时取消注释）
-            // GameObject go = new GameObject("AttackHit");
-            // go.transform.position = transform.position + transform.forward * 1f;
-            // SphereCollider sc = go.AddComponent<SphereCollider>();
-            // sc.isTrigger = true;
-            // sc.radius = 0.6f;
-            // AttackHit hit = go.AddComponent<AttackHit>();
-            // hit.damage = attackDamage;
-            // hit.owner = gameObject;
+            GameObject go = new GameObject("AttackHit");
+            go.transform.position = transform.position + transform.forward * 1f;
+            SphereCollider sc = go.AddComponent<SphereCollider>();
+            sc.isTrigger = true;
+            sc.radius = 0.6f;
+            AttackHit hit = go.AddComponent<AttackHit>();
+            hit.damage = attackDamage;
+            hit.owner = gameObject;
         }
     }
 }

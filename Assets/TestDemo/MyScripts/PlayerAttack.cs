@@ -45,6 +45,14 @@ namespace MyScripts
                 characterController.Move(transform.forward * lungeSpeed * Time.deltaTime);
                 yield return null;
             }
+            GameObject go = new GameObject("AttackHit");
+            go.transform.position = transform.position + transform.forward * 1f;
+            SphereCollider sc = go.AddComponent<SphereCollider>();
+            sc.isTrigger = true;
+            sc.radius = 0.6f;
+            AttackHit hit = go.AddComponent<AttackHit>();
+            hit.damage = attackDamage;
+            hit.owner = gameObject;
         }
     }
 }
