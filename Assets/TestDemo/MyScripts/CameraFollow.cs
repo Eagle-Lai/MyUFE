@@ -15,10 +15,14 @@ namespace MyScripts
         float yaw;
         float pitch;
 
+        public Vector3 lookOffset = new Vector3(0f, 1.5f, 0f);
+
         private void Start()
         {
             if (target == null) return;
-
+            yaw = 0f;
+            pitch = 20f;    // ÂÔ¸©ÊÓ
+            distance = 5f;
             Vector3 diff = target.position - transform.position;
             distance = Mathf.Max(diff.magnitude, 0.2f);
             yaw = Mathf.Atan2(diff.x, diff.z) * Mathf.Rad2Deg;
@@ -41,10 +45,10 @@ namespace MyScripts
         private void LateUpdate()
         {
             if(target == null) return;
-
-            Quaternion quaternion = Quaternion.Euler(pitch, yaw, 0f);
+            Vector3 lookPoint = target.position + lookOffset;
+            Quaternion quaternion = Quaternion.Euler(-pitch, yaw, 0f);
             transform.position = target.position +quaternion * Vector3.forward * (-distance);
-            transform.rotation = Quaternion.LookRotation(target.position - transform.position);
+            transform.rotation = Quaternion.LookRotation(lookPoint - transform.position);
         }
     }
 }

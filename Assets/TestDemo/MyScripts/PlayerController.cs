@@ -19,6 +19,8 @@ namespace MyScripts
 
         private void Update()
         {
+            
+            if(!cc.enabled) return;
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
 

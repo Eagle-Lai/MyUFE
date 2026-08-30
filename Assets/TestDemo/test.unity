@@ -283,6 +283,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Robot_Kyle
       objectReference: {fileID: 0}
+    - target: {fileID: 4605074223555081545, guid: 269257765cc4f4d448e6390587e9cc6b,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 269257765cc4f4d448e6390587e9cc6b, type: 3}
 --- !u!1 &423329476

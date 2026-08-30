@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace MyScripts
 {
+    [System.Serializable]
     public class Skill
     {
         public string name = "ÄÜÁ¿Çò";

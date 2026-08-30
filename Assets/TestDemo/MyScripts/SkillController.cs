@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace MyScripts
 {
+    [SerializeField]
     public class SkillController : MonoBehaviour
     {
+        [SerializeField]  
         public Skill[] skills;
         public GameObject projectilePrefab;
 

@@ -23,10 +23,13 @@ namespace MyScripts
         private AIState aiState = AIState.Idle;
         private float lastAttackTime;
         CharacterController cc;
+        Health selfHealth;
 
         void Awake()
         {
             cc = GetComponent<CharacterController>();
+            
+            selfHealth = GetComponent<Health>();
             if (player == null)
                 player = GameObject.FindGameObjectWithTag("Player").transform;
         }
@@ -35,6 +38,7 @@ namespace MyScripts
         {
             if(player == null) return;
 
+            if( selfHealth != null && selfHealth.IsDead) return;
             float dist = Vector3.Distance(transform.position, player.position);
             switch (aiState) 
             {
