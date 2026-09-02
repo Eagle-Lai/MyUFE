@@ -26,7 +26,20 @@
 
 ## TestDemo 学习项目（2026-08-24 起）
 - 用户从零学习实现简单战斗系统（场景 `Assets\TestDemo\test.unity`，Ethan 玩家 / Robot_Kyle 敌人），自己敲代码，由简到繁。
-- **双目录双命名空间约定**：AI 参考脚本放 `Assets\TestDemo\AIScripts\`（namespace `AIScripts`，11 个完整可运行参考实现：CameraFollow/PlayerController/PlayerAttack/Health/AttackHit/Skill/SkillController/Projectile/EnemyAI/HealthBarUI/GameManager）；用户自己敲的实现放 `Assets\TestDemo\MyScripts\`（namespace `MyScripts`，当前 10 个，**尚缺 GameManager**）。两个命名空间可同名类共存，验证时整组用同一命名空间（推荐 MyScripts 版），避免混挂类型不匹配。
+- **双目录双命名空间约定（永久规则，2026-08-31 用户明确要求）**：**以后每个功能实现都必须同时提供 AIScripts 和 MyScripts 两个版本**。AIScripts 版是"老师"角色（完整参考实现，带详细中文注释），MyScripts 版是"学生"角色（用户自己动手实现的版本）。两个版本功能对齐、接口一致，只是命名空间不同。AI 先写 AIScripts 版作为参考，用户参照后自己写 MyScripts 版。用户目的是学习，不是让 AI 直接改 MyScripts。
+  - AI 参考脚本放 `Assets\TestDemo\AIScripts\`（namespace `AIScripts`，11 个完整可运行参考实现：CameraFollow/PlayerController/PlayerAttack/Health/AttackHit/Skill/SkillController/Projectile/EnemyAI/HealthBarUI/GameManager）
+  - 用户自己敲的实现放 `Assets\TestDemo\MyScripts\`（namespace `MyScripts`，**11 个全部完成**：与 AIScripts 完全对齐）
+  - 两个命名空间可同名类共存，验证时整组用同一命名空间（推荐 MyScripts 版），避免混挂类型不匹配
+  - Editor 工具脚本**也必须双版本**（2026-08-31 用户明确要求，覆盖此前"Editor 脚本无需双版本"的约定）：AI 版放 `Assets\TestDemo\AIScripts\Editor\`（namespace `AIScripts`，菜单前缀 `TestDemo/AI/...`），MyScripts 版由用户写在 `Assets\TestDemo\MyScripts\Editor\`（namespace `MyScripts`，菜单前缀 `TestDemo/My/...`）；Unity 会把任意层级的 Editor 文件夹编译进 Editor 程序集；两版本生成的资产路径共用，执行任一版本菜单即可
 - `Assets\TestDemo\Prefabs\` 目录已创建（当前为空），供后续工程化使用。
 - 开发手册：`Assets\___Doc\TestDemo战斗功能开发指南.docx`（11 步渐进式：相机→移动→攻击→生命→命中→技能→AI→受击反馈→UI→胜负判定，每步含 Unity 操作/脚本设计/代码骨架/验证/学习点，代码骨架即 AIScripts 参考的浓缩版）。
 - 场景关键事实：两个模型 Animator 共用 UFE 的 MC_Controller.controller（`Assets\UFE\Engine\Resources\`，仅 Mirror 参数、状态机为空），无现成动画 → 前期用位移/特效模拟动作，真动画留扩展阶段。
+
+## TestDemo 动画系统接入（2026-08-31 进行中）
+- 计划文档：`Assets\___Doc\TestDemo动画系统实现计划.docx`（步骤 0 Editor 工具 + 步骤 1-5 AIScripts/MyScripts 双版本 + 步骤 6 场景配置），生成脚本 `.codebuddy\generate_anim_plan_docx.js`。
+- 动画资源映射（已确认全部存在）：Player(Ethan)=E_Basic_Idle / E_Basic_Walk_Forward / E_Stand_N1 / E_Basic_Hit_High_weak / E_Basic_Fall_Back；Enemy(Robot_Kyle)=IdleStanding / MoveForward / PunchStandingLight / HitStandingLight / FallDown，均在 `Assets\UFE\Demo\Characters\<角色>\Animations\`。
+- **第 0 步 AI 版已完成**：`Assets\TestDemo\AIScripts\Editor\CreateTestDemoAnimators.cs`（namespace AIScripts，lint 通过；旧单版本 `Assets\Editor\CreateTestDemoAnimators.cs` 待用户手动删除，删除审批多次超时）。菜单 `TestDemo > AI > Create Animator Controllers` 生成 `Assets\TestDemo\PlayerAnimator.controller` + `EnemyAnimator.controller`：4 参数（Speed float / Attack / Hit / Death trigger）+ 5 状态（Idle 默认 / Walk / Attack / Hit / Death）；Walk 为 1D BlendTree（Speed 0→IdleClip、1→WalkClip）；Idle↔Walk 按 Speed 0.1 阈值；Attack/Hit 播完按是否移动回 Idle(exitTime 0.9/0.8)或 Walk(+Speed>0.1)；AnyState trigger 驱动 Attack/Hit/Death，Death 无出口；已存在时弹窗确认覆盖。菜单 `TestDemo > AI > Apply Animators To Scene` 按名字含 Ethan/Robot 自动挂对应控制器并关闭 applyRootMotion。MyScripts 版 Editor 脚本留给用户自己实现（namespace MyScripts，菜单前缀 TestDemo/My/...）。
+  - 关键 API 坑：手动 `new BlendTree()` 后必须 `AssetDatabase.AddObjectToAsset(tree, controller)` 嵌入 controller 资产，否则保存后丢失。
+  - 关键 API 坑 2（Unity 2020.3.17f1 实测）：`AnimatorState` **没有 `position` 属性**——状态图位置存在 `ChildAnimatorState` 结构体数组 `root.states` 上，需遍历匹配 state 后改 `children[i].position` 并写回 `root.states = children`；**也没有 `clip` 属性**——动画片段直接赋 `state.motion`（AnimationClip 是 Motion 子类）。曾报 3 个 CS1061，已用 SetStatePosition 辅助方法修复。
+  - 本机 Unity Editor.log 位置：`C:\Users\lzy\AppData\Local\Unity\Editor\Editor.log`（Local 而非 Roaming），grep "error CS" 可定位 Unity 侧编译错误（IDE lint 不可靠时用）。
+- 进度：**第 0 步成功**（controller 已生成）；**第 1-6 步 AI 版全部完成**（PlayerController SetFloat Speed / PlayerAttack SetTrigger Attack / SkillController 复用 Attack / EnemyAI 状态机动画同步 / Health 受击+死亡动画+Restore 动画重置 `anim.Play("Idle",0,0f)`，均为 Animator 字段+Awake 兜底+判空，原逻辑未动，lint 通过）。剩余：①用户自写 MyScripts 版 1-6 步动画改动（目前 MyScripts 尚未开始，MyScripts/Editor 空）；②步骤 6 场景配置（菜单 Apply Animators To Scene 挂控制器，确认 Apply Root Motion 关闭；验证流程：移动/攻击/技能/AI/受击/死亡/按 R 重置双方回 Idle）。
