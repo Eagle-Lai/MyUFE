@@ -11,6 +11,16 @@ namespace MyScripts
         public Skill[] skills;
         public GameObject projectilePrefab;
 
+        public Animator animator;
+
+        private void Awake()
+        {
+            if(animator == null)
+            {
+                animator = GetComponent<Animator>();
+            }
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.K))
@@ -30,6 +40,11 @@ namespace MyScripts
                 return;
             }
             skill.lastUsedTime = Time.time;
+
+            if(animator != null)
+            {
+                animator.SetTrigger("Attack");
+            }
 
             Vector3 pos = transform.position + transform.forward * 1f + Vector3.up * 1f;
             GameObject go = Instantiate(projectilePrefab, pos, transform.rotation);

@@ -14,9 +14,14 @@ namespace MyScripts
 
         CharacterController characterController;
 
+        public Animator animator;
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            if(animator == null)
+            {
+                animator = GetComponent<Animator>();
+            }
         }
 
         private void Update()
@@ -34,6 +39,10 @@ namespace MyScripts
                 return;
             }
             lastAttackTime = Time.time;
+            if(animator != null)
+            {
+                animator.SetTrigger("Attack");
+            }
             StartCoroutine(AttackRoutine());
         }
 

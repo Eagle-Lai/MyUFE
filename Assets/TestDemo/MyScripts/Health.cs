@@ -16,6 +16,16 @@ namespace MyScripts
         public event Action OnDamaged;
         public event Action OnDeath;
 
+        public Animator animator;
+
+        private void Awake()
+        {
+            if (animator == null)
+            {
+                animator = GetComponent<Animator>();
+            }
+        }
+
         void Start()
         {
             currentHealth = MaxHealth;
@@ -25,7 +35,11 @@ namespace MyScripts
         {
             if (IsDead) return;
             currentHealth = Mathf.Max(0, currentHealth - damage);
-            if(OnDamaged != null) OnDamaged();
+            if(!IsDead && animator != null)
+            {
+                animator.SetTrigger("Hit");
+            }
+            if (OnDamaged != null) OnDamaged();
             if ((IsDead))
             {
                 Die();
@@ -42,7 +56,11 @@ namespace MyScripts
                 if(cc != null) cc.Move(hitDirection.normalized * 0.3f);
             }
             StartCoroutine(FlashRed());
-            if(OnDamaged != null) OnDamaged();
+            if(!IsDead && animator != null)
+            {
+                animator.SetTrigger("Hit");
+            }
+            if (OnDamaged != null) OnDamaged();
             if(IsDead)
             {
                 Die();
@@ -61,10 +79,19 @@ namespace MyScripts
             enabled = true;
             CharacterController cc = GetComponent<CharacterController>();
             if (cc != null) cc.enabled = true;
+
+            if(animator != null)
+            {
+                animator.Play("Idle", 0, 0f);
+            }
         }
 
         private void Die()
         {
+            if(animator != null)
+            {
+                animator.SetTrigger("Death");
+            }
             if (OnDeath != null) OnDeath();
             CharacterController cc = GetComponent<CharacterController>();
             if (cc != null) cc.enabled = false;

@@ -11,10 +11,16 @@ namespace MyScripts
         public float gravity = 9.8f;
 
         CharacterController cc;
-        
+
+        public Animator animator;
+
         private void Awake()
         {
             cc = GetComponent<CharacterController>();
+            if(animator == null)
+            {
+                animator = GetComponent<Animator>();
+            }
         }
 
         private void Update()
@@ -37,6 +43,12 @@ namespace MyScripts
             }
 
             cc.Move((moveDir * moveSpeed + Vector3.down * gravity) * Time.deltaTime);
+
+            float speedParam = moveDir.sqrMagnitude > 0.01f ? 1f : 0f;
+            if(animator != null)
+            {
+                animator.SetFloat("Speed", speedParam);
+            }
         }
     }
 }

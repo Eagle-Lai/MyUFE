@@ -6,6 +6,7 @@ namespace AIScripts
     /// <summary>
     /// 近战攻击（第 4 + 6 步）：J 键触发，前冲模拟挥拳，
     /// 并在面前生成短暂存在的判定球（AttackHit）造成伤害。
+    /// 动画计划第 2 步新增：攻击时 SetTrigger("Attack") 播放攻击动画。
     /// 参考实现：阅读后在 MyScripts 中亲手敲一份自己的版本。
     /// </summary>
     public class PlayerAttack : MonoBehaviour
@@ -18,9 +19,14 @@ namespace AIScripts
         float lastAttackTime = -999f;       // 初始化为足够小，保证第一次能攻击
         CharacterController cc;
 
+        // ---- 动画计划第 2 步新增 ----
+        // 玩家模型的 Animator（Awake 自动取同物体上的；不在同一物体时在 Inspector 手动拖）
+        public Animator anim;
+
         void Awake()
         {
             cc = GetComponent<CharacterController>();
+            if (anim == null) anim = GetComponent<Animator>(); // 兜底：同物体上自动获取
         }
 
         void Update()
@@ -37,6 +43,13 @@ namespace AIScripts
                 return;
             }
             lastAttackTime = Time.time;
+
+            // ---- 动画计划第 2 步新增：触发攻击动画 ----
+            // Trigger 是"一次性信号"：置位后控制器里 Any State→Attack 的转换立即满足，
+            // Attack 状态播放 E_Stand_N1，播到 90% 自动回 Idle/Walk（第 0 步搭好的转换）
+            // 注意：Trigger 被转换消费后自动清零，不需要手动 Reset（主动重置用 anim.ResetTrigger）
+            if (anim != null) anim.SetTrigger("Attack");
+
             StartCoroutine(AttackRoutine());
         }
 

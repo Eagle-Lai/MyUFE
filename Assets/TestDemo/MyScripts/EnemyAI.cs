@@ -25,10 +25,15 @@ namespace MyScripts
         CharacterController cc;
         Health selfHealth;
 
+        public Animator animator;
+
         void Awake()
         {
             cc = GetComponent<CharacterController>();
-            
+            if(animator == null)
+            {
+                animator = GetComponent<Animator>();
+            }
             selfHealth = GetComponent<Health>();
             if (player == null)
                 player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -43,7 +48,11 @@ namespace MyScripts
             switch (aiState) 
             {
                 case AIState.Idle:
-                    if(dist <= detectRange)
+                    if ((animator != null))
+                    {
+                        animator.SetFloat("Speed", 0f);
+                    }
+                    if (dist <= detectRange)
                     {
                         aiState = AIState.Chase;
                     }
@@ -51,7 +60,11 @@ namespace MyScripts
                 case AIState.Chase:
                     FaceToPlayer();
                     cc.Move(transform.forward * moveSpeed * Time.deltaTime);
-                    if(dist <= attackRange)
+                    if((animator != null))
+                    {
+                        animator.SetFloat("Speed", 1f);
+                    }
+                    if (dist <= attackRange)
                     {
                         aiState = AIState.Attack;
                     }
@@ -62,11 +75,19 @@ namespace MyScripts
                     break;
                  case AIState.Attack:
                     FaceToPlayer();
+                    if(animator != null)
+                    {
+                        animator.SetFloat("Speed", 0f);
+                    }
                     if(Time.time - lastAttackTime >= attackInterval)
                     {
                         lastAttackTime = Time.time;
+                        if(animator!= null)
+                        {
+                            animator.SetTrigger("Attack");
+                        }
                         Health health = player.GetComponent<Health>();
-                        if(health!= null)
+                        if (health!= null)
                         {
                             health.TakeDamage(attackDamage, transform.position - player.position);
                         }
